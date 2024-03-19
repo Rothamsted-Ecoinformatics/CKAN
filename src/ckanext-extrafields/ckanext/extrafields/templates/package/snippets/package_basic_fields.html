@@ -167,6 +167,7 @@
 <select id="field-experimentCode" error="errors.experimentCode" name="experimentCode" class="control-medium"
   onchange="displayCodesField()">
   <option value="None">N/A</option>
+  <option value="RRES Farms Field Experiment code">RRES Farms Field Experiment code</option>
   <option value="NWFP code">NWFP code</option>
   <option value="NW experiment code">NW experiment code</option>
   <option value="Other">Other Code </option>
@@ -215,36 +216,13 @@
 <select id="field-resourceTypeGeneral" name="resourceTypeGeneral" class="control-medium"
   value="{{ data.resourceTypeGeneral }}">
   <option value="N/A"></option>
-  <option value="Audiovisual">Audiovisual</option>
-  <option value="Book">Book</option>
-  <option value="BookChapter">BookChapter</option>
-  <option value="Collection">Collection</option>
-  <option value="ComputationalNotebook">ComputationalNotebook</option>
-  <option value="ConferencePaper">ConferencePaper</option>
-  <option value="ConferenceProceeding">ConferenceProceeding</option>
-  <option value="DataPaper">DataPaper</option>
   <option value="Dataset">Dataset</option>
-  <option value="Dissertation">Dissertation</option>
-  <option value="Event">Event</option>
-  <option value="Image">Image</option>
-  <option value="InteractiveResource">InteractiveResource</option>
   <option value="Instrument">Instrument</option>
-  <option value="Journal">Journal</option>
-  <option value="JournalArticle">JournalArticle</option>
   <option value="Model">Model</option>
-  <option value="OutputManagementPlan">OutputManagementPlan</option>
-  <option value="PeerReview">PeerReview</option>
-  <option value="PhysicalObject">PhysicalObject</option>
-  <option value="Preprint">Preprint</option>
-  <option value="Report">Report</option>
-  <option value="Service">Service</option>
   <option value="Software">Software</option>
-  <option value="Sound">Sound</option>
-  <option value="Standard">Standard</option>
-  <option value="StudyRegistration">StudyRegistration</option>
-  <option value="Text">Text</option>
-  <option value="Workflow">Workflow</option>
-  <option value="Other">Other</option>
+  <option value="Image">Image</option>
+  <option value="AudioVisual">AudioVisual</option>
+  <option value="ComputationalNotebook">ComputationalNotebook</option>
 </select><br><br>
 <script>
   selectElement("field-resourceTypeGeneral", "{{ data.resourceTypeGeneral }}")
@@ -1058,8 +1036,9 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   }
 </script>
 
-<label for="field-license">Select the License (Optional) </label>
-<i class="fas fa-info-circle" title="add info here"></i><br> 
+<label for="field-license">Select the License (optional)</label>
+<i class="fas fa-info-circle" title="add info here"></i><br>
+
 <select id="field-license" name="license" classes="control-medium">
   <option value="N/A"></option>
   <option value="Creative Commons Attribution Licence (CC BY 4.0)">Creative Commons Attribution Licence (CC BY 4.0)</option>
