@@ -50,7 +50,7 @@
   var displayElement = document.getElementById('displayCreatorField');
   var fullname = [];
   document.getElementById('errorMessage').innerHTML = "Creators: " + "{{ data.author }}";
-  console.log("{{ user }}");
+  console.log("{{user.sysadmin}}");
 
   function addCreator() {
     let fn = document.getElementById('field-given_name').value;
@@ -107,11 +107,11 @@
 <label for="field-publisher">*Publisher (Mandatory) </label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br>
-<input type="text" id="field-publisher" name="publisher" value="Rothamsted">
+<input type="text" id="field-publisher" name="publisher" value="Rothamsted Research">
 <!-- Default Publisher value is set to Rothamsted-->
 <script>
   // Set the default value for the input field
-  document.getElementById("field-publisher").value = "Rothamsted";
+  document.getElementById("field-publisher").value = "Rothamsted Research";
 </script><br><br>
 <label for="field-publicationYear">*Publication Year (Mandatory)</label><br>
 <input type="text" id="field-publicationYear" name="publicationYear" placeholder="YYYY"
@@ -1058,10 +1058,17 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   }
 </script>
 
-<!-- <input type="text" id="field-test" name="test">
+<label for="field-license">Select the License (Optional) </label>
+<i class="fas fa-info-circle" title="add info here"></i><br> 
+<select id="field-license" name="license" classes="control-medium">
+  <option value="N/A"></option>
+  <option value="Creative Commons Attribution Licence (CC BY 4.0)">Creative Commons Attribution Licence (CC BY 4.0)</option>
+  <option value="Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)">Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)</option>
+  <option value="Open Government Licence (OGL)">Open Government Licence (OGL)</option>
+</select><br><br>
+
 <script>
-  var cuser = "{{ user.name }}"
-  console.log("{{ user.id }}")
-</script> -->
+  selectElement("field-license", "{{ data.license }}")
+</script>
 
 {% endblock %}

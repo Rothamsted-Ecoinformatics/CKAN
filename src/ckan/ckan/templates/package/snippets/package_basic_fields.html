@@ -17,13 +17,16 @@
 
 {% block package_basic_fields_custom %}{% endblock %}
 
+<!-- {% block package_basic_fields_description %}
+  {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes) }}
+{% endblock %} -->
 
 {% block package_basic_fields_tags %}
   {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
   {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
 {% endblock %}
 
-{% block package_basic_fields_license %}
+<!-- {% block package_basic_fields_license %}
   <div class="form-group control-full">
     {% set error = errors.license_id %}
     <label class="form-label" for="field-license">{{ _("License") }}</label>
@@ -46,7 +49,7 @@
       </span>
     </div>
   </div>
-{% endblock %}
+{% endblock %} -->
 
 {% block package_basic_fields_org %}
   {# if we have a default group then this wants remembering #}
@@ -118,3 +121,4 @@
   {% endif %}
 
   {% endblock %}
+

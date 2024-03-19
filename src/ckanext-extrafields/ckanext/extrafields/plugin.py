@@ -1,5 +1,6 @@
 # encoding: utf-8
 from __future__ import annotations
+import datetime
 
 from ckan.types import Schema
 import ckan.plugins as p
@@ -118,6 +119,8 @@ class ExampleIDatasetFormPlugin(tk.DefaultDatasetForm, p.SingletonPlugin):
             'geoLowLeftLongitude': [tk.get_validator('ignore_missing'),
                                  tk.get_converter('convert_to_extras')],
             'geoTopRightLongitude': [tk.get_validator('ignore_missing'),
+                                 tk.get_converter('convert_to_extras')],
+            'license': [tk.get_validator('ignore_missing'),
                                  tk.get_converter('convert_to_extras')]
                       
         })        
@@ -229,7 +232,9 @@ class ExampleIDatasetFormPlugin(tk.DefaultDatasetForm, p.SingletonPlugin):
             'geoLowLeftLongitude': [tk.get_validator('ignore_missing'),
                                  tk.get_converter('convert_to_extras')],   
             'geoTopRightLongitude': [tk.get_validator('ignore_missing'),
-                                 tk.get_converter('convert_to_extras')]                           
+                                 tk.get_converter('convert_to_extras')],   
+            'license': [tk.get_validator('ignore_missing'),
+                                 tk.get_converter('convert_to_extras')]                            
         })       
         return schema
     def show_package_schema(self) -> Schema:
@@ -338,6 +343,8 @@ class ExampleIDatasetFormPlugin(tk.DefaultDatasetForm, p.SingletonPlugin):
             'geoLowLeftLongitude': [tk.get_converter('convert_from_extras'),
                                  tk.get_validator('ignore_missing')],
             'geoTopRightLongitude': [tk.get_converter('convert_from_extras'),
+                                 tk.get_validator('ignore_missing')],
+            'license': [tk.get_converter('convert_from_extras'),
                                  tk.get_validator('ignore_missing')]
             
         })       
@@ -448,6 +455,8 @@ class ExampleIDatasetFormPlugin(tk.DefaultDatasetForm, p.SingletonPlugin):
             'geoLowLeftLongitude': [tk.get_converter('convert_from_extras'),
                                  tk.get_validator('ignore_missing')],
             'geoTopRightLongitude': [tk.get_converter('convert_from_extras'),
+                                 tk.get_validator('ignore_missing')],
+            'license': [tk.get_converter('convert_from_extras'),
                                  tk.get_validator('ignore_missing')]                            
         })       
         return schema
@@ -465,3 +474,4 @@ class ExampleIDatasetFormPlugin(tk.DefaultDatasetForm, p.SingletonPlugin):
         # Add this plugin's templates dir to CKAN's extra_template_paths, so
         # that CKAN will use this plugin's custom templates.
         tk.add_template_directory(config, 'templates')        
+

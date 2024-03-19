@@ -298,4 +298,10 @@
   <td class="dataset-details">{{ pkg_dict.geoTopRightLongitude }}</td>
 </tr>
 {% endif %}
+{% if pkg_dict.license %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("License") }}</th>
+  <td class="dataset-details">{{ pkg_dict.license }}</td>
+</tr>
+{% endif %}
 {% endblock %}
