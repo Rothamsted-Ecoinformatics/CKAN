@@ -1,0 +1,1067 @@
+{% ckan_extends %}
+{% block package_basic_fields_custom %}
+{% set user = current_user %}
+
+
+<!-- Creator Fields -->
+<!--                -->
+<!--                -->
+<style>
+  /* Apply green color to all <p> elements */
+  p {
+    color: green;
+  }
+</style>
+<label id="creatorLabel"><strong> Creator Details (Mandatory)</strong></label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br><br>
+<!-- First Name -->
+<label for="field-given_name">*Given Name</label><br>
+<input type="text" id="field-given_name" placeholder="John, Ben .." name="given_name" classes="control-medium">
+<br><br>
+<label for="field-family_name">*Family Name</label><br>
+<input type="text" id="field-family_name" placeholder="Smith, Lee" name="family_name" classes="control-medium">
+<br><br>
+<label for="field-nameIdField">Name Identifier (ORCID)</label><br>
+<input type="text" id="field-nameIdField" placeholder="https://orcid.org/0000-0001-5727-2427" name="nameIdField"
+  classes="control-medium">
+<br><br>
+<label for="field-creatorAffiliationField">*Affiliation</label><br>
+<input type="text" id="field-creatorAffiliationField" placeholder="Affiliations" name="field-creatorAffiliationField"
+  classes="control-medium">
+<br><br>
+<button type="button" onclick="addCreator()">Add Creator</button>
+<button type="button" onclick="clearCreator()">Clear</button>
+<p id='errorMessage'></p>
+<br>
+
+<input type="text" name="author" id="field-author" value="{{ data.author }}" error="errors.author" style="display:none">
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+<input type="text" id="field-nameIdentifier" name="nameIdentifier" style="display:none"
+  value="{{ data.nameIdentifier }}">
+<input type="text" id="field-creatorAffiliation" name="creatorAffiliation" style="display:none"
+  value="{{ data.creatorAffiliation }}">
+<!-- CREATOR Function-->
+
+<script>
+  var nameId = [];
+  var creator = [];
+  var affiliations = [];
+  var displayElement = document.getElementById('displayCreatorField');
+  var fullname = [];
+  document.getElementById('errorMessage').innerHTML = "Creators: " + "{{ data.author }}";
+  console.log("{{ user }}");
+
+  function addCreator() {
+    let fn = document.getElementById('field-given_name').value;
+    let sn = document.getElementById('field-family_name').value;
+    let id = document.getElementById('field-nameIdField').value;
+    let af = document.getElementById('field-creatorAffiliationField').value;
+
+    //Clear the fields
+    try {
+      if (!fn || !sn || !af) {
+        throw new Error('* Fields Should Not Be Empty');
+      }
+    }
+    catch (err) {
+      document.getElementById('errorMessage').innerHTML = err.message;
+      return;
+    }
+    document.getElementById('field-given_name').value = '';
+    document.getElementById('field-family_name').value = '';
+    document.getElementById('field-nameIdField').value = '';
+    document.getElementById('field-creatorAffiliationField').value = '';
+    document.getElementById('errorMessage').innerHTML = '';
+    fullname = fn.concat(' ', sn);
+    creator.push(fullname);
+    if (id) {
+      nameId.push(id);
+    }
+    else {
+      nameId.push("NONE");
+    }
+    affiliations.push(af);
+    document.getElementById('field-author').value = creator;
+    document.getElementById('field-nameIdentifier').value = nameId;
+    document.getElementById('field-creatorAffiliation').value = affiliations;
+    document.getElementById('errorMessage').innerHTML = "Creators Addded :" + creator;
+  }
+
+  function clearCreator() {
+    creator = [];
+    nameId = [];
+    document.getElementById('field-given_name').value = '';
+    document.getElementById('field-family_name').value = '';
+    document.getElementById('field-nameIdField').value = '';
+    document.getElementById('errorMessage').innerHTML = '';
+    document.getElementById('field-author').value = ""
+    document.getElementById('field-nameIdentifier').value = ""
+    document.getElementById('field-creatorAffiliation').value = ""
+
+  }
+</script>
+<!-- PUBLISHER and Publication Year -->
+<!--                                -->
+<!--                                -->
+<label for="field-publisher">*Publisher (Mandatory) </label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br>
+<input type="text" id="field-publisher" name="publisher" value="Rothamsted">
+<!-- Default Publisher value is set to Rothamsted-->
+<script>
+  // Set the default value for the input field
+  document.getElementById("field-publisher").value = "Rothamsted";
+</script><br><br>
+<label for="field-publicationYear">*Publication Year (Mandatory)</label><br>
+<input type="text" id="field-publicationYear" name="publicationYear" placeholder="YYYY"
+  value="{{ data.publicationYear }}"> <br><br>
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+
+<label><strong> Description </strong></label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br><br>
+
+<!-- Abstract Field -->
+<style>
+  textarea {
+    width: 500px;
+    /* Adjust as needed */
+  }
+</style>
+<label for="field-abstract">*Abstract (Mandatory) </label><br>
+<textarea id="field-abstract" name="abstract" placeholder="Enter Abstract" error="errors.abstract"
+  class="control-medium" rows="5">{{ data.abstract }}
+  </textarea><br>
+<!-- Methods Field -->
+<style>
+  textarea {
+    width: 500px;
+    /* Adjust as needed */
+  }
+</style>
+<label for="field-methods">*Methods (Mandatory) </label><br>
+<textarea id="field-methods" name="methods" placeholder="Enter Methods" error="errors.methods" class="control-medium"
+  rows="5">{{ data.methods }}
+  </textarea><br>
+
+<!-- TechnicalInfo Field -->
+
+<style>
+  textarea {
+    width: 500px;
+    /* Adjust as needed */
+  }
+</style>
+<label for="field-technicalInfo">Technical Information (Optional) </label><br>
+<textarea id="field-technicalInfo" name="technicalInfo" error="errors.technicalInfo"
+  placeholder="Enter TEchnical Information" class="control-medium" rows="5">{{ data.technicalInfo }}
+  </textarea><br>
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+<!-- Experiment Code -->
+
+<label for="field-experimentCode">*Select Experiment Code (Optional)</label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br>
+<select id="field-experimentCode" error="errors.experimentCode" name="experimentCode" class="control-medium"
+  onchange="displayCodesField()">
+  <option value="None">N/A</option>
+  <option value="NWFP code">NWFP code</option>
+  <option value="NW experiment code">NW experiment code</option>
+  <option value="Other">Other Code </option>
+</select><br><br>
+
+<div id="codesField" style="display: none;">
+  <label for="field-Codes">*Codes (Mandatory) </label><br>
+  <input type="text" id="field-Codes" name="Codes" value="{{ data.Codes }}" error="errors.Codes"
+    value="{{ data.Codes }}">
+</div>
+
+<script>
+  function selectElement(id, valueToSelect) {
+    let element = document.getElementById(id);
+    element.value = valueToSelect;
+  }
+
+  // Initializattion
+  selectElement('field-experimentCode', "{{ data.experimentCode }}");
+  if ("{{data.Codes}}") {
+    displayCodesField();
+  }
+
+
+  function displayCodesField() {
+    var selectField = document.getElementById('field-experimentCode');
+    var codesField = document.getElementById('codesField');
+    if (selectField.value == 'None') {
+      codesField.style.display = 'none';
+      document.getElementById('field-Codes').value = "N/A";
+    } else {
+      codesField.style.display = 'block';
+      document.getElementById("field-Codes").value = "{{ data.Codes }}";
+    }
+    console.log(document.getElementById("field-experimentCode").value)
+  }
+
+</script><br>
+<hr style="height:2px;border-width:0;color:black;background-color:grey">
+
+
+<!-- Resource Type  -->
+<label for="field-resourceTypeGeneral">*General Resource Type (Mandatory) </label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br>
+<select id="field-resourceTypeGeneral" name="resourceTypeGeneral" class="control-medium"
+  value="{{ data.resourceTypeGeneral }}">
+  <option value="N/A"></option>
+  <option value="Audiovisual">Audiovisual</option>
+  <option value="Book">Book</option>
+  <option value="BookChapter">BookChapter</option>
+  <option value="Collection">Collection</option>
+  <option value="ComputationalNotebook">ComputationalNotebook</option>
+  <option value="ConferencePaper">ConferencePaper</option>
+  <option value="ConferenceProceeding">ConferenceProceeding</option>
+  <option value="DataPaper">DataPaper</option>
+  <option value="Dataset">Dataset</option>
+  <option value="Dissertation">Dissertation</option>
+  <option value="Event">Event</option>
+  <option value="Image">Image</option>
+  <option value="InteractiveResource">InteractiveResource</option>
+  <option value="Instrument">Instrument</option>
+  <option value="Journal">Journal</option>
+  <option value="JournalArticle">JournalArticle</option>
+  <option value="Model">Model</option>
+  <option value="OutputManagementPlan">OutputManagementPlan</option>
+  <option value="PeerReview">PeerReview</option>
+  <option value="PhysicalObject">PhysicalObject</option>
+  <option value="Preprint">Preprint</option>
+  <option value="Report">Report</option>
+  <option value="Service">Service</option>
+  <option value="Software">Software</option>
+  <option value="Sound">Sound</option>
+  <option value="Standard">Standard</option>
+  <option value="StudyRegistration">StudyRegistration</option>
+  <option value="Text">Text</option>
+  <option value="Workflow">Workflow</option>
+  <option value="Other">Other</option>
+</select><br><br>
+<script>
+  selectElement("field-resourceTypeGeneral", "{{ data.resourceTypeGeneral }}")
+</script>
+
+{{ form.input('resourceType', label=_('*ResourceType (Mandatory) '), id='field-resourceType', placeholder=_('More
+Info'), value=data.resourceType, error=errors.resourceType, classes=['control-medium']) }}
+
+
+<!-- Language -->
+<!--          -->
+<!--          -->
+<label for="field-language">*Language (Mandatory) </label><br>
+<select id="field-language" name="language" class="control-medium">
+  <option value="en">English</option>
+  <option value="es">Spanish</option>
+  <option value="de">German</option>
+  <option value="fr">French</option>
+  <option value="el">Greek</option>
+  <option value="hi">Hindi</option>
+  <option value="ru">Russian</option>
+  <option value="zh">Chinese</option>
+  <option value="ja">Japanese</option>
+  <option value="Other">Other</option>
+</select><br><br>
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+<!-- Dates Fields  -->
+<label><strong> Dates </strong></label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br><br>
+
+<!-- Collected Dates -->
+<label for="field-collectionStartDate">Collection Start Date (Optional)</label><br>
+<input type="date" id="field-collectionStartDate" name="collectionStartDate" classes="control-medium" placeholder="DD-MM-YYYY"
+  value="{{ data.collectionStartDate }}"><br><br>
+
+<label for="field-collectionEndDate">Collection End Date (Optional)</label><br>
+<input type="date" id="field-collectionEndDate" name="collectionEndDate" classes="control-medium" placeholder="DD-MM-YYYY"
+  value="{{ data.collectionEndDate }}"><br><br>
+<!-- Created Dates -->
+<label for="field-createdDate">Created Date (Optional)</label><br>
+<input type="date" id="field-createdDate" name="createdDate" classes="control-medium" placeholder="DD-MM-YYYY"
+  value="{{ data.createdDate }}"><br><br>
+<!-- Submitted Dates -->
+<label type="date" for="field-submittedDate">*Submitted Date (Mandatory)</label><br>
+<input id="field-submittedDate" name="submittedDate" classes="control-medium" placeholder="DD-MM-YYYY"
+  value="{{ data.submittedDate }}"><br><br>
+
+<!-- Available Dates -->
+<label for="field-availableDate">Available Date (Optional)</label><br>
+<input type="date" id="field-availableDate" name="availableDate" classes="control-medium" placeholder="DD-MM-YYYY"
+  value="{{ data.availableDate }}"><br><br>
+<!-- Withdrawn Dates -->
+<label for="field-withdrawnDate">Withdrawn Date (Optional)</label><br>
+<input type="date" id="field-withdrawnDate" name="withdrawnDate" classes="control-medium" placeholder="DD-MM-YYYY"
+  value="{{ data.withdrawnDate }}"><br><br>
+
+
+<script>
+  // Script to set submitted date to today's date 
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  let yyyy = today.getFullYear();
+
+  today = yyyy + '-' + mm + '-' + dd;
+
+  document.getElementById('field-submittedDate').value = today;
+</script>
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+<!-- Funder Information -->
+<!--                    -->
+<!--                    -->
+<label><strong> Funder Information (Mandatory)</strong></label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br><br>
+<label for="field-funderNameField">*Funder Name </label><br>
+<input id="field-funderNameField" name="funderNameField" classes="control-medium"><br><br>
+<label for="field-funderIdField">*Funder Identifier</label><br>
+<input id="field-funderIdField" name="funderIdField" classes="control-medium"><br><br>
+<label for="field-funderIdTypeField">*Funder ID Type</label><br>
+<select id="field-funderIdTypeField" name="funderIdTypeField" classes="control-medium">
+  <option value="Crossref Funder ID">Crossref Funder ID </option>
+  <option value="GRID">GRID </option>
+  <option value="ISNI">ISNI</option>
+  <option value="ROR">ROR</option>
+  <option value="Other">Other</option>
+</select><br><br>
+<label for="field-awardNumberField">Award number</label><br>
+<input id="field-awardNumberField" name="awardNumberField" classes="control-medium"><br><br>
+<label for="field-awardURIField">Award URI</label><br>
+<input id="field-awardURIField" name="awardURIField" classes="control-medium"><br><br>
+<label for="field-awardTitleField">*Award Title</label><br>
+<input id="field-awardTitleField" name="awardTitleField" classes="control-medium"><br><br>
+<button type="button" onclick="addFunders()"> Add </button>
+<button type="button" onclick="clearFunders()"> Clear </button>
+<p id=funderInfo> Funders: {{ data.funderName }}</p>
+
+<!-- Metadata fields are hidden -->
+<!--                            -->
+<input id="field-funderName" name="funderName" classes="control-medium" style="display:None;"
+  value="{{ data.funderName }}">
+<input id="field-funderId" name="funderId" classes="control-medium" style="display:None;" value="{{ data.funderId }}">
+<input id="field-funderIdType" name="funderIdType" classes="control-medium" style="display:None;"
+  value="{{ data.funderIdType }}">
+<input id="field-awardNumber" name="awardNumber" classes="control-medium" style="display:None;"
+  value="{{ data.awardNumber }}">
+<input id="field-awardURI" name="awardURI" classes="control-medium" style="display:None;" value="{{ data.awardURI }}">
+<input id="field-awardTitle" name="awardTitle" classes="control-medium" style="display:None;"
+  value="{{ data.awardTitle }}">
+
+
+<script>
+  var fname = [];
+  var fid = [];
+  var fidType = [];
+  var faNum = [];
+  var fUri = [];
+  var aTitle = [];
+
+  function addFunders() {
+    let fn = document.getElementById("field-funderNameField").value;
+    let id = document.getElementById("field-funderIdField").value;
+    let idt = document.getElementById("field-funderIdTypeField").value;
+    let an = document.getElementById("field-awardNumberField").value;
+    let uri = document.getElementById("field-awardURIField").value;
+    let at = document.getElementById("field-awardTitleField").value;
+
+    if (!fn || !id || !idt || !at) {
+      document.getElementById('funderInfo').innerHTML = "* Fields Should Not Be Empty";
+      return;
+    }
+    //  Clear Fields
+    document.getElementById("field-funderNameField").value = '';
+    document.getElementById("field-funderIdField").value = '';
+    document.getElementById("field-funderIdTypeField").value = '';
+    document.getElementById("field-awardNumberField").value = '';
+    document.getElementById("field-awardURIField").value = '';
+    document.getElementById("field-awardTitleField").value = '';
+
+    // Pushing data to metadata fields
+    fname.push(fn);
+    fid.push(id);
+    fidType.push(idt);
+    if (an) {
+      faNum.push(an);
+    }
+    else {
+      faNum.push("NONE");
+    }
+    if (uri) {
+      fUri.push(uri);
+    }
+    else {
+      fUri.push("NONE");
+    }
+    aTitle.push(at);
+    document.getElementById("field-funderName").value = fname;
+    document.getElementById("field-funderId").value = fid;
+    document.getElementById("field-funderIdType").value = fidType;
+    document.getElementById("field-awardNumber").value = faNum;
+    document.getElementById("field-awardURI").value = fUri;
+    document.getElementById("field-awardTitle").value = aTitle;
+    document.getElementById('funderInfo').innerHTML = "Funders: " + fname;
+  }
+
+  function clearFunders() {
+    fname = [];
+    fid = [];
+    fidType = [];
+    faNum = [];
+    fUri = [];
+    aTitle = [];
+    document.getElementById("field-funderName").value = fname;
+    document.getElementById("field-funderId").value = fid;
+    document.getElementById("field-funderIdType").value = fidType;
+    document.getElementById("field-awardNumber").value = faNum;
+    document.getElementById("field-awardURI").value = fUri;
+    document.getElementById("field-awardTitle").value = aTitle;
+    document.getElementById("field-funderNameField").value = fname;
+    document.getElementById("field-funderIdField").value = fid;
+    document.getElementById("field-funderIdTypeField").value = fidType;
+    document.getElementById("field-awardNumberField").value = faNum;
+    document.getElementById("field-awardURIField").value = fUri;
+    document.getElementById("field-awardTitleField").value = aTitle;
+    document.getElementById('funderInfo').innerHTML = "Cleared"
+  }
+
+  // </script>
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+<!-- Contributor Details -->
+<!--                     -->
+<!--                     -->
+<label><strong> Contributors Details (Optional) </strong></label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br><br>
+<label for="field-contributorTypeField">*Contributor Type</label><br>
+<select id="field-contributorTypeField" name="contributorTypeField" class="control-medium">
+  <option value="None"></option>
+  <option value="ContactPerson">ContactPerson</option>
+  <option value="DataCollector">DataCollector</option>
+  <option value="DataCurator">DataCurator</option>
+  <option value="DataManager">DataManager</option>
+  <option value="Distributor">Distributor</option>
+  <option value="Editor">Editor</option>
+  <option value="HostingInstitution">HostingInstitution</option>
+  <option value="Producer">Producer</option>
+  <option value="ProjectLeader">ProjectLeader</option>
+  <option value="ProjectManager">ProjectManager</option>
+  <option value="ProjectMember">ProjectMember</option>
+  <option value="RegistrationAgency">RegistrationAgency</option>
+  <option value="RegistrationAuthority">RegistrationAuthority</option>
+  <option value="RelatedPerson">RelatedPerson</option>
+  <option value="Researcher">Researcher</option>
+  <option value="ResearchGroup">ResearchGroup</option>
+  <option value="RightsHolder">RightsHolder</option>
+  <option value="Sponsor">Sponsor</option>
+  <option value="Supervisor">Supervisor</option>
+  <option value="WorkPackageLeader">WorkPackageLeader</option>
+  <option value="Other">Other</option>
+</select><br><br>
+
+<!-- Input Lines -->
+<label for="field-contributorFirstName">*Given Name</label><br>
+<input type="text" id="field-contributorFirstName" placeholder="John, Ben .." name="contributorFirstName"
+  classes="control-medium">
+<br><br>
+<label for="field-contributorFamilyName">*Family Name</label><br>
+<input type="text" id="field-contributorFamilyName" placeholder="Smith, Lee" name="contributorFamilyName"
+  classes="control-medium">
+<br><br>
+<label for="field-contributorNameId">Name Identifier</label><br>
+<input type="text" id="field-contributorNameId" placeholder="https://orcid.org/0000-0001-5727-2427"
+  name="contributorNameId" classes="control-medium">
+<br>
+<br>
+<label for="field-contributorAffiliationField">*Affiliation</label><br>
+<input type="text" id="field-contributorAffiliationField" placeholder="affiliation"
+  name="field-contributorAffiliationField" classes="control-medium">
+<br><br>
+<button type="button" onclick="addContributor()">Add Contributor</button>
+<button type="button" onclick="clearContributor()">Clear</button>
+<p id='contributorMessage'> Contributors: {{ data.contributorDetails }} </p>
+<br>
+<!-- Metadata Field Lines for Contributors. These are not displayed, Used to store the metadatafields-->
+<input id="field-contributorType" error="errors.contributorType" name="contributorType" classes="control-medium"
+  style="display:none" value="{{ data.contributorType }}">
+<input id="field-contributorDetails" error="errors.contributorDetails" name="contributorDetails"
+  classes="control-medium" style="display:none" value="{{ data.contributorDetails }}">
+<input id="field-contributorId" error="errors.contributorId" name="contributorId" classes="control-medium"
+  style="display:none" value="{{ data.contributorId }}">
+<input id="field-contributorAffiliation" error="errors.contributorAffiliation" name="contributorAffiliation"
+  classes="control-medium" style="display:none" value="{{ data.contributorAffiliation }}">
+
+<!-- Contributor Functions -->
+
+<script>
+  var contriId = [];
+  var contriName = [];
+  var contriType = [];
+  var contriAffiliation = [];
+
+  function addContributor() {
+    let fn = document.getElementById('field-contributorFirstName').value;
+    let sn = document.getElementById('field-contributorFamilyName').value;
+    let id = document.getElementById('field-contributorNameId').value;
+    let ct = document.getElementById('field-contributorTypeField').value;
+    let af = document.getElementById('field-contributorAffiliationField').value;
+    //Clear the fields
+    try {
+      if (!fn || !sn || !ct || !af) {
+        throw new Error('* Fields Cannot Be Empty');
+      }
+    } catch (err) {
+      document.getElementById('contributorMessage').innerHTML = err.message;
+      return;
+    }
+    document.getElementById('field-contributorFirstName').value = '';
+    document.getElementById('field-contributorFamilyName').value = '';
+    document.getElementById('field-contributorNameId').value = '';
+    document.getElementById('field-contributorNameId').value = '';
+    document.getElementById('field-contributorTypeField').value = '';
+    document.getElementById('field-contributorAffiliationField').value = '';
+
+    let fullname = fn.concat(' ', sn);
+
+    contriName.push(fullname);
+
+    if (id) {
+      contriId.push(id);
+    }
+    else {
+      contriId.push("NONE");
+    }
+    contriType.push(ct);
+    contriAffiliation.push(af);
+    document.getElementById('field-contributorDetails').value = contriName;
+    document.getElementById('field-contributorId').value = contriId;
+    document.getElementById('field-contributorType').value = contriType;
+    document.getElementById('field-contributorAffiliation').value = contriAffiliation;
+    document.getElementById('contributorMessage').innerHTML = "Contributors added :" + contriName;
+
+  }
+
+  function clearContributor() {
+    contriId = [];
+    contriName = [];
+    contriType = [];
+    contriAffiliation = [];
+    document.getElementById('field-contributorFirstName').value = '';
+    document.getElementById('field-contributorFamilyName').value = '';
+    document.getElementById('field-contributorNameId').value = '';
+    document.getElementById('contributorMessage').innerHTML = "Cleared !!!";
+    document.getElementById('field-contributorDetails').value = ""
+    document.getElementById('field-contributorId').value = ""
+    document.getElementById('field-contributorType').value = ""
+
+  }
+
+</script>
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+
+<!-- Related Resources Fields -->
+<!--                          -->
+<!--                          -->
+<label><strong>* Related Resources (Optional) </strong></label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br><br>
+<label for="field-relatedIdField"> Select Related ID Type </label><br>
+<select id="field-relatedIdField" name="relatedIdField" class="control-medium">
+  <option value="">N/A</option>
+  <option value="ARK">ARK</option>
+  <option value="arXiv">arXiv</option>
+  <option value="bibcode">bibcode</option>
+  <option value="DOI">DOI</option>
+  <option value="EAN13">EAN13</option>
+  <option value="EISSN">EISSN</option>
+  <option value="Handle">Handle</option>
+  <option value="IGSN">IGSN</option>
+  <option value="ISBN">ISBN</option>
+  <option value="ISSN">ISSN</option>
+  <option value="ISTC">ISTC</option>
+  <option value="LISSN">LISSN</option>
+  <option value="LSID">LSID</option>
+  <option value="PMID">PMID</option>
+  <option value="PURL">PURL</option>
+  <option value="UPC">UPC</option>
+  <option value="URL">URL</option>
+  <option value="URN">URN</option>
+  <option value="w3id">w3id</option>
+</select><br><br>
+
+<label for="field-relationTypeField">* Select Relation Type </label><br>
+<select id="field-relationTypeField" name="relationTypeField" class="control-medium">
+  <option value="">N/A</option>
+  <option value="IsCitedBy">IsCitedBy</option>
+  <option value="Cites">Cites</option>
+  <option value="IsSupplementTo">IsSupplementTo</option>
+  <option value="IsSupplementedBy">IsSupplementedBy</option>
+  <option value="IsContinuedBy">IsContinuedBy</option>
+  <option value="Continues">Continues</option>
+  <option value="IsDescribedBy">IsDescribedBy</option>
+  <option value="Describes">Describes</option>
+  <option value="HasMetadata">HasMetadata</option>
+  <option value="IsMetadataFor">IsMetadataFor</option>
+  <option value="HasVersion">HasVersion</option>
+  <option value="IsVersionOf">IsVersionOf</option>
+  <option value="IsNewVersionOf">IsNewVersionOf</option>
+  <option value="IsPreviousVersionOf">IsPreviousVersionOf</option>
+  <option value="IsPartOf">IsPartOf</option>
+  <option value="HasPart">HasPart</option>
+  <option value="IsPublishedIn">IsPublishedIn</option>
+  <option value="IsReferencedBy">IsReferencedBy</option>
+  <option value="References">References</option>
+  <option value="IsDocumentedBy">IsDocumentedBy</option>
+  <option value="Documents">Documents</option>
+  <option value="IsCompiledBy">IsCompiledBy</option>
+  <option value="Compiles">Compiles</option>
+  <option value="IsVariantFormOf">IsVariantFormOf</option>
+  <option value="IsOriginalFormOf">IsOriginalFormOf</option>
+  <option value="IsIdenticalTo">IsIdenticalTo</option>
+  <option value="IsReviewedBy">IsReviewedBy</option>
+  <option value="Reviews">Reviews</option>
+  <option value="IsDerivedFrom">IsDerivedFrom</option>
+  <option value="IsSourceOf">IsSourceOf</option>
+  <option value="IsRequiredBy">IsRequiredBy</option>
+  <option value="Requires">Requires</option>
+  <option value="IsObsoletedBy">IsObsoletedBy</option>
+  <option value="Obsoletes">Obsoletes</option>
+  <option value="IsCollectedBy">IsCollectedBy</option>
+  <option value="Collects">Collects</option>
+</select><br><br>
+
+
+<label for="field-relatedResourceTypeField">* Select Resource Type </label><br>
+<select id="field-relatedResourceTypeField" name="relatedResourceTypeField" class="control-medium">
+  <option value="">N/A</option>
+  <option value="Audiovisual">Audiovisual</option>
+  <option value="Book">Book</option>
+  <option value="BookChapter">BookChapter</option>
+  <option value="Collection">Collection</option>
+  <option value="ComputationalNotebook">ComputationalNotebook</option>
+  <option value="ConferencePaper">ConferencePaper</option>
+  <option value="ConferenceProceeding">ConferenceProceeding</option>
+  <option value="DataPaper">DataPaper</option>
+  <option value="Dataset">Dataset</option>
+  <option value="Dissertation">Dissertation</option>
+  <option value="Event">Event</option>
+  <option value="Image">Image</option>
+  <option value="InteractiveResource">InteractiveResource</option>
+  <option value="Instrument">Instrument</option>
+  <option value="Journal">Journal</option>
+  <option value="JournalArticle">JournalArticle</option>
+  <option value="Model">Model</option>
+  <option value="OutputManagementPlan">OutputManagementPlan</option>
+  <option value="PeerReview">PeerReview</option>
+  <option value="PhysicalObject">PhysicalObject</option>
+  <option value="Preprint">Preprint</option>
+  <option value="Report">Report</option>
+  <option value="Service">Service</option>
+  <option value="Software">Software</option>
+  <option value="Sound">Sound</option>
+  <option value="Standard">Standard</option>
+  <option value="StudyRegistration">StudyRegistration</option>
+  <option value="Text">Text</option>
+  <option value="Workflow">Workflow</option>
+  <option value="Other">Other</option>
+</select><br><br>
+
+<label for="field-relatedIdentifierField">*Enter the Identifier</label><br>
+<input id="field-relatedIdentifierField" name="relatedIdentifierField" classes="control-medium"><br>
+<button type="button" onclick="addRelated()">Add Resources</button>
+<button type="button" onclick="clearRelated()">Clear</button>
+
+<p id="relatedMessage"> Related Resources: {{ data.relatedIdentifier }} </p>
+<!-- Metadata Fields for Related Resources -->
+<input id="field-relatedIdentifierType" name="relatedIdentifierType" classes="control-medium" style="display:none"
+  value="{{ data.relatedIdentifierType }}">
+<input id="field-relationType" name="relationType" classes="control-medium" style="display:none"
+  value="{{ data.relationType }}">
+<input id="field-relatedResourceType" name="relatedResourceType" classes="control-medium" style="display:none"
+  value="{{ data.relatedResourceType }}">
+<input id="field-relatedIdentifier" name="relatedIdentifier" classes="control-medium" style="display:none"
+  value="{{ data.relatedIdentifier }}">
+
+<script>
+  var relationTypeList = [];
+  var idTypeList = [];
+  var RRTypeList = [];
+  var idList = [];
+
+  function addRelated() {
+    let idt = document.getElementById('field-relatedIdField').value;
+    let relt = document.getElementById('field-relationTypeField').value;
+    let rest = document.getElementById('field-relatedResourceTypeField').value;
+    let rid = document.getElementById('field-relatedIdentifierField').value;
+    if (!idt || !relt || !rest || !rid) {
+      document.getElementById('relatedMessage').innerHTML = "Fill all the fields";
+      return;
+    }
+    relationTypeList.push(relt);
+    idTypeList.push(idt);
+    RRTypeList.push(rest);
+    idList.push(rid);
+    document.getElementById('field-relatedIdentifierField').value = '';
+    document.getElementById('field-relatedIdentifierType').value = idTypeList;
+    document.getElementById('field-relationType').value = relationTypeList;
+    document.getElementById('field-relatedResourceType').value = RRTypeList
+    document.getElementById('field-relatedIdentifier').value = idList;
+    document.getElementById('relatedMessage').innerHTML = "IDs Added: " + idList;
+  }
+
+  function clearRelated() {
+    relationTypeList = [];
+    idTypeList = [];
+    RRTypeList = [];
+    idList = [];
+    document.getElementById('field-relatedIdentifierType').value = idTypeList;
+    document.getElementById('field-relationType').value = relationTypeList;
+    document.getElementById('field-relatedResourceType').value = RRTypeList
+    document.getElementById('field-relatedIdentifier').value = idList;
+    document.getElementById('relatedMessage').innerHTML = "Cleared";
+
+  }
+</script>
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+
+<!-- Associated Research Notebooks Field -->
+<!--                                     -->
+<!--                                     -->
+<label for="field-associatedNotesField">Associated Research Notebooks (Optional) </label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br>
+<input type="text" id="field-associatedNoteField" name="associatedNoteField" style="width: 500px;"> <br>
+<button type="button" onclick="addNoteBooks()"> Add </button>
+<button type="button" onclick="clearNoteBooks()">Clear</button>
+<p id="notebookAdded"> Associated Notes: {{ data.associatedNote }} </p>
+<input type="text" id="field-associatedNote" name="associatedNote" style="display:none;"
+  value="{{ data.associatedNote }}">
+<script>
+  var notes = [];
+
+  function addNoteBooks() {
+    let notebook = document.getElementById("field-associatedNoteField").value;
+    notes.push(notebook);
+    document.getElementById("field-associatedNote").value = notes;
+    document.getElementById('notebookAdded').innerHTML = "Associated Notebooks: " + notes;
+    document.getElementById("field-associatedNoteField").value = "";
+  }
+
+  function clearNoteBooks() {
+
+    notes = [];
+    document.getElementById("field-associatedNote").value = notes;
+    document.getElementById('notebookAdded').innerHTML = "Cleared !!!";
+    document.getElementById("field-associatedNoteField").value = "";
+  }
+
+</script>
+
+
+<!-- Data Location Field -->
+<!--                     -->
+<!--                     -->
+
+<label for="field-dataLocationField"> *Data Locations (Mandatory)</label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br>
+<input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
+<button type="button" onclick="addDataLocation()"> Add </button>
+<button type="button" onclick="clearDataLocation()">Clear</button>
+<p id="dataLocationAdded"> Data Locations: {{ data.dataLocation }} </p>
+<input type="text" id="field-dataLocation" name="dataLocation" style="display:none;" value="{{ data.dataLocation }}">
+
+<script>
+  var dataLoc = [];
+
+  function addDataLocation() {
+    let loc = document.getElementById('field-dataLocationField').value;
+    dataLoc.push(loc);
+    document.getElementById('field-dataLocation').value = dataLoc;
+    document.getElementById('dataLocationAdded').innerHTML = "Data Locations Added:" + dataLoc
+    document.getElementById('field-dataLocationField').value = "";
+  }
+
+  function clearDataLocation() {
+
+    dataLoc = [];
+    document.getElementById('field-dataLocation').value = dataLoc;
+    document.getElementById('field-dataLocationField').value = "";
+    document.getElementById('dataLocationAdded').innerHTML = "Cleared !!!";
+
+
+  }
+
+</script>
+
+
+<!-- Responsible Person Field -->
+<!--                          -->
+<!--                          -->
+<label for="field-responsiblePerson">*Responsible Person (Mandatory)</label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br>
+<input id="field-responsiblePerson" name="responsiblePerson" style="width: 500px;"
+  value="{{ data.responsiblePerson }}"><br><br>
+
+
+<!-- Research Infrastructure Used -->
+<!--                              -->
+<!--                              -->
+<label for="field-infraUsedField"> Research Infrastructure Used (Select All)</label><br>
+<select id="field-infraUsedField" name="infraUsedField" onchange="addInfraUsed()">
+  <option value=""></option>
+  <option value="LTEs">LTEs</option>
+  <option value="LSRE">LSRE</option>
+  <option value="NWFP">NWFP</option>
+  <option value="RIS">RIS</option>
+  <option value="URTO">URTO</option>
+  <option value="Rowden">Rowden</option>
+</select>
+
+<input type="text" id="field-infraUsed" name="infraUsed" style="display:None;" value="{{ data.infraUsed }}">
+
+<p id="infraUsedAdded">Research Infra Used: {{ data.infraUsed }}</p>
+<button type="button" onclick="clearInfra()">Clear</button>
+<script>
+  var infra = [];
+  function addInfraUsed() {
+    let inf = document.getElementById('field-infraUsedField').value;
+    infra.push(inf);
+    document.getElementById('infraUsedAdded').innerHTML = "Used Infrastructure Selected: " + infra;
+    document.getElementById('field-infraUsed').value = infra;
+  }
+
+  function clearInfra() {
+    infra = [];
+    document.getElementById('infraUsedAdded').innerHTML = "Cleared !!!"
+    document.getElementById('field-infraUsed').value = infra;
+    document.getElementById("field-infraUsedField").value = "";
+
+  }
+</script>
+<br><br>
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+<!-- Geo location fields -->
+<!--                     -->
+<!--                     -->
+<label><strong> Geolocation Point (Optional)</strong></label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br><br>
+
+<label for="field-geoLocation"> Enter The Geolocation (Name of the place) </label>
+<input type="text" id="field-geoLocation" name="geoLocation" style="width:auto" value="{{ data.geoLocation }}">
+
+<!--      World Map         -->
+<!-- Load Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+  crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+  integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+  crossorigin=""></script>
+<br><br>
+<label for="'mapid">Select the location in the map to fill Latitude and Longitude Automatically</label><br>
+<div id="mapid"></div>
+<br><br>
+<label for="field-geoLatitude"> Latitude </label><br>
+<input type="text" id="field-geoLatitude" name="geoLatitude" value="{{ data.geoLatitude }}"><br><br>
+<label for="field-geoLongitude"> Longitude </label><br>
+<input type="text" id="field-geoLongitude" name="geoLongitude" value="{{ data.geoLongitude }}"><br><br>
+<style>
+  #mapid {
+    height: 400px;
+  }
+</style>
+
+<script>
+  var latitude;
+  var logitude;
+  var mymap = L
+    .map('mapid')
+    .setView([50, -0.1], 4);
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+    maxZoom: 100,
+  }).addTo(mymap);
+  mymap.on('click', function (e) {
+    latitude = e.latlng.lat;
+    longitude = e.latlng.lng;
+    document.getElementById('field-geoLatitude').value = latitude.toFixed(2);
+    document.getElementById('field-geoLongitude').value = longitude.toFixed(2);
+  });
+</script>
+
+<!-- Add 2 buttons to this map such that when clicked, the map will zoom to Harpenden UK and North Wyke UK -->
+<script>
+  // Add buttons to zoom to specific locations
+  var harpendenButton = L.control({ position: 'topright' });
+  harpendenButton.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+    div.innerHTML = '<button type="button" onclick="zoomToHarpenden()">Zoom to Harpenden</button>';
+    return div;
+  };
+  harpendenButton.addTo(mymap);
+
+  var northWykeButton = L.control({ position: 'topright' });
+  northWykeButton.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+    div.innerHTML = '<button type="button" onclick="zoomToNorthWyke()">Zoom to North Wyke</button>';
+    return div;
+  };
+  northWykeButton.addTo(mymap);
+
+  // Functions to zoom to specific locations
+  function zoomToHarpenden() {
+    mymap.setView([51.8142, -0.3589], 14);
+  }
+
+  function zoomToNorthWyke() {
+    mymap.setView([50.7873, -3.9267], 16);
+  }
+</script>
+
+
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
+<!-- Geo Location Box -->
+<!--                  -->
+<label><strong> Geolocation Box (Optional)</strong></label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br><br>
+
+<label for="field-geoLowLeftLatitude"> Geo Latitude Lower Left Corner </label><br>
+<input type="text" id="field-geoLowLeftLatitude" name="geoLowLeftLatitude"
+  value="{{ data.geoLowLeftLatitude }}"><br><br>
+
+<label for="field-geoLowLeftLongitude"> Geo Longitude Lower Left Corner </label><br>
+<input type="text" id="field-geoLowLeftLongitude" name="geoLowLeftLongitude"
+  value="{{ data.geoLowLeftLongitude }}"><br><br>
+
+<label for="field-geoTopRightLatitude"> Geo Latitude Top Right Corner </label><br>
+<input type="text" id="field-geoTopRightLatitude" name="geoTopRightLatitude"
+  value="{{ data.geoTopRightLatitude }}"><br><br>
+
+<label for="field-geoTopRightLongitude"> Geo Longitude Top Right Corner </label><br>
+<input type="text" id="field-geoTopRightLongitude" name="geoTopRightLongitude"
+  value="{{ data.geoTopRightLongitude }}"><br><br>
+<hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
+<!-- Subject Fields -->
+<!--                 -->
+<!--                 -->
+<label><strong> Subject Details (Optional)</strong></label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br><br>
+
+
+<label for="field-subjectSchemeField">*Subject Scheme</label><br>
+<input type="text" id="field-subjectSchemeField" name="subjectSchemeField"><br><br>
+
+<label for="field-subjectUriField">*Subject URI</label><br>
+<input type="text" id="field-subjectUriField" name="subjectUriField"><br><br>
+
+<label for="field-valueUriField">*Value URI</label><br>
+<input type="text" id="field-valueUriField" name="valueUriField"><br><br>
+
+<label for="field-classificationCodeField">*Classification Code</label><br>
+<input type="text" id="field-classificationCodeField" name="clasificationCodeField"><br><br>
+
+<label for="field-subjectField">*Subject</label><br>
+<input type="text" id="field-subjectField" name="subjectField"><br><br>
+
+<button type="button" onclick="addSubject()">Add</button>
+<button type="button" onclick="clearSubject()">Clear</button>
+<p id="subjectMessage">Subjects: {{ data.subject }}</p>
+
+<!-- Metadata Fields -->
+<input type="text" id="field-subjectScheme" name="subjectScheme" style="display: none;"
+  value="{{ data.subjectScheme }}">
+<input type="text" id="field-subjectUri" name="subjectUri" style="display: none;" value="{{ data.subjectUri }}">
+<input type="text" id="field-valueUri" name="valueUri" style="display: none;" value="{{ data.valueUri }}">
+<input type="text" id="field-classificationCode" name="clasificationCode" style="display: none;"
+  value="{{ data.classificationCode }}">
+<input type="text" id="field-subject" name="subject" style="display: none;" value="{{ data.subject }}">
+
+<!-- Subject Functions -->
+<!--                   -->
+<!--                   -->
+
+<script>
+  var subScheme = [];
+  var subUri = [];
+  var valUri = [];
+  var classCode = [];
+  var sub = [];
+
+  function addSubject() {
+    let ss = document.getElementById('field-subjectSchemeField').value;
+    let su = document.getElementById('field-subjectUriField').value;
+    let vu = document.getElementById('field-valueUriField').value;
+    let cc = document.getElementById('field-classificationCodeField').value;
+    let s = document.getElementById('field-subjectField').value;
+    if (!ss || !su || !vu || !cc || !s) {
+      document.getElementById('subjectMessage').innerHTML = "* fields should now be empty";
+      return;
+    }
+    // Push to Array
+    subScheme.push(ss);
+    subUri.push(su);
+    valUri.push(vu);
+    classCode.push(cc);
+    sub.push(s);
+    // clear Fields
+    document.getElementById('field-subjectSchemeField').value = '';
+    document.getElementById('field-subjectUriField').value = '';
+    document.getElementById('field-valueUriField').value = '';
+    document.getElementById('field-classificationCodeField').value = '';
+    document.getElementById('field-subjectField').value = '';
+    // Push to Metadatafields
+    document.getElementById('field-subjectScheme').value = subScheme;
+    document.getElementById('field-subjectUri').value = subUri;
+    document.getElementById('field-valueUri').value = valUri;
+    document.getElementById('field-classificationCode').value = classCode;
+    document.getElementById('field-subject').value = sub;
+    // Print Message
+    document.getElementById('subjectMessage').innerHTML = "Subjects Added:" + sub;
+  }
+
+  function clearSubject() {
+    subScheme = [];
+    subUri = [];
+    valUri = [];
+    classCode = [];
+    sub = [];
+    document.getElementById('field-subjectScheme').value = subScheme;
+    document.getElementById('field-subjectUri').value = subUri;
+    document.getElementById('field-valueUri').value = valUri;
+    document.getElementById('field-classificationCode').value = classCode;
+    document.getElementById('field-subject').value = sub;
+    document.getElementById('field-subjectSchemeField').value = '';
+    document.getElementById('field-subjectUriField').value = '';
+    document.getElementById('field-valueUriField').value = '';
+    document.getElementById('field-classificationCodeField').value = '';
+    document.getElementById('field-subjectField').value = '';
+    document.getElementById('subjectMessage').innerHTML = "Cleared !!!";
+
+  }
+</script>
+
+<!-- <input type="text" id="field-test" name="test">
+<script>
+  var cuser = "{{ user.name }}"
+  console.log("{{ user.id }}")
+</script> -->
+
+{% endblock %}
