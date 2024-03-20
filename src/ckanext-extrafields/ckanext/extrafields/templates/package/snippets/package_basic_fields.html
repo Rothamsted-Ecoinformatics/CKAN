@@ -8,8 +8,8 @@
 <!--                -->
 <style>
   /* Apply green color to all <p> elements */
-  p {
-    color: green;
+  pre {
+    color: rgb(0, 0, 0);
   }
 </style>
 <label id="creatorLabel"><strong> Creator Details (Mandatory)</strong></label>
@@ -23,7 +23,6 @@
 <label for="field-given_name">*Given Name</label><br>
 <input type="text" id="field-given_name" placeholder="John, Ben .." name="given_name" classes="control-medium">
 <br><br>
-
 <label for="field-nameIdField">Name Identifier (ORCID)</label><br>
 <input type="text" id="field-nameIdField" placeholder="https://orcid.org/0000-0001-5727-2427" name="nameIdField"
   classes="control-medium">
@@ -33,8 +32,10 @@
   classes="control-medium">
 <br><br>
 <button type="button" onclick="addCreator()">Add Creator</button>
-<button type="button" onclick="clearCreator()">Clear</button>
-<p id='errorMessage'></p>
+<button type="button" onclick="clearCreator()">Clear All</button>
+<button type="button" onclick="popCreator()">Clear Last Entry</button>
+
+<pre id='errorMessage'></pre>
 <br>
 
 <input type="text" name="author" id="field-author" value="{{ data.author }}" error="errors.author" style="display:none">
@@ -49,11 +50,9 @@
   var nameId = [];
   var creator = [];
   var affiliations = [];
-  var displayElement = document.getElementById('displayCreatorField');
   var fullname = [];
   document.getElementById('errorMessage').innerHTML = "Creators: " + "{{ data.author }}";
   console.log("{{user.sysadmin}}");
-
   function addCreator() {
     let fn = document.getElementById('field-given_name').value;
     let sn = document.getElementById('field-family_name').value;
@@ -70,11 +69,7 @@
       document.getElementById('errorMessage').innerHTML = err.message;
       return;
     }
-    document.getElementById('field-given_name').value = '';
-    document.getElementById('field-family_name').value = '';
-    document.getElementById('field-nameIdField').value = '';
-    document.getElementById('field-creatorAffiliationField').value = '';
-    document.getElementById('errorMessage').innerHTML = '';
+    clearCreatorInputFields();
     fullname = fn.concat(' ', sn);
     creator.push(fullname);
     if (id) {
@@ -87,7 +82,8 @@
     document.getElementById('field-author').value = creator;
     document.getElementById('field-nameIdentifier').value = nameId;
     document.getElementById('field-creatorAffiliation').value = affiliations;
-    document.getElementById('errorMessage').innerHTML = "Creators Addded :" + creator;
+    // document.getElementById('errorMessage').innerHTML = "Creators Addded :" + creator;
+    displayCreators();
   }
 
   function clearCreator() {
@@ -101,6 +97,33 @@
     document.getElementById('field-nameIdentifier').value = ""
     document.getElementById('field-creatorAffiliation').value = ""
 
+  }
+  function clearCreatorInputFields() {
+    document.getElementById('field-given_name').value = '';
+    document.getElementById('field-family_name').value = '';
+    document.getElementById('field-nameIdField').value = '';
+    document.getElementById('field-creatorAffiliationField').value = '';
+    document.getElementById('errorMessage').innerHTML = '';
+  }
+  function displayCreators() {
+    let p = document.getElementById('errorMessage');
+    p.innerHTML = "Creators Addded :";
+    for (let i = 0; i < creator.length; i++) {
+      let c = document.createTextNode(`Creator ${i + 1}: ${creator[i]}, ID: ${nameId[i]}, Organization: ${affiliations[i]}`);
+      p.append("\n");
+      p.append(c);
+
+    }
+
+  }
+  function popCreator() {
+    creator.pop();
+    nameId.pop();
+    affiliations.pop();
+    document.getElementById('field-author').value = creator;
+    document.getElementById('field-nameIdentifier').value = nameId;
+    document.getElementById('field-creatorAffiliation').value = affiliations;
+    displayCreators();
   }
 </script>
 <!-- PUBLISHER and Publication Year -->
@@ -259,12 +282,12 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 
 <!-- Collected Dates -->
 <label for="field-collectionStartDate">Collection Start Date (Optional)</label><br>
-<input type="date" id="field-collectionStartDate" name="collectionStartDate" classes="control-medium" placeholder="DD-MM-YYYY"
-  value="{{ data.collectionStartDate }}"><br><br>
+<input type="date" id="field-collectionStartDate" name="collectionStartDate" classes="control-medium"
+  placeholder="DD-MM-YYYY" value="{{ data.collectionStartDate }}"><br><br>
 
 <label for="field-collectionEndDate">Collection End Date (Optional)</label><br>
-<input type="date" id="field-collectionEndDate" name="collectionEndDate" classes="control-medium" placeholder="DD-MM-YYYY"
-  value="{{ data.collectionEndDate }}"><br><br>
+<input type="date" id="field-collectionEndDate" name="collectionEndDate" classes="control-medium"
+  placeholder="DD-MM-YYYY" value="{{ data.collectionEndDate }}"><br><br>
 <!-- Created Dates -->
 <label for="field-createdDate">Created Date (Optional)</label><br>
 <input type="date" id="field-createdDate" name="createdDate" classes="control-medium" placeholder="DD-MM-YYYY"
@@ -323,7 +346,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <input id="field-awardTitleField" name="awardTitleField" classes="control-medium"><br><br>
 <button type="button" onclick="addFunders()"> Add </button>
 <button type="button" onclick="clearFunders()"> Clear </button>
-<p id=funderInfo> Funders: {{ data.funderName }}</p>
+<pre id=funderInfo> Funders: {{ data.funderName }}</pre>
 
 <!-- Metadata fields are hidden -->
 <!--                            -->
@@ -471,8 +494,9 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   name="field-contributorAffiliationField" classes="control-medium">
 <br><br>
 <button type="button" onclick="addContributor()">Add Contributor</button>
-<button type="button" onclick="clearContributor()">Clear</button>
-<p id='contributorMessage'> Contributors: {{ data.contributorDetails }} </p>
+<button type="button" onclick="clearContributor()">Clear All</button>
+<button type="button" onclick="popContributor()">Clear Last Entry</button>
+<pre id='contributorMessage'> Contributors: {{ data.contributorDetails }} </pre>
 <br>
 <!-- Metadata Field Lines for Contributors. These are not displayed, Used to store the metadatafields-->
 <input id="field-contributorType" error="errors.contributorType" name="contributorType" classes="control-medium"
@@ -530,8 +554,8 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById('field-contributorId').value = contriId;
     document.getElementById('field-contributorType').value = contriType;
     document.getElementById('field-contributorAffiliation').value = contriAffiliation;
-    document.getElementById('contributorMessage').innerHTML = "Contributors added :" + contriName;
-
+    // document.getElementById('contributorMessage').innerHTML = "Contributors added :" + contriName;
+    displayContributors();
   }
 
   function clearContributor() {
@@ -548,7 +572,26 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById('field-contributorType').value = ""
 
   }
-
+  function displayContributors() {
+    let p = document.getElementById('contributorMessage');
+    p.innerHTML = "Creators Added";
+    for (let i = 0; i < contriName.length; i++) {
+      let c = document.createTextNode(`Contributor ${i + 1}: Type ${contriType[i]}, Name: ${contriName[i]}, Organization: ${contriAffiliation[i]} ID: ${contriId[i]}`);
+      p.append("\n");
+      p.append(c);
+    }
+  }
+  function popContributor() {
+    contriId.pop();
+    contriName.pop();
+    contriType.pop();
+    contriAffiliation.pop();
+    document.getElementById('field-contributorDetails').value = contriName;
+    document.getElementById('field-contributorId').value = contriId;
+    document.getElementById('field-contributorType').value = contriType;
+    document.getElementById('field-contributorAffiliation').value = contriAffiliation;
+    displayContributors();
+  }
 </script>
 <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
@@ -665,7 +708,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <button type="button" onclick="addRelated()">Add Resources</button>
 <button type="button" onclick="clearRelated()">Clear</button>
 
-<p id="relatedMessage"> Related Resources: {{ data.relatedIdentifier }} </p>
+<pre id="relatedMessage"> Related Resources: {{ data.relatedIdentifier }} </pre>
 <!-- Metadata Fields for Related Resources -->
 <input id="field-relatedIdentifierType" name="relatedIdentifierType" classes="control-medium" style="display:none"
   value="{{ data.relatedIdentifierType }}">
@@ -728,7 +771,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <input type="text" id="field-associatedNoteField" name="associatedNoteField" style="width: 500px;"> <br>
 <button type="button" onclick="addNoteBooks()"> Add </button>
 <button type="button" onclick="clearNoteBooks()">Clear</button>
-<p id="notebookAdded"> Associated Notes: {{ data.associatedNote }} </p>
+<pre id="notebookAdded"> Associated Notes: {{ data.associatedNote }} </pre>
 <input type="text" id="field-associatedNote" name="associatedNote" style="display:none;"
   value="{{ data.associatedNote }}">
 <script>
@@ -763,7 +806,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
 <button type="button" onclick="addDataLocation()"> Add </button>
 <button type="button" onclick="clearDataLocation()">Clear</button>
-<p id="dataLocationAdded"> Data Locations: {{ data.dataLocation }} </p>
+<pre id="dataLocationAdded"> Data Locations: {{ data.dataLocation }} </pre>
 <input type="text" id="field-dataLocation" name="dataLocation" style="display:none;" value="{{ data.dataLocation }}">
 
 <script>
@@ -816,7 +859,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 
 <input type="text" id="field-infraUsed" name="infraUsed" style="display:None;" value="{{ data.infraUsed }}">
 
-<p id="infraUsedAdded">Research Infra Used: {{ data.infraUsed }}</p>
+<pre id="infraUsedAdded">Research Infra Used: {{ data.infraUsed }}</pre>
 <button type="button" onclick="clearInfra()">Clear</button>
 <script>
   var infra = [];
@@ -966,7 +1009,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 
 <button type="button" onclick="addSubject()">Add</button>
 <button type="button" onclick="clearSubject()">Clear</button>
-<p id="subjectMessage">Subjects: {{ data.subject }}</p>
+<pre id="subjectMessage">Subjects: {{ data.subject }}</pre>
 
 <!-- Metadata Fields -->
 <input type="text" id="field-subjectScheme" name="subjectScheme" style="display: none;"
@@ -1046,8 +1089,10 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 
 <select id="field-license" name="license" classes="control-medium">
   <option value="N/A"></option>
-  <option value="Creative Commons Attribution Licence (CC BY 4.0)">Creative Commons Attribution Licence (CC BY 4.0)</option>
-  <option value="Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)">Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)</option>
+  <option value="Creative Commons Attribution Licence (CC BY 4.0)">Creative Commons Attribution Licence (CC BY 4.0)
+  </option>
+  <option value="Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)">Creative Commons Attribution Non-Commercial
+    (CC BY-NC 4.0)</option>
   <option value="Open Government Licence (OGL)">Open Government Licence (OGL)</option>
 </select><br><br>
 
