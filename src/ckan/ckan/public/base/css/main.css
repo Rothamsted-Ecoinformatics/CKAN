@@ -11202,7 +11202,7 @@ a.tag:hover {
 
 .box, .wrapper {
   background-color: #fff;
-  border: 1px solid #ccc;
+  border: 5px solid #fed316;
   border-radius: 4px;
   box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
 }
@@ -11443,7 +11443,7 @@ a.tag:hover {
   }
 }
 .media-view:hover, .media-view.hovered {
-  border-color: #005d7a;
+  border-color: #7a997a;
   box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
 }
 .media-view span {
@@ -11570,7 +11570,7 @@ a.tag:hover {
 .module-narrow .nav-item > a:hover,
 .module-narrow .nav-aside li a:hover {
   text-decoration: none;
-  background-color: #eeeeee;
+  background-color: #7a997a;
 }
 .module-narrow .nav-item > a .badge,
 .module-narrow .nav-aside li a .badge {
@@ -13233,7 +13233,7 @@ td.diff_header {
 
 @media (min-width: 576px) {
   .hero {
-    background: url("../../../base/images/wheat-tile.png");
+    background: url("../../../base/images/field.png");
   }
 }
 .hero:after {
@@ -13359,21 +13359,23 @@ td.diff_header {
 }
 
 .homepage .hero {
-  background: url("../../../base/images/wheat-tile.png");
+  background: url("../../../base/images/field.png");
   padding: 20px 0;
 }
 .homepage .module-promotion {
   background: #fff;
-  padding: 30px;
+  padding:  20px;
+  border: 5px solid #fed316;
+
 }
 .homepage .module-search {
   color: #fff;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 5px solid #fed316;
 }
 .homepage .module-search .search-form {
   border-radius: 0.25rem;
-  background-color: #005d7a;
+  background-color: #7a997a;
   padding: 30px 20px;
 }
 .homepage .module-search .search-form input {
@@ -13394,7 +13396,7 @@ td.diff_header {
 .homepage .module-search .tags {
   margin-top: -5px;
   padding: 5px 10px 10px 10px;
-  background-color: #003647;
+  background-color: #0e6633;
 }
 .homepage .module-search .tags h3, .homepage .module-search .tags .h3 {
   font-size: 0.875rem;
@@ -13411,14 +13413,20 @@ td.diff_header {
 .homepage .module-stats {
   margin-top: 1rem;
   color: #444;
+  border: 5px solid #fed316;
+
 }
 .homepage .module-stats .card {
   padding: 1.5rem 1.75rem;
+
 }
 .homepage .module-stats .card ul {
   margin: 0;
   list-style: none;
-  padding: 0;
+  padding: 10;
+  border: 5px solid #fed316;
+
+
 }
 .homepage .module-stats .card ul::after {
   display: block;
@@ -13443,10 +13451,13 @@ td.diff_header {
 }
 .homepage .module-feeds {
   padding: 2rem 0;
-  background: #eee url("../../../base/images/bg.png");
+  background:  #7a997a;
+  /* #eee url("../../../base/images/bg.png"); */
 }
 .homepage .module-feeds .module-stats {
   margin-top: 0;
+  border: 5px solid #fed316;
+
 }
 
 @media (max-width: 767.98px) {
@@ -13456,16 +13467,20 @@ td.diff_header {
   .homepage .module-stats {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+    border: 5px solid #fed316;
+
   }
   .homepage .module-feeds .card {
     margin-top: 1rem;
     margin-bottom: 1rem;
+    border: 5px solid #fed316;
+
   }
 }
 .account-masthead {
   min-height: 30px;
   color: #fff;
-  background: #003647 url("../../../base/images/bg.png");
+  background: #0e6633 url("../../../base/images/bg.png");
 }
 .account-masthead .account {
   float: right;
@@ -13530,7 +13545,7 @@ td.diff_header {
 }
 
 .masthead {
-  background: #005d7a url("../../../base/images/bg.png");
+  background: #7a997a url("../../../base/images/bg.png");
 }
 .masthead .debug {
   position: fixed;
@@ -13539,7 +13554,7 @@ td.diff_header {
   color: #fff;
   background-color: #206b82;
   padding: 2px 4px;
-  border: #fff 1px solid;
+  border: #fed316 5px solid;
   border-left: 0px;
   z-index: 9;
 }
@@ -13584,7 +13599,7 @@ td.diff_header {
 }
 .masthead .main-navbar ul li:hover a, .masthead .main-navbar ul li:focus a, .masthead .main-navbar ul li.active a {
   border-radius: 0.3rem;
-  background-color: #003647;
+  background-color: #0e6633;
 }
 .masthead .main-navbar .site-search button {
   display: flex;
@@ -13625,7 +13640,7 @@ td.diff_header {
   }
 }
 .site-footer {
-  background: #005d7a url("../../../base/images/bg.png");
+  background: #0e6633 url("../../../base/images/bg.png");
   padding: 20px 0;
 }
 .site-footer label,

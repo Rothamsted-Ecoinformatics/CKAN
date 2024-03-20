@@ -304,4 +304,11 @@
   <td class="dataset-details">{{ pkg_dict.license }}</td>
 </tr>
 {% endif %}
+
+{% if pkg_dict.version %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Version") }}</th>
+  <td class="dataset-details">{{ pkg_dict.version }}</td>
+</tr>
+{% endif %}
 {% endblock %}

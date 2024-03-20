@@ -30,12 +30,7 @@
     {% snippet 'package/snippets/info.html', pkg=pkg %}
   {% endblock %}
 
-  {% block package_organization %}
-    {% if pkg.organization %}
-      {% set org = h.get_organization(pkg.organization.id) %}
-      {% snippet "snippets/organization.html", organization=org, has_context_title=true %}
-    {% endif %}
-  {% endblock %}
+
 
   {% block package_social %}
     {% snippet "snippets/social.html" %}
@@ -46,3 +41,4 @@
   {% endblock %}
 
 {% endblock %}
+
