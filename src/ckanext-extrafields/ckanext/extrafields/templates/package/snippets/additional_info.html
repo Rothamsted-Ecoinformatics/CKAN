@@ -2,6 +2,7 @@
 
 {% block extras %}
 {% set user = current_user %}
+{% set flag = "true" %}
 
 <!-- {% if pkg_dict.author %}
 <tr>
@@ -11,76 +12,92 @@
 {% endif %} -->
 {% if pkg_dict.nameIdentifier %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Name Identifier (ORCID)") }}</th>
+  <th scope="row" class="dataset-label">{{ _("Author ORCID") }}</th>
   <td class="dataset-details">{{ pkg_dict.nameIdentifier }}</td>
 </tr>
 {% endif %}
 {% if pkg_dict.creatorAffiliation %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Creator Affiliation") }}</th>
+  <th scope="row" class="dataset-label">{{ _("Author Affiliation") }}</th>
   <td class="dataset-details">{{ pkg_dict.creatorAffiliation }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.publisher %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Publisher") }}</th>
-  <td class="dataset-details">{{ pkg_dict.publisher }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.publicationYear %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("PublicationYear") }}</th>
-  <td class="dataset-details">{{ pkg_dict.publicationYear }}</td>
-</tr>
-{% endif %}
+
 {% if pkg_dict.abstract %}
 <tr>
   <th scope="row" class="dataset-label">{{ _("Abstract") }}</th>
   <td class="dataset-details">{{ pkg_dict.abstract }}</td>
 </tr>
 {% endif %}
+
 {% if pkg_dict.methods %}
 <tr>
   <th scope="row" class="dataset-label">{{ _("Methods") }}</th>
   <td class="dataset-details">{{ pkg_dict.methods }}</td>
 </tr>
 {% endif %}
+
 {% if pkg_dict.technicalInfo %}
 <tr>
   <th scope="row" class="dataset-label">{{ _("Technical Information") }}</th>
   <td class="dataset-details">{{ pkg_dict.technicalInfo }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.experimentCode %}
+
+<!-- Spatial Information -->
 <tr>
-  <th scope="row" class="dataset-label">{{ _("RRES Farms Field Experiment Code") }}</th>
-  <td class="dataset-details">{{ pkg_dict.experimentCode }}</td>
+   <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;" >SPATIAL INFROMATION</th>
+</tr>
+
+{% if pkg_dict.geoLocation %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Location") }}</th>
+  <td class="dataset-details">{{ pkg_dict.geoLocation }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.Codes %}
+{% if pkg_dict.geoLatitude %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Codes") }}</th>
-  <td class="dataset-details">{{ pkg_dict.Codes }}</td>
+  <th scope="row" class="dataset-label">{{ _("Latitude") }}</th>
+  <td class="dataset-details">{{ pkg_dict.geoLatitude }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.resourceTypeGeneral %}
+{% if pkg_dict.geoLongitude %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("General Resource Type") }}</th>
-  <td class="dataset-details">{{ pkg_dict.resourceTypeGeneral }}</td>
+  <th scope="row" class="dataset-label">{{ _("Longitude") }}</th>
+  <td class="dataset-details">{{ pkg_dict.geoLongitude }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.resourceType %}
+
+{% if pkg_dict.geoLowLeftLatitude %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Resource Type") }}</th>
-  <td class="dataset-details">{{ pkg_dict.resourceType }}</td>
+  <th scope="row" class="dataset-label">{{ _("Geo Latitude Low Left Corner") }}</th>
+  <td class="dataset-details">{{ pkg_dict.geoLowLeftLatitude }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.language %}
+{% if pkg_dict.geoLowLeftLongitude %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Language") }}</th>
-  <td class="dataset-details">{{ pkg_dict.language }}</td>
+  <th scope="row" class="dataset-label">{{ _("Geo Longitude Low Left Corner") }}</th>
+  <td class="dataset-details">{{ pkg_dict.geoLowLeftLongitude }}</td>
 </tr>
 {% endif %}
+{% if pkg_dict.geoTopRightLatitude %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Geo Latitude Top Right Corner") }}</th>
+  <td class="dataset-details">{{ pkg_dict.geoTopRightLatitude }}</td>
+</tr>
+{% endif %}
+{% if pkg_dict.geoTopRightLongitude %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Geo Longitude Top Right Corner") }}</th>
+  <td class="dataset-details">{{ pkg_dict.geoTopRightLongitude }}</td>
+</tr>
+{% endif %}
+<!-- Collection Date -->
+
+<tr>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">COLLECTION DATES</th>
+</tr>
+
 {% if pkg_dict.collectionStartDate %}
 <tr>
   <th scope="row" class="dataset-label">{{ _("Collection Start Date") }}</th>
@@ -93,66 +110,236 @@
   <td class="dataset-details">{{ pkg_dict.collectionEndDate }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.createdDate %}
+
+<!-- Related Resources -->
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Created Date") }}</th>
-  <td class="dataset-details">{{ pkg_dict.createdDate }}</td>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">RELATED RESOURCES</th>
+</tr>
+
+{% if pkg_dict.relatedIdentifierType %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Related Resource ID Type") }}</th>
+  <td class="dataset-details">{{ pkg_dict.relatedIdentifierType }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.submittedDate %}
+
+{% if pkg_dict.relatedIdentifier %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Submitted Date") }}</th>
-  <td class="dataset-details">{{ pkg_dict.submittedDate }}</td>
+  <th scope="row" class="dataset-label">{{ _("Related Resources IDs") }}</th>
+  <td class="dataset-details">{{ pkg_dict.relatedIdentifier }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.availableDate %}
+
+{% if pkg_dict.relationType %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Available Date") }}</th>
-  <td class="dataset-details">{{ pkg_dict.availableDate }}</td>
+  <th scope="row" class="dataset-label">{{ _("Relation Type") }}</th>
+  <td class="dataset-details">{{ pkg_dict.relationType }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.withdrawnDate %}
+
+{% if pkg_dict.relatedResourceType %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Withdrawn Date") }}</th>
-  <td class="dataset-details">{{ pkg_dict.withdrawnDate }}</td>
+  <th scope="row" class="dataset-label">{{ _("Related Resource Type") }}</th>
+  <td class="dataset-details">{{ pkg_dict.relatedResourceType }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.funderName %}
+
+<!-- Private Info Start -->
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Funder Name") }}</th>
-  <td class="dataset-details">{{ pkg_dict.funderName }}</td>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">PRIVATE INFROMATION</th>
+</tr>
+
+{% if pkg_dict.associatedNote  %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Assoicated Research NotebookS") }}</th>
+  <td class="dataset-details">{{ pkg_dict.associatedNote }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.funderId %}
+
+{% if pkg_dict.responsiblePerson and flag=="true" %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Funder Identifier") }}</th>
-  <td class="dataset-details">{{ pkg_dict.funderId }}</td>
+  <th scope="row" class="dataset-label">{{ _("Responsible Person") }}</th>
+  <td class="dataset-details">{{ pkg_dict.responsiblePerson }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.funderIdType %}
+
+
+{% if pkg_dict.infraUsed and flag=="true" %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Funder Identifier Type") }}</th>
-  <td class="dataset-details">{{ pkg_dict.funderIdType }}</td>
+  <th scope="row" class="dataset-label">{{ _("Research Infrastructure Used") }}</th>
+  <td class="dataset-details">{{ pkg_dict.infraUsed }}</td>
 </tr>
 {% endif %}
+
+{% if pkg_dict.dataLocation and flag=="true" %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Data Locations") }}</th>
+  <td class="dataset-details">{{ pkg_dict.dataLocation }}</td>
+</tr>
+{% endif %}
+
+{% if pkg_dict.experimentCode and flag=="true" %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("RRES Farms Field Experiment Code") }}</th>
+  <td class="dataset-details">{{ pkg_dict.experimentCode }}</td>
+</tr>
+{% endif %}
+{% if pkg_dict.Codes and flag=="true" %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Codes") }}</th>
+  <td class="dataset-details">{{ pkg_dict.Codes }}</td>
+</tr>
+{% endif %}
+
+<!-- Private Info End -->
+<tr>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">VERSION INFROMATION</th>
+</tr>
+
+{% if pkg_dict.version %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Version") }}</th>
+  <td class="dataset-details">{{ pkg_dict.version }}</td>
+</tr>
+{% endif %}
+
+<!-- Subject Info -->
+<tr>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">SUBJECT INFROMATION</th>
+</tr>
+
+{% if pkg_dict.subject %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Subject") }}</th>
+  <td class="dataset-details">{{ pkg_dict.subject }}</td>
+</tr>
+{% endif %}
+
+{% if pkg_dict.subjectScheme %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Subject Scheme") }}</th>
+  <td class="dataset-details">{{ pkg_dict.subjectScheme }}</td>
+</tr>
+{% endif %}
+
+{% if pkg_dict.subjectUri %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Subject URI") }}</th>
+  <td class="dataset-details">{{ pkg_dict.subjectUri }}</td>
+</tr>
+{% endif %}
+
+{% if pkg_dict.valueUri %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Value URI") }}</th>
+  <td class="dataset-details">{{ pkg_dict.valueUri }}</td>
+</tr>
+{% endif %}
+
+{% if pkg_dict.classificationCode %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Subject Classification Code") }}</th>
+  <td class="dataset-details">{{ pkg_dict.classificationCode }}</td>
+</tr>
+{% endif %}
+
+<!-- License -->
+<tr>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">LICENSE INFROMATION</th>
+</tr>
+
+{% if pkg_dict.license %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("License") }}</th>
+  <td class="dataset-details">{{ pkg_dict.license }}</td>
+</tr>
+{% endif %}
+
+<!-- Resource Type -->
+<tr>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">RESOURCE TYPE INFROMATION</th>
+</tr>
+
+{% if pkg_dict.resourceTypeGeneral %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("General Resource Type") }}</th>
+  <td class="dataset-details">{{ pkg_dict.resourceTypeGeneral }}</td>
+</tr>
+{% endif %}
+
+{% if pkg_dict.resourceType %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Resource Type") }}</th>
+  <td class="dataset-details">{{ pkg_dict.resourceType }}</td>
+</tr>
+{% endif %}
+
+{% if pkg_dict.language %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Language") }}</th>
+  <td class="dataset-details">{{ pkg_dict.language }}</td>
+</tr>
+{% endif %}
+
+<!-- Publisher -->
+<tr>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">PUBLISHER INFROMATION</th>
+</tr>
+
+{% if pkg_dict.publisher %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Publisher") }}</th>
+  <td class="dataset-details">{{ pkg_dict.publisher }}</td>
+</tr>
+{% endif %}
+
+{% if pkg_dict.publicationYear %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("PublicationYear") }}</th>
+  <td class="dataset-details">{{ pkg_dict.publicationYear }}</td>
+</tr>
+{% endif %}
+
+<!-- Funder Info -->
+<tr>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">FUNDER INFROMATION</th>
+</tr>
+
 {% if pkg_dict.awardNumber %}
 <tr>
   <th scope="row" class="dataset-label">{{ _("Award Number") }}</th>
   <td class="dataset-details">{{ pkg_dict.awardNumber }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.awardURI %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Award URI") }}</th>
-  <td class="dataset-details">{{ pkg_dict.awardURI }}</td>
-</tr>
-{% endif %}
+
 {% if pkg_dict.awardTitle %}
 <tr>
   <th scope="row" class="dataset-label">{{ _("Award Title") }}</th>
   <td class="dataset-details">{{ pkg_dict.awardTitle }}</td>
 </tr>
 {% endif %}
+
+
+{% if pkg_dict.awardURI %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Award URI") }}</th>
+  <td class="dataset-details">{{ pkg_dict.awardURI }}</td>
+</tr>
+{% endif %}
+
+{% if pkg_dict.funderName %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Funder Name") }}</th>
+  <td class="dataset-details">{{ pkg_dict.funderName }}</td>
+</tr>
+{% endif %}
+
+
+<!-- Contributors -->
+<tr>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">CONTRIBUTOR INFROMATION</th>
+</tr>
+
 {% if pkg_dict.contributorType %}
 <tr>
   <th scope="row" class="dataset-label">{{ _("Contributor Types") }}</th>
@@ -178,137 +365,37 @@
   <td class="dataset-details">{{ pkg_dict.contributorAffiliation }}</td>
 </tr>
 {% endif %}
-{% if pkg_dict.relatedIdentifierType %}
+<!-- Other Dates -->
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Related Resource ID Type") }}</th>
-  <td class="dataset-details">{{ pkg_dict.relatedIdentifierType }}</td>
+  <th scope="row" class="dataset-label" style="font-style: italic; color: #fed316; background-color: #7a997a;">OTHER  DATES</th>
 </tr>
-{% endif %}
-{% if pkg_dict.relationType %}
+
+{% if pkg_dict.createdDate %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Relation Type") }}</th>
-  <td class="dataset-details">{{ pkg_dict.relationType }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.relatedResourceType %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Related Resource Type") }}</th>
-  <td class="dataset-details">{{ pkg_dict.relatedResourceType }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.relatedIdentifier %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Related Resources IDs") }}</th>
-  <td class="dataset-details">{{ pkg_dict.relatedIdentifier }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.associatedNote %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Assoicated Research NotebookS") }}</th>
-  <td class="dataset-details">{{ pkg_dict.associatedNote }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.dataLocation %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Data Locations") }}</th>
-  <td class="dataset-details">{{ pkg_dict.dataLocation }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.responsiblePerson %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Responsible Person") }}</th>
-  <td class="dataset-details">{{ pkg_dict.responsiblePerson }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.infraUsed %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Research Infrastructure Used") }}</th>
-  <td class="dataset-details">{{ pkg_dict.infraUsed }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.geoLocation %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Location") }}</th>
-  <td class="dataset-details">{{ pkg_dict.geoLocation }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.geoLatitude %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Latitude") }}</th>
-  <td class="dataset-details">{{ pkg_dict.geoLatitude }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.geoLongitude %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Longitude") }}</th>
-  <td class="dataset-details">{{ pkg_dict.geoLongitude }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.subjectScheme %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Subject Scheme") }}</th>
-  <td class="dataset-details">{{ pkg_dict.subjectScheme }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.subjectUri %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Subject URI") }}</th>
-  <td class="dataset-details">{{ pkg_dict.subjectUri }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.valueUri %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Value URI") }}</th>
-  <td class="dataset-details">{{ pkg_dict.valueUri }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.classificationCode %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Subject Classification Code") }}</th>
-  <td class="dataset-details">{{ pkg_dict.classificationCode }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.subject %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Subject") }}</th>
-  <td class="dataset-details">{{ pkg_dict.subject }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.geoLowLeftLatitude %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Geo Latitude Low Left Corner") }}</th>
-  <td class="dataset-details">{{ pkg_dict.geoLowLeftLatitude }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.geoLowLeftLongitude %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Geo Longitude Low Left Corner") }}</th>
-  <td class="dataset-details">{{ pkg_dict.geoLowLeftLongitude }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.geoTopRightLatitude %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Geo Latitude Top Right Corner") }}</th>
-  <td class="dataset-details">{{ pkg_dict.geoTopRightLatitude }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.geoTopRightLongitude %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("Geo Longitude Top Right Corner") }}</th>
-  <td class="dataset-details">{{ pkg_dict.geoTopRightLongitude }}</td>
-</tr>
-{% endif %}
-{% if pkg_dict.license %}
-<tr>
-  <th scope="row" class="dataset-label">{{ _("License") }}</th>
-  <td class="dataset-details">{{ pkg_dict.license }}</td>
+  <th scope="row" class="dataset-label">{{ _("Created Date") }}</th>
+  <td class="dataset-details">{{ pkg_dict.createdDate }}</td>
 </tr>
 {% endif %}
 
-{% if pkg_dict.version %}
+{% if pkg_dict.submittedDate %}
 <tr>
-  <th scope="row" class="dataset-label">{{ _("Version") }}</th>
-  <td class="dataset-details">{{ pkg_dict.version }}</td>
+  <th scope="row" class="dataset-label">{{ _("Submitted Date") }}</th>
+  <td class="dataset-details">{{ pkg_dict.submittedDate }}</td>
 </tr>
 {% endif %}
+
+{% if pkg_dict.availableDate %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Available Date") }}</th>
+  <td class="dataset-details">{{ pkg_dict.availableDate }}</td>
+</tr>
+{% endif %}
+
+{% if pkg_dict.withdrawnDate %}
+<tr>
+  <th scope="row" class="dataset-label">{{ _("Withdrawn Date") }}</th>
+  <td class="dataset-details">{{ pkg_dict.withdrawnDate }}</td>
+</tr>
+{% endif %}
+
 {% endblock %}

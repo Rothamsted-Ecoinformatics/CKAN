@@ -326,10 +326,18 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <label><strong> Funder Information (Mandatory)</strong></label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
+<label for="field-awardNumberField">Award number</label><br>
+<input id="field-awardNumberField" name="awardNumberField" classes="control-medium"><br><br>
+
+<label for="field-awardTitleField">*Award Title</label><br>
+<input id="field-awardTitleField" name="awardTitleField" classes="control-medium"><br><br>
+
 <label for="field-funderNameField">*Funder Name </label><br>
 <input id="field-funderNameField" name="funderNameField" classes="control-medium"><br><br>
+
 <label for="field-funderIdField">*Funder Identifier</label><br>
 <input id="field-funderIdField" name="funderIdField" classes="control-medium"><br><br>
+
 <label for="field-funderIdTypeField">*Funder ID Type</label><br>
 <select id="field-funderIdTypeField" name="funderIdTypeField" classes="control-medium">
   <option value="Crossref Funder ID">Crossref Funder ID </option>
@@ -338,12 +346,10 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   <option value="ROR">ROR</option>
   <option value="Other">Other</option>
 </select><br><br>
-<label for="field-awardNumberField">Award number</label><br>
-<input id="field-awardNumberField" name="awardNumberField" classes="control-medium"><br><br>
+
 <label for="field-awardURIField">Award URI</label><br>
 <input id="field-awardURIField" name="awardURIField" classes="control-medium"><br><br>
-<label for="field-awardTitleField">*Award Title</label><br>
-<input id="field-awardTitleField" name="awardTitleField" classes="control-medium"><br><br>
+
 <button type="button" onclick="addFunders()"> Add </button>
 <button type="button" onclick="clearFunders()"> Clear </button>
 <pre id=funderInfo> Funders: {{ data.funderName }}</pre>
@@ -533,7 +539,6 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     }
     document.getElementById('field-contributorFirstName').value = '';
     document.getElementById('field-contributorFamilyName').value = '';
-    document.getElementById('field-contributorNameId').value = '';
     document.getElementById('field-contributorNameId').value = '';
     document.getElementById('field-contributorTypeField').value = '';
     document.getElementById('field-contributorAffiliationField').value = '';
