@@ -2,23 +2,23 @@
 
 To Restart Server:
 			  
-		service supervisor stop
- 		service nginx stop 
+	service supervisor stop
+ 	service nginx stop 
 	
- 		_(check any services using port 80)_   lsof -i :80 
+ 	_(check any services using port 80)_   lsof -i :80 
 	
- 		_Kill if any processes are running on port 80_  kill -9 <pid>
+ 	_(Kill if any processes are running on port 80_)  kill -9 <pid>
 	
 
-  		service supervisor start
+  	service supervisor start
 	
- 		service nginx start
+ 	service nginx start
 
  
 
 Log File for CKAN:
 
-  		 /etc/ckan/default/uwsgi.ERR
+  	/etc/ckan/default/uwsgi.ERR
 
 Git Information:
 
