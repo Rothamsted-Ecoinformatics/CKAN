@@ -5,9 +5,9 @@ To Restart Server:
 	service supervisor stop
  	service nginx stop 
 	
- 	_(check any services using port 80)_   lsof -i :80 
+ 	< check any services using port 80)>   lsof -i :80 
 	
- 	_(Kill if any processes are running on port 80_)  kill -9 <pid>
+ 	< Kill if any processes are running on port 80>  kill -9 <pid>
 	
 
   	service supervisor start
