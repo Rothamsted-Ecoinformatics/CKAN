@@ -1,90 +1,116 @@
 <section class="additional-info">
-  <h3>{{ _('Additional Info') }}</h3>
-  <table class="table table-striped table-bordered table-condensed">
-    <thead>
-      <tr>
-        <th scope="col" style="font-style: italic; color: #fed316; background-color: #7a997a;">{{ _('Field') }}</th>
-        <th scope="col" style="font-style: italic; color: #fed316; background-color: #7a997a;">{{ _('Value') }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% block package_additional_info %}
-        {% if pkg_dict.url %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _('Source') }}</th>
-            {% if h.is_url(pkg_dict.url) %}
-              <td class="dataset-details" property="foaf:homepage">
-                <a href="{{ pkg_dict.url }}" rel="foaf:homepage" target="_blank">
-                  {{ pkg_dict.url }}
-                </a>
-              </td>
-            {% else %}
-              <td class="dataset-details" property="foaf:homepage">{{ pkg_dict.url }}</td>
-            {% endif %}
-          </tr>
-        {% endif %}
+ <!-- Author Information -->
+  <div><strong>Authors</strong></div>
+  <pre id="author-field" style="background-color: #f3f1f1;"></pre>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
-        {% if pkg_dict.author_email %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Author") }}</th>
-            <td class="dataset-details" property="dc:creator">{{ h.mail_to(email_address=pkg_dict.author_email, name=pkg_dict.author) }}</td>
-          </tr>
-        {% elif pkg_dict.author %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Author") }}</th>
-            <td class="dataset-details" property="dc:creator">{{ pkg_dict.author }}</td>
-          </tr>
-        {% endif %}
+  <script>
+    let auths = "{{pkg_dict.author}}".split(",");
+    let ids = "{{ pkg_dict.nameIdentifier }}".split(",");
+    let affils = "{{ pkg_dict.creatorAffiliation }}".split(",");
 
-        <!-- {% if pkg_dict.maintainer_email %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _('Maintainer') }}</th>
-            <td class="dataset-details" property="dc:contributor">{{ h.mail_to(email_address=pkg_dict.maintainer_email, name=pkg_dict.maintainer) }}</td>
-          </tr>
-        {% elif pkg_dict.maintainer %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _('Maintainer') }}</th>
-            <td class="dataset-details" property="dc:contributor">{{ pkg_dict.maintainer }}</td>
-          </tr>
-        {% endif %} -->
+    for (let i = 0; i < auths.length; i++) {
+      let p = document.getElementById("author-field");
+      val = document.createTextNode(`${auths[i]}; ${ids[i]}; ${affils[i]}`);
+      p.append(val);
+      p.append("\n");
+    }
+  </script>
+  <!-- Abstract, Methods and Technical Information  -->
+  <div><strong> Abstract </strong></div>
+  <p style="background-color: #f3f1f1;">{{ pkg_dict.abstract }}</p>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <div><strong> Methods </strong></div>
+  <p style="background-color: #f3f1f1;">{{ pkg_dict.methods }}</p>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
 
-        <!-- {% if h.check_access('package_update',{'id':pkg_dict.id}) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("State") }}</th>
-            <td class="dataset-details">{{ _(pkg_dict.state) }}</td>
-          </tr>
-        {% endif %}
-        {% if pkg_dict.metadata_modified %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Last Updated") }}</th>
-            <td class="dataset-details">
-                {% snippet 'snippets/local_friendly_datetime.html', datetime_obj=pkg_dict.metadata_modified %}
-            </td>
-          </tr>
-        {% endif %}
-        {% if pkg_dict.metadata_created %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Created") }}</th>
+  <div><strong> Technical Information </strong></div>
+  <p style="background-color: #f3f1f1;">{{ pkg_dict.technicalInfo }}</p>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
-            <td class="dataset-details">
-                {% snippet 'snippets/local_friendly_datetime.html', datetime_obj=pkg_dict.metadata_created %}
-            </td>
-          </tr>
-        {% endif %}
-        -->
-      {% block extras scoped %}
-        {% for extra in h.sorted_extras(pkg_dict.extras) %}
-          {% set key, value = extra %}
-          <tr rel="dc:relation" resource="_:extra{{ i }}">
-            <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key|e) }}</th>
-            <td class="dataset-details" property="rdf:value">{{ value }}</td>
-          </tr>
-        {% endfor %} 
-      {% endblock %}   
 
-      {% endblock %}
-    </tbody>
-  </table>
+  <div><strong> Spatial Information </strong></div>
+  <pre style="background-color: #f3f1f1;">
+    <!-- Spatial Information -->
+ Geolocation Point (Latitude, Longitude) : ( {{ pkg_dict.geoLatitude }}, {{ pkg_dict.geoLongitude }} ) 
+ Geolocation Box:
+    Lower Left Corner (Latitude,Longitude): ( {{ pkg_dict.geoLowLeftLatitude }}, {{ pkg_dict.geoLowLeftLongitude }} ) 
+    Top Right Corner (Latitude,Longitude): ( {{ pkg_dict.geoTopRightLatitude }}, {{ pkg_dict.geoTopRightLongitude }} ) 
+  </pre>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <!-- Collection Dates -->
+  <div><strong> Collection Date </strong></div>
+  {% if pkg_dict.collectionEndDate %}
+    <p style="background-color: #f3f1f1;">{{ pkg_dict.collectionStartDate }} to {{ pkg_dict.collectionEndDate }} </p>
+  {%else%}
+    <p style="background-color: #f3f1f1;"> {{ pkg_dict.collectionStartDate }} </p>  
+  {%endif%}  
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <!-- Related Resource Fields -->
+  <div><strong> Related Resources</strong> </div>
+  <pre id="relatedResourceField" style="background-color: #f3f1f1;"></pre>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <script>
+    let type = "{{pkg_dict.relationType}}".split(",");
+    let Rid = "{{pkg_dict.relatedIdentifier}}".split(",");
+    let p = document.getElementById("relatedResourceField");
+    for (let i=0;i<type.length; i++ ){
+
+      let link = document.createElement("a");
+      link.href = Rid[i];
+      link.textContent = Rid[i];
+      val = document.createTextNode(` ${i + 1}: ${type[i]} `);
+
+      p.append(val);
+      p.append(link);
+      p.append("\n");
+    }
+  </script>
+  <!-- Funder Information -->
+  <div><strong> Funder Information</strong></div>
+  <pre id="funderInfo" style="background-color: #f3f1f1;"></pre>.
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <script>
+    let aNum = "{{pkg_dict.awardNumber}}".split(",");
+    let aTitle = "{{pkg_dict.awardTitle}}".split(",");
+    let aURI = "{{pkg_dict.awardURI}}".split(",");
+    let funder = "{{pkg_dict.funderName}}".split(",");
+    p = document.getElementById("funderInfo");
+    for(let i=0; i<aNum.length;i++){
+      let link = document.createElement("a");
+      link.href = aURI[i];
+      link.textContent = aURI[i];
+      val = document.createTextNode(` ${i+1}. Award Number: ${aNum[i]}, Award Title: ${aTitle[i]}, Funder Name: ${funder[i]}, Award URI: `);
+      p.append(val);
+      p.append(link);
+      p.append("\n"); 
+      }
+  </script>
+
+  <!-- Contributor Information -->
+  <div><strong> Contributors</strong></div>
+  <pre id="contributorDetails" style="background-color: #f3f1f1;"></pre>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <script>
+    let conType = "{{pkg_dict.contributorType}}".split(",");
+    let conName = "{{pkg_dict.contributorDetails}}".split(",");
+    let conID = "{{pkg_dict.contributorId}}".split(",");
+    let conAff = "{{pkg_dict.contributorAffiliation}}".split(",");
+    para = document.getElementById("contributorDetails");
+    
+    for (let i=0;i<conName.length;i++){
+      val = document.createTextNode(` ${i+1}. Type: ${conType[i]}, Name: ${conName[i]}, ID: ${conID[i]}, Affiliation: ${conAff[i]}  `);
+      para.append(val);
+      para.append("\n");
+    }
+
+  </script>
+  
 </section>
-

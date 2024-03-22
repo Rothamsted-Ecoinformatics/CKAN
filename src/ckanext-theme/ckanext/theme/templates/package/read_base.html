@@ -30,7 +30,29 @@
     {% snippet 'package/snippets/info.html', pkg=pkg %}
   {% endblock %}
 
+  <div style="text-align: center;"><strong>Version</strong></div>
+  <pre style="text-align: center; background-color: #f3f1f1;" >{{ pkg_dict.version }}</pre>
+  
+  <div style="text-align: center;"><strong>Subjects</strong></div>
+  <pre style="text-align: center; background-color: #f3f1f1;" >{{ pkg_dict.subject }}</pre>
 
+  <div style="text-align: center;"><strong>License</strong></div>
+  <p style="text-align: center; background-color: #f3f1f1;" >{{ pkg_dict.license }}</p>
+
+  <div style="text-align: center;"><strong>Resource Type Information</strong></div>
+  <pre style="text-align: center; background-color: #f3f1f1;" >General Type: {{ pkg_dict.resourceTypeGeneral }}
+  Resource Type: {{pkg_dict.resourceType}}</pre>
+
+  <div style="text-align: center;"><strong>Publisher Information</strong></div>
+  <pre style="text-align: center; background-color: #f3f1f1;" >Publisher: {{ pkg_dict.publisher }}
+  Publication Year: {{pkg_dict.publicationYear}}</pre>
+
+  <div style="text-align: center;"><strong>Other Dates</strong></div>
+  <pre style="text-align: center; background-color: #f3f1f1;" >Created Date: {{ pkg_dict.createdDate }}
+    Submitted Date: {{ pkg_dict.submittedDate }}
+    Available Date: {{ pkg_dict.availableDate }}
+    Withdrawn Date: {{ pkg_dict.withdrawnDate }}
+  </pre>
 
   {% block package_social %}
     {% snippet "snippets/social.html" %}
