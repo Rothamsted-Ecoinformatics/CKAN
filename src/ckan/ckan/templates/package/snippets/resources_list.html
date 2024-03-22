@@ -10,13 +10,12 @@
 
   #}
 {% set dateAvailable = pkg.availableDate %}
-
 {% set flag = h.setFlag(dateAvailable) %}
 
 <section id="dataset-resources" class="resources">
   <h2>{{ _('Data and Resources') }}</h2>
   {% block resource_list %}
-    {% if resources and flag  %}
+    {% if resources and flag %}
       {% set can_edit = can_edit or h.check_access('package_update', {'id':pkg.id }) %}
       <ul class="{% block resource_list_class %}resource-list{% endblock %}">
         {% block resource_list_inner %}
@@ -25,10 +24,13 @@
           {% endfor %}
         {% endblock %}
       </ul>
-    {% else %}
-      {% block resource_list_empty %}
+    {% elif resources and not flag %}
+    <p class="test">Data is not yet available. Contact the author for more information</p>  
+    {% else %}  
+      {% block resource_list_empty %}         
         {% if h.check_access('resource_create', {'package_id': pkg['id']}) %}
           {% trans url=h.url_for(pkg.type ~ '_resource.new', id=pkg.name) %}
+
           <p class="empty">Data in this dataset is either empty or not available, <a href="{{ url }}">why not add some?</a></p>
           {% endtrans %}
         {% else %}
