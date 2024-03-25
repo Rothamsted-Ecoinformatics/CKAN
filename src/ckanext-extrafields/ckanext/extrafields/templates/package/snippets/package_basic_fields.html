@@ -353,7 +353,9 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 
 
 <button type="button" onclick="addFunders()"> Add </button>
-<button type="button" onclick="clearFunders()"> Clear </button>
+<button type="button" onclick="clearFunders()"> Clear All</button>
+<button type="button" onclick="popFunders()"> Clear Last Entry</button>
+
 <pre id=funderInfo> Funders: {{ data.funderName }}</pre>
 
 <!-- Metadata fields are hidden -->
@@ -422,6 +424,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById("field-awardURI").value = fUri;
     document.getElementById("field-awardTitle").value = aTitle;
     document.getElementById('funderInfo').innerHTML = "Funders: " + fname;
+    displayFunders();
   }
 
   function clearFunders() {
@@ -445,9 +448,30 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById("field-awardTitleField").value = aTitle;
     document.getElementById('funderInfo').innerHTML = "Cleared"
   }
+  function displayFunders(){
+  let p = document.getElementById("funderInfo");
+  p.innerHTML = "Funders:";
+  for(let i = 0; i < fname.length; i++){
+    let c = document.createTextNode(`Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]}, Funder: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}`);
+    p.append("\n");
+    p.append(c);
+    
 
+  }
+  }
+  function popFunders(){
+    fname.pop();
+    fid.pop();
+    fUri.pop();
+    faNum.pop();
+    aTitle.pop();
+    fidType.pop();
+    displayFunders();
+
+  }
   // </script>
 <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
 <!-- Contributor Details -->
 <!--                     -->
 <!--                     -->
@@ -581,7 +605,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   }
   function displayContributors() {
     let p = document.getElementById('contributorMessage');
-    p.innerHTML = "Creators Added";
+    p.innerHTML = "Contributors Added";
     for (let i = 0; i < contriName.length; i++) {
       let c = document.createTextNode(`Contributor ${i + 1}: Type ${contriType[i]}, Name: ${contriName[i]}, Organization: ${contriAffiliation[i]} ID: ${contriId[i]}`);
       p.append("\n");
@@ -713,7 +737,8 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <label for="field-relatedIdentifierField">*Enter the Identifier</label><br>
 <input id="field-relatedIdentifierField" name="relatedIdentifierField" classes="control-medium"><br>
 <button type="button" onclick="addRelated()">Add Resources</button>
-<button type="button" onclick="clearRelated()">Clear</button>
+<button type="button" onclick="clearRelated()">Clear All</button>
+<button type="button" onclick="popRelated()">Clear Last Entry</button>
 
 <pre id="relatedMessage"> Related Resources: {{ data.relatedIdentifier }} </pre>
 <!-- Metadata Fields for Related Resources -->
@@ -750,7 +775,25 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById('field-relationType').value = relationTypeList;
     document.getElementById('field-relatedResourceType').value = RRTypeList
     document.getElementById('field-relatedIdentifier').value = idList;
-    document.getElementById('relatedMessage').innerHTML = "IDs Added: " + idList;
+    displayRelatedResources();
+  }
+  function displayRelatedResources(){
+    let p = document.getElementById("relatedMessage");
+    p.innerHTML="Related Resources: "
+    for(let i = 0; i < idList.length; i++){
+      c = document.createTextNode(`Resource ${i+1}:: ID Type: ${idTypeList[i]}, Relation Type: ${relationTypeList[i]}, Resource Type: ${RRTypeList[i]}, ID: ${idList[i]}`);
+      p.append("\n");
+      p.append(c);
+      
+      }
+  
+  function popRelated(){
+    idTypeList.pop();
+    relationTypeList.pop();
+    RRTypeList.pop();
+    idList.pop();
+    displayRelatedResources();
+  }    
   }
 
   function clearRelated() {
@@ -1015,7 +1058,9 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <input type="text" id="field-subjectField" name="subjectField"><br><br>
 
 <button type="button" onclick="addSubject()">Add</button>
-<button type="button" onclick="clearSubject()">Clear</button>
+<button type="button" onclick="clearSubject()">Clear All</button>
+<button type="button" onclick="popSubject()">Clear Last Entry</button>
+
 <pre id="subjectMessage">Subjects: {{ data.subject }}</pre>
 
 <!-- Metadata Fields -->
@@ -1067,9 +1112,25 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById('field-classificationCode').value = classCode;
     document.getElementById('field-subject').value = sub;
     // Print Message
-    document.getElementById('subjectMessage').innerHTML = "Subjects Added:" + sub;
+    displaySubject();
   }
-
+  function displaySubject(){
+    let p = document.getElementById("subjectMessage");
+    p.innerHTML = "Subjects:"
+    for(let i=0; i<sub.length; i++){
+      c=document.createTextNode(`${i+1}:: Subject Scheme:${subScheme[i]}, Subject URI:${subUri[i]}, Value URI:${valUri}, Classification Code:${classCode[i]}, Subject:${sub[i]}`);
+      p.append("\n");
+      p.append(c);
+    }
+  }
+  function popSubject(){
+    subScheme.pop();
+    subUri.pop();
+    valUri.pop();
+    classCode.pop();
+    sub.pop();
+    displaySubject();
+  }
   function clearSubject() {
     subScheme = [];
     subUri = [];
