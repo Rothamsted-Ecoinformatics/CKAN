@@ -1,5 +1,7 @@
 <section class="additional-info">
  <!-- Author Information -->
+ {% set can_edit = h.check_access('package_update', {'id':pkg_dict.id }) %}
+ {% set user = 'true' if can_edit else 'false' %}
   <div><strong>Authors</strong></div>
   <pre id="author-field" style="background-color: #f3f1f1;"></pre>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
@@ -113,4 +115,68 @@
 
   </script>
   
+  <!-- Private Information -->
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+      display: none;
+      border-bottom: 1px black;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    </style>
+  <table id="table1" >
+    <tr><th>
+      
+        Private Information
+     
+    </th> 
+    <td></td>  
+    </tr>
+    <tr>
+      <th>Responsible Person</th>
+      <td>{{pkg_dict.responsiblePerson}}</td>
+    </tr>
+    <tr>
+      <th>Research Infrastructure Used</th>
+      <td>{{ pkg_dict.infraUsed }}</td>
+    </tr>
+    <tr>
+      <th>Data Locations</th>
+      <td>{{ pkg_dict.dataLocation }}</td>
+    </tr>
+    <tr>
+      <th>Assoicated Notebooks</th>
+      <td><a href="{{pkg_dict.associatedNote}}">{{pkg_dict.associatedNote}}</a></td>
+    </tr>
+    <tr>
+      <th>Experiment Code Type</th>
+      <td>{{pkg_dict.experimentCode}}</td>
+    </tr>
+    <tr>
+      <th>Experiment Code</th>
+      <td>{{pkg_dict.Codes}}</td>
+    </tr>
+  </table>
+  <script>
+    if("{{user}}" == "true"){
+      console.log("show secret");
+      document.getElementById("table1").style.display="table";
+    }
+    else{
+      console.log("hide secrets");
+    }
+    
+    
+  </script>
 </section>

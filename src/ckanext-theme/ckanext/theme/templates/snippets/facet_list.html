@@ -40,6 +40,9 @@ Dictionary with search facets
     {% set hide_empty = hide_empty or false %}
     {% with items = items or h.get_facet_items_dict(name, search_facets) %}
 	{% if items or not hide_empty %}
+	{%if title != "Organizations"%}
+	
+	
 	    {% block facet_list_item %}
 		<section class="module module-narrow module-shallow">
 		    {% block facet_list_heading %}
@@ -51,6 +54,7 @@ Dictionary with search facets
 		    {% block facet_list_items %}
 			{% with items = items or h.get_facet_items_dict(name, search_facets) %}
 			    {% if items %}
+				
 				<nav aria-label="{{ title }}">
 				    <ul class="list-unstyled nav nav-simple nav-facet">
 					{% for item in items %}
@@ -69,7 +73,7 @@ Dictionary with search facets
 					{% endfor %}
 				    </ul>
 				</nav>
-
+				
 				<p class="module-footer">
 				    {% if h.get_param_int('_%s_limit' % name) %}
 					{% if h.has_more_facets(name, search_facets) %}
@@ -86,6 +90,8 @@ Dictionary with search facets
 		    {% endblock %}
 		</section>
 	    {% endblock %}
+		{%endif%}	
 	{% endif %}
     {% endwith %}
 {% endblock %}
+
