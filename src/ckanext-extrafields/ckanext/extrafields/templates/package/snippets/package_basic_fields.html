@@ -1028,8 +1028,8 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   mymap.on('click', function (e) {
     latitude = e.latlng.lat;
     longitude = e.latlng.lng;
-    document.getElementById('field-geoLatitude').value = latitude.toFixed(2);
-    document.getElementById('field-geoLongitude').value = longitude.toFixed(2);
+    document.getElementById('field-geoLatitude').value = latitude.toFixed(4);
+    document.getElementById('field-geoLongitude').value = longitude.toFixed(4);
   });
 </script>
 
