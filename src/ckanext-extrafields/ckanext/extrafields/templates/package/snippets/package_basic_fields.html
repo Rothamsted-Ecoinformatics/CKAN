@@ -47,12 +47,11 @@
 <!-- CREATOR Function-->
 
 <script>
-  var nameId = [];
-  var creator = [];
-  var affiliations = [];
+  var nameId = "{{ data.nameIdentifier }}".split(",");
+  var creator = "{{ data.author }}".split(",");
+  var affiliations = "{{ data.creatorAffiliation }}".split(",");
   var fullname = [];
-  document.getElementById('errorMessage').innerHTML = "Creators: " + "{{ data.author }}";
-  console.log("{{user.sysadmin}}");
+  displayCreators();
   function addCreator() {
     let fn = document.getElementById('field-given_name').value;
     let sn = document.getElementById('field-family_name').value;
@@ -200,8 +199,7 @@
 
 <div id="codesField" style="display: none;">
   <label for="field-Codes">*Codes (Mandatory) </label><br>
-  <input type="text" id="field-Codes" name="Codes" value="{{ data.Codes }}" error="errors.Codes"
-    value="{{ data.Codes }}">
+  <input type="text" id="field-Codes" name="Codes" value="{{ data.Codes }}" error="errors.Codes" value="{{ data.Codes }}">
 </div>
 
 <script>
@@ -215,7 +213,6 @@
   if ("{{data.Codes}}") {
     displayCodesField();
   }
-
 
   function displayCodesField() {
     var selectField = document.getElementById('field-experimentCode');
@@ -232,8 +229,9 @@
 </script><br>
 <hr style="height:2px;border-width:0;color:black;background-color:grey">
 
-
 <!-- Resource Type  -->
+<!--                -->
+<!--                -->
 <label for="field-resourceTypeGeneral">*General Resource Type (Mandatory) </label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
@@ -425,12 +423,13 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 
 
 <script>
-  var fname = [];
-  var fid = [];
-  var fidType = [];
-  var faNum = [];
-  var fUri = [];
-  var aTitle = [];
+  var fname = "{{ data.funderName }}".split(",");
+  var fid = "{{ data.funderId }}".split(",");
+  var fidType = "{{ data.funderIdType }}".split(",");
+  var faNum = "{{ data.awardNumber }}".split(",");
+  var fUri = "{{ data.awardURI }}".split(",");
+  var aTitle = "{{ data.awardTitle }}".split(",");
+  displayFunders();
 
   function addFunders() {
     let fn = document.getElementById("field-funderNameField").value;
@@ -594,10 +593,11 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <!-- Contributor Functions -->
 
 <script>
-  var contriId = [];
-  var contriName = [];
-  var contriType = [];
-  var contriAffiliation = [];
+  var contriId = "{{ data.contributorId }}".split(",");
+  var contriName = "{{ data.contributorDetails }}".split(",");
+  var contriType = "{{ data.contributorType }}".split(",");
+  var contriAffiliation = "{{ data.contributorAffiliation }}".split(",");
+  displayContributors();
 
   function addContributor() {
     let fn = document.getElementById('field-contributorFirstName').value;
@@ -803,10 +803,11 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   value="{{ data.relatedIdentifier }}">
 
 <script>
-  var relationTypeList = [];
-  var idTypeList = [];
-  var RRTypeList = [];
-  var idList = [];
+  var relationTypeList = "{{ data.relationType }}".split(",");
+  var idTypeList = "{{ data.relatedIdentifierType }}".split(",");
+  var RRTypeList = "{{ data.relatedResourceType }}".split(",");
+  var idList = "{{ data.relatedIdentifier }}".split(",");
+  displayRelatedResources();
 
   function addRelated() {
     let idt = document.getElementById('field-relatedIdField').value;
@@ -970,16 +971,12 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     }
     function infraAdd( val ){
         let i = infra.indexOf(val);
-        console.log(i);
         if(i>-1){
-            console.log("remove " + val);
             infra.splice(i, 1);
         }
         else{
-            console.log("add " + val);
             infra.push(val);
         }
-        console.log(infra);
         document.getElementById('field-infraUsed').value = infra;
     }
     function checkInfra(val){
@@ -1152,11 +1149,12 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <!--                   -->
 
 <script>
-  var subScheme = [];
-  var subUri = [];
-  var valUri = [];
-  var classCode = [];
-  var sub = [];
+  var subScheme = "{{ data.subjectScheme }}".split(",");
+  var subUri = "{{ data.subjectUri }}".split(",");
+  var valUri = "{{ data.valueUri }}".split(",");
+  var classCode = "{{ data.classificationCode }}".split();
+  var sub = "{{ data.subject }}".split(",");
+  displaySubject();
 
   function addSubject() {
     let ss = document.getElementById('field-subjectSchemeField').value;
@@ -1252,7 +1250,6 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById("field-license").value = selectedLicense;
   });
   
-  console.log("{{data.license }}");
   //Retain Value
   var licenseVal = document.querySelector('input[value="{{ data.license }}"]');
   licenseVal.checked = true;
