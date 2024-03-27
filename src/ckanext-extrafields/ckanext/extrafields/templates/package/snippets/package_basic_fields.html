@@ -236,7 +236,7 @@
 <!-- Resource Type  -->
 <label for="field-resourceTypeGeneral">*General Resource Type (Mandatory) </label>
 <i class="fas fa-info-circle" title="add info here"></i>
-<br>
+<br><br>
 <input id="field-resourceTypeGeneral" name="resourceTypeGeneral" class="control-medium" value="{{ data.resourceTypeGeneral }}" style="display: none;">
 
 <div id = "resourceTypeSelect">
@@ -519,7 +519,6 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     aTitle.pop();
     fidType.pop();
     displayFunders();
-
   }
   // </script>
 <hr style="height:2px;border-width:0;color:black;background-color:gray">
@@ -948,37 +947,61 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <!-- Research Infrastructure Used -->
 <!--                              -->
 <!--                              -->
-<label for="field-infraUsedField"> Research Infrastructure Used (Select All)</label><br>
-<select id="field-infraUsedField" name="infraUsedField" onchange="addInfraUsed()">
-  <option value=""></option>
-  <option value="LTEs">LTEs</option>
-  <option value="LSRE">LSRE</option>
-  <option value="NWFP">NWFP</option>
-  <option value="RIS">RIS</option>
-  <option value="URTO">URTO</option>
-  <option value="Rowden">Rowden</option>
-</select>
+<label for="field-infraUsedField"> Research Infrastructure Used (Select All)</label>
+<i class="fas fa-info-circle" title="add info here"></i>
+<br><br>
+<div id="field-infraUsedField" name="infraUsedField" >
+  
+  <input type="checkbox" id="if1" value="LTEs" onchange="infraAdd('LTEs')">LTEs
+  <input type="checkbox" id="if2" value="LSRE" onchange="infraAdd('LSRE')">LSRE
+  <input type="checkbox" id="if3" value="NWFP" onchange="infraAdd('NWFP')">NWFP
+  <input type="checkbox" id="if4" value="RIS" onchange="infraAdd('RIS')">RIS
+  <input type="checkbox" id="if5" value="URTO" onchange="infraAdd('URTO')">URTO
+  <input type="checkbox" id="if6" value="Rowden" onchange="infraAdd('Rowden')">Rowden
+</div>
+<input type="text" id="field-infraUsed" name="infraUsed"  value="{{ data.infraUsed }}" style="display: none;">
 
-<input type="text" id="field-infraUsed" name="infraUsed" style="display:None;" value="{{ data.infraUsed }}">
-
-<pre id="infraUsedAdded">Research Infra Used: {{ data.infraUsed }}</pre>
-<button type="button" onclick="clearInfra()">Clear</button>
 <script>
-  var infra = [];
-  function addInfraUsed() {
-    let inf = document.getElementById('field-infraUsedField').value;
-    infra.push(inf);
-    document.getElementById('infraUsedAdded').innerHTML = "Used Infrastructure Selected: " + infra;
-    document.getElementById('field-infraUsed').value = infra;
-  }
-
-  function clearInfra() {
-    infra = [];
-    document.getElementById('infraUsedAdded').innerHTML = "Cleared !!!"
-    document.getElementById('field-infraUsed').value = infra;
-    document.getElementById("field-infraUsedField").value = "";
-
-  }
+    var infra = "{{data.infraUsed}}".split(",");
+    if(infra.length>0){
+      for (let x=0; x<infra.length;x++){
+        checkInfra(infra[x]);
+      }
+    }
+    function infraAdd( val ){
+        let i = infra.indexOf(val);
+        console.log(i);
+        if(i>-1){
+            console.log("remove " + val);
+            infra.splice(i, 1);
+        }
+        else{
+            console.log("add " + val);
+            infra.push(val);
+        }
+        console.log(infra);
+        document.getElementById('field-infraUsed').value = infra;
+    }
+    function checkInfra(val){
+      if(val == "LTEs"){
+        document.getElementById("if1").checked=true;
+      }
+      else if(val == "LSRE"){
+        document.getElementById("if2").checked=true;
+      }
+      else if(val == "NWFP"){
+        document.getElementById("if3").checked=true;
+      }
+      else if(val == "RIS"){
+        document.getElementById("if4").checked=true;
+      }
+      else if(val == "URTO"){
+        document.getElementById("if5").checked=true;
+      }
+      else if(val == "Rowden"){
+        document.getElementById("if6").checked=true;
+      }
+    }
 </script>
 <br><br>
 <hr style="height:2px;border-width:0;color:black;background-color:gray">
