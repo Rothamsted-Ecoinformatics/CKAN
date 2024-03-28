@@ -542,6 +542,13 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     faNum.pop();
     aTitle.pop();
     fidType.pop();
+    document.getElementById("field-funderName").value = fname;
+    document.getElementById("field-funderId").value = fid;
+    document.getElementById("field-awardURI").value = fUri;
+    document.getElementById("field-awardNumber").value = faNum;
+    document.getElementById("field-awardTitle").value = aTitle;
+    document.getElementById("field-funderIdType").value = fidType;
+
     displayFunders();
   }
   // </script>
@@ -865,15 +872,20 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
       p.append(c);
       
       }
+    }
   
   function popRelated(){
     idTypeList.pop();
     relationTypeList.pop();
     RRTypeList.pop();
     idList.pop();
+    document.getElementById('field-relatedIdentifierType').value = idTypeList;
+    document.getElementById('field-relationType').value = relationTypeList;
+    document.getElementById('field-relatedResourceType').value = RRTypeList
+    document.getElementById('field-relatedIdentifier').value = idList;
     displayRelatedResources();
   }    
-  }
+
 
   function clearRelated() {
     relationTypeList = [];
@@ -1230,6 +1242,11 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     valUri.pop();
     classCode.pop();
     sub.pop();
+    document.getElementById('field-subjectScheme').value = subScheme;
+    document.getElementById('field-subjectUri').value = subUri;
+    document.getElementById('field-valueUri').value = valUri;
+    document.getElementById('field-classificationCode').value = classCode;
+    document.getElementById('field-subject').value = sub;    
     displaySubject();
   }
   function clearSubject() {
