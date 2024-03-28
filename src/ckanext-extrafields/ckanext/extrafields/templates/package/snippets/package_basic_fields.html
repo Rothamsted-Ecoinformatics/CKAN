@@ -12,7 +12,7 @@
     color: rgb(0, 0, 0);
   }
 </style>
-<label id="creatorLabel"><strong> Creator Details (Mandatory)</strong></label>
+<label id="creatorLabel"><strong>* Creator Details (Mandatory)</strong></label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
 <!-- First Name -->
@@ -51,7 +51,9 @@
   var creator = "{{ data.author }}".split(",");
   var affiliations = "{{ data.creatorAffiliation }}".split(",");
   var fullname = [];
-  displayCreators();
+  if(creator[0]!=''){
+    displayCreators();
+  }
   function addCreator() {
     let fn = document.getElementById('field-given_name').value;
     let sn = document.getElementById('field-family_name').value;
@@ -185,33 +187,51 @@
 <hr style="height:2px;border-width:0;color:black;background-color:gray">
 <!-- Experiment Code -->
 
-<label for="field-experimentCode">*Select Experiment Code (Optional)</label>
+<label for="field-experimentCode">Select Experiment Code (Optional)</label>
 <i class="fas fa-info-circle" title="add info here"></i>
-<br>
-<select id="field-experimentCode" error="errors.experimentCode" name="experimentCode" class="control-medium"
-  onchange="displayCodesField()">
-  <option value="None">N/A</option>
-  <option value="RRES Farms Field Experiment code">RRES Farms Field Experiment code</option>
-  <option value="NWFP code">NWFP code</option>
-  <option value="NW experiment code">NW experiment code</option>
-  <option value="Other">Other Code </option>
-</select><br><br>
+<br><br>
+<input type="text" id="field-experimentCode" name="experimentCode" style="display: none;" value="{{data.experimentCode}}">
 
+<div id="field-expCodeDiv">
+    <input type="radio" id="exp1" name="expCode" checked="true" onchange="assignCode('None')" value="None">N/A
+    <input type="radio" id="exp2" name="expCode" value="RRES Farms Field Experiment Code" onchange="assignCode('RRES Farms Field Experiment Code')">RRES Farms Field Experiment Code
+    <input type="radio" id="exp3" name="expCode" value="NWFP Code" onchange="assignCode('NWFP Code')">NWFP Code
+    <input type="radio" id="exp4" name="expCode" value="NW Experiment Code" onchange="assignCode('NW Experiment Code')">NW Experiment Code
+    <input type="radio" id="exp5" name="expCode" value="Other" onchange="assignCode('Other')">Other Codes
+</div>
+<br>
 <div id="codesField" style="display: none;">
   <label for="field-Codes">*Codes (Mandatory) </label><br>
-  <input type="text" id="field-Codes" name="Codes" value="{{ data.Codes }}" error="errors.Codes" value="{{ data.Codes }}">
+  <input type="text" id="field-Codes" name="Codes" value="{{ data.Codes }}" error="errors.Codes" >
 </div>
 
 <script>
+    // Initializattion
+    selectElement('field-experimentCode', "{{ data.experimentCode }}");
+  if ("{{data.Codes}}") {
+    let val = document.getElementById("field-experimentCode").value;
+    if(val == "RRES Farms Field Experiment Code"){
+      document.getElementById("exp2").checked = true;
+    }
+    else if(val == "NWFP Code"){
+      document.getElementById("exp3").checked = true;
+    }
+    else if(val == "NW Experiment Code"){
+      document.getElementById("exp4").checked = true;
+    }
+    else if(val == "Other"){
+      document.getElementById("exp5").checked = true;
+    }
+    displayCodesField();
+  }
+
+  function assignCode(val){
+    document.getElementById("field-experimentCode").value = val;
+    displayCodesField();
+  }  
   function selectElement(id, valueToSelect) {
     let element = document.getElementById(id);
     element.value = valueToSelect;
-  }
-
-  // Initializattion
-  selectElement('field-experimentCode', "{{ data.experimentCode }}");
-  if ("{{data.Codes}}") {
-    displayCodesField();
   }
 
   function displayCodesField() {
@@ -373,7 +393,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <!-- Funder Information -->
 <!--                    -->
 <!--                    -->
-<label><strong> Funder Information (Mandatory)</strong></label>
+<label><strong>* Funder Information (Mandatory)</strong></label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
 <label for="field-awardNumberField">Award number</label><br>
@@ -406,7 +426,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <button type="button" onclick="clearFunders()"> Clear All</button>
 <button type="button" onclick="popFunders()"> Clear Last Entry</button>
 
-<pre id=funderInfo> Funders: {{ data.funderName }}</pre>
+<pre id=funderInfo></pre>
 
 <!-- Metadata fields are hidden -->
 <!--                            -->
@@ -429,8 +449,9 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   var faNum = "{{ data.awardNumber }}".split(",");
   var fUri = "{{ data.awardURI }}".split(",");
   var aTitle = "{{ data.awardTitle }}".split(",");
+  if(faNum[0]!=''){
   displayFunders();
-
+  }
   function addFunders() {
     let fn = document.getElementById("field-funderNameField").value;
     let id = document.getElementById("field-funderIdField").value;
@@ -578,7 +599,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <button type="button" onclick="addContributor()">Add Contributor</button>
 <button type="button" onclick="clearContributor()">Clear All</button>
 <button type="button" onclick="popContributor()">Clear Last Entry</button>
-<pre id='contributorMessage'> Contributors: {{ data.contributorDetails }} </pre>
+<pre id='contributorMessage'></pre>
 <br>
 <!-- Metadata Field Lines for Contributors. These are not displayed, Used to store the metadatafields-->
 <input id="field-contributorType" error="errors.contributorType" name="contributorType" classes="control-medium"
@@ -597,8 +618,9 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   var contriName = "{{ data.contributorDetails }}".split(",");
   var contriType = "{{ data.contributorType }}".split(",");
   var contriAffiliation = "{{ data.contributorAffiliation }}".split(",");
+  if(contriName[0]!=''){
   displayContributors();
-
+  }
   function addContributor() {
     let fn = document.getElementById('field-contributorFirstName').value;
     let sn = document.getElementById('field-contributorFamilyName').value;
@@ -681,7 +703,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <!-- Related Resources Fields -->
 <!--                          -->
 <!--                          -->
-<label><strong>* Related Resources (Optional) </strong></label>
+<label><strong>Related Resources (Optional) </strong></label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
 <label for="field-relatedIdField"> Select Related ID Type </label><br>
@@ -791,7 +813,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <button type="button" onclick="clearRelated()">Clear All</button>
 <button type="button" onclick="popRelated()">Clear Last Entry</button>
 
-<pre id="relatedMessage"> Related Resources: {{ data.relatedIdentifier }} </pre>
+<pre id="relatedMessage"></pre>
 <!-- Metadata Fields for Related Resources -->
 <input id="field-relatedIdentifierType" name="relatedIdentifierType" classes="control-medium" style="display:none"
   value="{{ data.relatedIdentifierType }}">
@@ -807,8 +829,9 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   var idTypeList = "{{ data.relatedIdentifierType }}".split(",");
   var RRTypeList = "{{ data.relatedResourceType }}".split(",");
   var idList = "{{ data.relatedIdentifier }}".split(",");
+  if(relationTypeList[0]!=''){
   displayRelatedResources();
-
+  }
   function addRelated() {
     let idt = document.getElementById('field-relatedIdField').value;
     let relt = document.getElementById('field-relationTypeField').value;
@@ -964,7 +987,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 
 <script>
     var infra = "{{data.infraUsed}}".split(",");
-    if(infra.length>0){
+    if(infra[0]!=''){
       for (let x=0; x<infra.length;x++){
         checkInfra(infra[x]);
       }
@@ -1133,7 +1156,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <button type="button" onclick="clearSubject()">Clear All</button>
 <button type="button" onclick="popSubject()">Clear Last Entry</button>
 
-<pre id="subjectMessage">Subjects: {{ data.subject }}</pre>
+<pre id="subjectMessage"></pre>
 
 <!-- Metadata Fields -->
 <input type="text" id="field-subjectScheme" name="subjectScheme" style="display: none;"
@@ -1154,8 +1177,9 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   var valUri = "{{ data.valueUri }}".split(",");
   var classCode = "{{ data.classificationCode }}".split();
   var sub = "{{ data.subject }}".split(",");
+  if(sub[0]!=''){
   displaySubject();
-
+  }
   function addSubject() {
     let ss = document.getElementById('field-subjectSchemeField').value;
     let su = document.getElementById('field-subjectUriField').value;
@@ -1256,4 +1280,16 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   
 </script>
 
+
+<label for="field-version"><strong>*Version (Mandatory)</strong></label><br>
+<input type="text" id="field-version" name="version" class="control-medium" is_required="true" error="errors.version">
+<br><br>
+<script>
+  if("{{data.version}}"){
+    document.getElementById("field-version").value = "{{data.version}}";
+  }
+  else{
+    document.getElementById("field-version").value = 1;
+  }
+</script>
 {% endblock %}
