@@ -211,7 +211,7 @@
 
 <script>
     // Initializattion
-    selectElement('field-experimentCode', "{{ data.experimentCode }}");
+    // selectElement('field-experimentCode', "{{ data.experimentCode }}");
   if ("{{data.Codes}}") {
     let val = document.getElementById("field-experimentCode").value;
     if(val == "RRES Farms Field Experiment Code"){
@@ -1265,7 +1265,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 </div><br>
 <script>
   // When New Radio Button is selected
-  let licenseContainer = document.getElementById("licenseButtons");
+  var licenseContainer = document.getElementById("licenseButtons");
   let selectedLicense;
   licenseContainer.addEventListener('change', function(){
     if (document.getElementById('lr1').checked) {
@@ -1279,14 +1279,14 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   });
   
   //Retain Value
-  let val = "{{ data.license }}"
-  if(val=="Creative Commons Attribution Licence (CC BY 4.0)"){
+  let x = "{{ data.license }}"
+  if(x=="Creative Commons Attribution Licence (CC BY 4.0)"){
     document.getElementById("lr1").checked=true;
   }
-  else if( val == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)" ){
+  else if( x == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)" ){
     document.getElementById("lr2").checked = true;
     }
-  else if(val == "Open Government Licence (OGL)"){
+  else if(x == "Open Government Licence (OGL)"){
     document.getElementById("lr3").checked=true;
   }  
   
