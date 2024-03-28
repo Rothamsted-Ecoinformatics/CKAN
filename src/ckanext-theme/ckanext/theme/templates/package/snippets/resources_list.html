@@ -9,6 +9,27 @@
   {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
 
   #}
+  
+  
+  {# setFlag() is a function defined in /usr/lib/ckan/default/src/ckan/ckan/lib/helpers.py
+    
+    It is defined to check the available data of the dataset and decide whether or not to display the resources
+
+    Might get removed when ckan is upgraded.
+    the code is given here to use in such a case
+    
+    @core_helper
+  def setFlag( dateAvailable ) -> str:
+     ''' returns true or false based on available date and current date'''
+     if not dateAvailable:
+          return True
+      currentDate = datetime.date.today()
+      availableDate = datetime.datetime.strptime(dateAvailable, "%Y-%m-%d").date()
+      if currentDate >= availableDate:
+         return True
+     else:
+          return False
+  #}
 {% set dateAvailable = pkg.availableDate %}
 {% set flag = h.setFlag(dateAvailable) %}
 

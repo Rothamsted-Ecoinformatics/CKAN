@@ -1255,7 +1255,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 
 <label for="field-license">Select the License (optional)</label>
 <i class="fas fa-info-circle" title="add info here"></i><br>
-<input id="field-license" name="license" class="control-medium" style="display: none;">
+<input id="field-license" name="license" class="control-medium" style="display: none;" value="{{data.license}}">
 <div id="licenseButtons">
   <input type="radio" id="lr1" name="licenseSelect" value="Creative Commons Attribution Licence (CC BY 4.0)">Creative Commons Attribution Licence (CC BY 4.0)
   <br>
@@ -1279,8 +1279,16 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   });
   
   //Retain Value
-  var licenseVal = document.querySelector('input[value="{{ data.license }}"]');
-  licenseVal.checked = true;
+  let val = "{{ data.license }}"
+  if(val=="Creative Commons Attribution Licence (CC BY 4.0)"){
+    document.getElementById("lr1").checked=true;
+  }
+  else if( val == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)" ){
+    document.getElementById("lr2").checked = true;
+    }
+  else if(val == "Open Government Licence (OGL)"){
+    document.getElementById("lr3").checked=true;
+  }  
   
 </script>
 
