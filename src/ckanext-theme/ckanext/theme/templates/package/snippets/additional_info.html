@@ -13,7 +13,7 @@
 
     for (let i = 0; i < auths.length; i++) {
       let p = document.getElementById("author-field");
-      val = document.createTextNode(`${auths[i]}; ${ids[i]}; ${affils[i]}`);
+      val = document.createTextNode(`${auths[i]}     ID:${ids[i]}    Affiliation:${affils[i]}`);
       p.append(val);
       p.append("\n");
     }

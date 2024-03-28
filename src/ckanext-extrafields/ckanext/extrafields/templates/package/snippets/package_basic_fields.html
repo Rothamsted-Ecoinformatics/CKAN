@@ -196,7 +196,7 @@
 <br><br>
 <input type="text" id="field-experimentCode" name="experimentCode" style="display: none;" value="{{data.experimentCode}}">
 
-<div id="field-expCodeDiv">
+<div>
     <input type="radio" id="exp1" name="expCode" checked="true" onchange="assignCode('None')" value="None">N/A
     <input type="radio" id="exp2" name="expCode" value="RRES Farms Field Experiment Code" onchange="assignCode('RRES Farms Field Experiment Code')">RRES Farms Field Experiment Code
     <input type="radio" id="exp3" name="expCode" value="NWFP Code" onchange="assignCode('NWFP Code')">NWFP Code
@@ -213,17 +213,17 @@
     // Initializattion
     // selectElement('field-experimentCode', "{{ data.experimentCode }}");
   if ("{{data.Codes}}") {
-    let val = document.getElementById("field-experimentCode").value;
-    if(val == "RRES Farms Field Experiment Code"){
+    let f = document.getElementById("field-experimentCode").value;
+    if(f == "RRES Farms Field Experiment Code"){
       document.getElementById("exp2").checked = true;
     }
-    else if(val == "NWFP Code"){
+    else if(f == "NWFP Code"){
       document.getElementById("exp3").checked = true;
     }
-    else if(val == "NW Experiment Code"){
+    else if(f == "NW Experiment Code"){
       document.getElementById("exp4").checked = true;
     }
-    else if(val == "Other"){
+    else if(f == "Other"){
       document.getElementById("exp5").checked = true;
     }
     displayCodesField();
