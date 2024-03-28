@@ -134,6 +134,14 @@
     tr:nth-child(even) {
       background-color: #dddddd;
     }
+    pre {
+    color: rgb(0, 0, 0);
+    font: 1em sans-serif;
+  }
+  p {
+    color: black;
+    font: 1em sans-serif
+  }
     </style>
   <table id="table1" >
     <tr><th>
@@ -141,7 +149,7 @@
         Private Information
      
     </th> 
-    <td></td>  
+    <td></td>
     </tr>
     <tr>
       <th>Responsible Person</th>
@@ -157,7 +165,7 @@
     </tr>
     <tr>
       <th>Assoicated Notebooks</th>
-      <td><a href="{{pkg_dict.associatedNote}}">{{pkg_dict.associatedNote}}</a></td>
+      <td> <pre id="notebookField"></pre> </td>
     </tr>
     <tr>
       <th>Experiment Code Type</th>
@@ -176,7 +184,13 @@
     else{
       console.log("hide secrets");
     }
-    
-    
+    let notebooks = "{{ pkg_dict.associatedNote }}".split(",");
+    for(let i=0;i<notebooks.length; i++){
+      let link = document.createElement('a');
+      link.href = notebooks[i];
+      link.textContent = notebooks[i];
+      document.getElementById("notebookField").append(link);
+      document.getElementById("notebookField").append("\n");
+    }
   </script>
 </section>
