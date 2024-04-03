@@ -16,9 +16,6 @@
     {% link_for _('Manage'), named_route=pkg.type ~ '.edit', id=pkg.name, class_='btn btn-light', icon='wrench' %}
   {% endif %}
 {% endblock %}
-
-
-
 {% block secondary_content %}
 
   {% block secondary_help_content %}{% endblock %}
@@ -26,6 +23,9 @@
   {% block package_info %}
     {% snippet 'package/snippets/info.html', pkg=pkg %}
   {% endblock %}
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+  <div style="text-align: center;"><strong>DOI</strong></div>
+  <pre style="text-align: center; background-color: #f3f1f1;" >https://doi.org/{{ pkg_dict['doi'] }}</pre>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <div style="text-align: center;"><strong>Version</strong></div>
@@ -56,7 +56,7 @@
   Available Date: {{ pkg_dict.availableDate }}
   Withdrawn Date: {{ pkg_dict.withdrawnDate }}
   </pre>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   {% block package_social %}
     {% snippet "snippets/social.html" %}

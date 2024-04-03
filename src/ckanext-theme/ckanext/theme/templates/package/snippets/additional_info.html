@@ -13,8 +13,12 @@
 
     for (let i = 0; i < auths.length; i++) {
       let p = document.getElementById("author-field");
-      val = document.createTextNode(`${auths[i]}     ID:${ids[i]}    Affiliation:${affils[i]}`);
+      val = document.createTextNode(`${auths[i]}         Affiliation:${affils[i]}         ID:`);
+      let link = document.createElement("a");
+      link.href = ids[i];
+      link.textContent = ids[i];
       p.append(val);
+      p.append(link);
       p.append("\n");
     }
   </script>
@@ -193,5 +197,5 @@
       document.getElementById("notebookField").append(link);
       document.getElementById("notebookField").append("\n");
     }
-  </script>
+    </script>
 </section>
