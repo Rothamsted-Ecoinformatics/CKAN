@@ -11,9 +11,28 @@
     color: rgb(0, 0, 0);
     font: 1em sans-serif;
   }
+
   p {
     color: black;
     font: 1em sans-serif
+  }
+
+  #creatorDisp {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .creator-item {
+    background-color: #f0f0f0;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    display: block;
+  }
+
+  .creator-item .close-btn {
+    cursor: pointer;
+    margin-left: 5px;
   }
 </style>
 <label id="creatorLabel"><strong>* Creator Details (Mandatory)</strong></label>
@@ -36,18 +55,18 @@
   classes="control-medium">
 <br><br>
 <button type="button" onclick="addCreator()">Add Creator</button>
-<button type="button" onclick="clearCreator()">Clear All</button>
-<button type="button" onclick="popCreator()">Clear Last Entry</button>
 
 <pre id='errorMessage'></pre>
+<div id="creatorDisp"></div>
 <br>
-
-<input type="text" name="author" id="field-author" value="{{ data.author }}" error="errors.author" style="display:none">
 <hr style="height:2px;border-width:0;color:black;background-color:gray">
-<input type="text" id="field-nameIdentifier" name="nameIdentifier" style="display:none"
-  value="{{ data.nameIdentifier }}">
-<input type="text" id="field-creatorAffiliation" name="creatorAffiliation" style="display:none"
-  value="{{ data.creatorAffiliation }}">
+
+<input type="text" name="author" id="field-author" value="{{ data.author }}" error="errors.author"
+  style="display: none;">
+<input type="text" id="field-nameIdentifier" name="nameIdentifier" value="{{ data.nameIdentifier }}"
+  style="display: none;">
+<input type="text" id="field-creatorAffiliation" name="creatorAffiliation" value="{{ data.creatorAffiliation }}"
+  style="display: none;">
 <!-- CREATOR Function-->
 
 <script>
@@ -55,82 +74,96 @@
   var creator = "{{ data.author }}".split(",");
   var affiliations = "{{ data.creatorAffiliation }}".split(",");
   var fullname = [];
-  if(creator[0]!=''){
-    displayCreators();
-  }
-  function addCreator() {
-    let fn = document.getElementById('field-given_name').value;
-    let sn = document.getElementById('field-family_name').value;
-    let id = document.getElementById('field-nameIdField').value;
-    let af = document.getElementById('field-creatorAffiliationField').value;
+  const creatorList = document.getElementById('creatorDisp');
 
-    //Clear the fields
-    try {
-      if (!fn || !sn || !af) {
-        throw new Error('* Fields Should Not Be Empty');
+  for(let i=0; i<creator.length; i++){
+      displayCreators(creator[i]);
+  }
+
+  function displayCreatorPre(){
+      let p = document.getElementById('errorMessage');
+      p.innerHTML = "Creators Addded :";
+      for (let i = 0; i < creator.length; i++) {
+          let c = document.createTextNode(`Creator ${i + 1}: ${creator[i]}, ID: ${nameId[i]}, Organization: ${affiliations[i]}`);
+          p.append("\n");
+          p.append(c);
+
       }
-    }
-    catch (err) {
-      document.getElementById('errorMessage').innerHTML = err.message;
-      return;
-    }
-    clearCreatorInputFields();
-    fullname = fn.concat(' ', sn);
-    creator.push(fullname);
-    if (id) {
-      nameId.push(id);
-    }
-    else {
-      nameId.push("NONE");
-    }
-    affiliations.push(af);
-    document.getElementById('field-author').value = creator;
-    document.getElementById('field-nameIdentifier').value = nameId;
-    document.getElementById('field-creatorAffiliation').value = affiliations;
-    // document.getElementById('errorMessage').innerHTML = "Creators Addded :" + creator;
-    displayCreators();
   }
 
-  function clearCreator() {
-    creator = [];
-    nameId = [];
-    document.getElementById('field-given_name').value = '';
-    document.getElementById('field-family_name').value = '';
-    document.getElementById('field-nameIdField').value = '';
-    document.getElementById('errorMessage').innerHTML = '';
-    document.getElementById('field-author').value = ""
-    document.getElementById('field-nameIdentifier').value = ""
-    document.getElementById('field-creatorAffiliation').value = ""
+  function addCreator() {
+      let fn = document.getElementById('field-given_name').value;
+      let sn = document.getElementById('field-family_name').value;
+      let id = document.getElementById('field-nameIdField').value;
+      let af = document.getElementById('field-creatorAffiliationField').value;
 
+      //Clear the fields
+      try {
+          if (!fn || !sn || !af) {
+              throw new Error('* Fields Should Not Be Empty');
+          }
+      }
+      catch (err) {
+          document.getElementById('errorMessage').innerHTML = err.message;
+          return;
+      }
+      clearCreatorInputFields();
+      fullname = fn.concat(' ', sn);
+      creator.push(fullname);
+      if (id) {
+          nameId.push(id);
+      }
+      else {
+          nameId.push("NONE");
+      }
+      affiliations.push(af);
+      document.getElementById('field-author').value = creator;
+      document.getElementById('field-nameIdentifier').value = nameId;
+      document.getElementById('field-creatorAffiliation').value = affiliations;
+      // document.getElementById('errorMessage').innerHTML = "Creators Addded :" + creator;
+      displayCreators(fullname);
   }
+
   function clearCreatorInputFields() {
-    document.getElementById('field-given_name').value = '';
-    document.getElementById('field-family_name').value = '';
-    document.getElementById('field-nameIdField').value = '';
-    document.getElementById('field-creatorAffiliationField').value = '';
-    document.getElementById('errorMessage').innerHTML = '';
+      document.getElementById('field-given_name').value = '';
+      document.getElementById('field-family_name').value = '';
+      document.getElementById('field-nameIdField').value = '';
+      document.getElementById('field-creatorAffiliationField').value = '';
+      document.getElementById('errorMessage').innerHTML = '';
   }
-  function displayCreators() {
-    let p = document.getElementById('errorMessage');
-    p.innerHTML = "Creators Addded :";
-    for (let i = 0; i < creator.length; i++) {
-      let c = document.createTextNode(`Creator ${i + 1}: ${creator[i]}, ID: ${nameId[i]}, Organization: ${affiliations[i]}`);
-      p.append("\n");
-      p.append(c);
+  function displayCreators(name) {
+      let index = creator.indexOf(name);
+      const creatorItem = document.createElement("div");
+      creatorItem.classList.add('creator-item');
+      creatorItem.innerHTML = `
+          ${name} <span class="close-btn" onclick="removeCreator(this)">X</span>
+      `;
+      creatorList.appendChild(creatorItem);
+      displayCreatorPre();
+  }
 
-    }
 
+
+  function removeCreator(closeBtn) {
+      const creatorItem = closeBtn.parentNode;
+      creatorList.removeChild(creatorItem);
+      let name = creatorItem.textContent.trim();
+      name = name.slice(0, -1);
+      name = name.trim()
+      console.log(name);
+      let index = creator.indexOf(name);
+      creator.splice(index, 1);
+      nameId.splice(index, 1);
+      affiliations.splice(index, 1);
+      document.getElementById('field-author').value = creator;
+      document.getElementById('field-nameIdentifier').value = nameId;
+      document.getElementById('field-creatorAffiliation').value = affiliations;
+      displayCreatorPre();
   }
-  function popCreator() {
-    creator.pop();
-    nameId.pop();
-    affiliations.pop();
-    document.getElementById('field-author').value = creator;
-    document.getElementById('field-nameIdentifier').value = nameId;
-    document.getElementById('field-creatorAffiliation').value = affiliations;
-    displayCreators();
-  }
+
 </script>
+
+
 <!-- PUBLISHER and Publication Year -->
 <!--                                -->
 <!--                                -->
@@ -194,45 +227,48 @@
 <label for="field-experimentCode">Select Experiment Code (Optional)</label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
-<input type="text" id="field-experimentCode" name="experimentCode" style="display: none;" value="{{data.experimentCode}}">
+<input type="text" id="field-experimentCode" name="experimentCode" style="display: none;"
+  value="{{data.experimentCode}}">
 
 <div>
-    <input type="radio" id="exp1" name="expCode" checked="true" onchange="assignCode('None')" value="None">N/A
-    <input type="radio" id="exp2" name="expCode" value="RRES Farms Field Experiment Code" onchange="assignCode('RRES Farms Field Experiment Code')">RRES Farms Field Experiment Code
-    <input type="radio" id="exp3" name="expCode" value="NWFP Code" onchange="assignCode('NWFP Code')">NWFP Code
-    <input type="radio" id="exp4" name="expCode" value="NW Experiment Code" onchange="assignCode('NW Experiment Code')">NW Experiment Code
-    <input type="radio" id="exp5" name="expCode" value="Other" onchange="assignCode('Other')">Other Codes
+  <input type="radio" id="exp1" name="expCode" checked="true" onchange="assignCode('None')" value="None">N/A
+  <input type="radio" id="exp2" name="expCode" value="RRES Farms Field Experiment Code"
+    onchange="assignCode('RRES Farms Field Experiment Code')">RRES Farms Field Experiment Code
+  <input type="radio" id="exp3" name="expCode" value="NWFP Code" onchange="assignCode('NWFP Code')">NWFP Code
+  <input type="radio" id="exp4" name="expCode" value="NW Experiment Code" onchange="assignCode('NW Experiment Code')">NW
+  Experiment Code
+  <input type="radio" id="exp5" name="expCode" value="Other" onchange="assignCode('Other')">Other Codes
 </div>
 <br>
 <div id="codesField" style="display: none;">
   <label for="field-Codes">*Codes (Mandatory) </label><br>
-  <input type="text" id="field-Codes" name="Codes" value="{{ data.Codes }}" error="errors.Codes" >
+  <input type="text" id="field-Codes" name="Codes" value="{{ data.Codes }}" error="errors.Codes">
 </div>
 
 <script>
-    // Initializattion
-    // selectElement('field-experimentCode', "{{ data.experimentCode }}");
+  // Initializattion
+  // selectElement('field-experimentCode', "{{ data.experimentCode }}");
   if ("{{data.Codes}}") {
     let f = document.getElementById("field-experimentCode").value;
-    if(f == "RRES Farms Field Experiment Code"){
+    if (f == "RRES Farms Field Experiment Code") {
       document.getElementById("exp2").checked = true;
     }
-    else if(f == "NWFP Code"){
+    else if (f == "NWFP Code") {
       document.getElementById("exp3").checked = true;
     }
-    else if(f == "NW Experiment Code"){
+    else if (f == "NW Experiment Code") {
       document.getElementById("exp4").checked = true;
     }
-    else if(f == "Other"){
+    else if (f == "Other") {
       document.getElementById("exp5").checked = true;
     }
     displayCodesField();
   }
 
-  function assignCode(val){
+  function assignCode(val) {
     document.getElementById("field-experimentCode").value = val;
     displayCodesField();
-  }  
+  }
   function selectElement(id, valueToSelect) {
     let element = document.getElementById(id);
     element.value = valueToSelect;
@@ -259,9 +295,10 @@
 <label for="field-resourceTypeGeneral">*General Resource Type (Mandatory) </label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
-<input id="field-resourceTypeGeneral" name="resourceTypeGeneral" class="control-medium" value="{{ data.resourceTypeGeneral }}" style="display: none;">
+<input id="field-resourceTypeGeneral" name="resourceTypeGeneral" class="control-medium"
+  value="{{ data.resourceTypeGeneral }}" style="display: none;">
 
-<div id = "resourceTypeSelect">
+<div id="resourceTypeSelect">
   <input type="radio" id="rt1" name="resourceSelect" value="Dataset">Dataset
   <input type="radio" id="rt2" name="resourceSelect" value="Instrument">Instrument
   <input type="radio" id="rt3" name="resourceSelect" value="Model">Instrument
@@ -272,53 +309,53 @@
 </div>
 <br>
 <script>
-	let resourceTypeContainer = document.getElementById("resourceTypeSelect");
+  let resourceTypeContainer = document.getElementById("resourceTypeSelect");
   let selectedResource;
-  resourceTypeContainer.addEventListener('change', function(){
-    if(document.getElementById("rt1").checked){
+  resourceTypeContainer.addEventListener('change', function () {
+    if (document.getElementById("rt1").checked) {
       selectedResource = document.getElementById("rt1").value;
     }
-    else if(document.getElementById("rt2").checked){
+    else if (document.getElementById("rt2").checked) {
       selectedResource = document.getElementById("rt2").value;
     }
-    else if(document.getElementById("rt3").checked){
+    else if (document.getElementById("rt3").checked) {
       selectedResource = document.getElementById("rt3").value;
     }
-    else if(document.getElementById("rt4").checked){
+    else if (document.getElementById("rt4").checked) {
       selectedResource = document.getElementById("rt4").value;
     }
-    else if(document.getElementById("rt5").checked){
+    else if (document.getElementById("rt5").checked) {
       selectedResource = document.getElementById("rt5").value;
     }
-    else if(document.getElementById("rt6").checked){
+    else if (document.getElementById("rt6").checked) {
       selectedResource = document.getElementById("rt6").value;
     }
-    else if(document.getElementById("rt7").checked){
+    else if (document.getElementById("rt7").checked) {
       selectedResource = document.getElementById("rt7").value;
     }
     document.getElementById("field-resourceTypeGeneral").value = selectedResource;
   });
   //retain value
   let resid = "N/A";
-  if("{{data.resourceTypeGeneral}}"=="Dataset"){
+  if ("{{data.resourceTypeGeneral}}" == "Dataset") {
     resid = "rt1"
   }
-  else if("{{data.resourceTypeGeneral}}"=="Instrument"){
+  else if ("{{data.resourceTypeGeneral}}" == "Instrument") {
     resid = "rt2"
   }
-  else if("{{data.resourceTypeGeneral}}"=="Instrument"){
+  else if ("{{data.resourceTypeGeneral}}" == "Instrument") {
     resid = "rt3"
   }
-  else if("{{data.resourceTypeGeneral}}"=="Software"){
+  else if ("{{data.resourceTypeGeneral}}" == "Software") {
     resid = "rt4"
   }
-  else if("{{data.resourceTypeGeneral}}"=="Image"){
+  else if ("{{data.resourceTypeGeneral}}" == "Image") {
     resid = "rt5"
   }
-  else if("{{data.resourceTypeGeneral}}"=="AudioVisual"){
+  else if ("{{data.resourceTypeGeneral}}" == "AudioVisual") {
     resid = "rt6"
   }
-  else if("{{data.resourceTypeGeneral}}"=="ComputationalNotebook"){
+  else if ("{{data.resourceTypeGeneral}}" == "ComputationalNotebook") {
     resid = "rt7"
   }
 
@@ -397,7 +434,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <!-- Funder Information -->
 <!--                    -->
 <!--                    -->
-<label><strong>* Funder Information (Mandatory)</strong></label>
+<label><strong> Funder Information (Mandatory)</strong></label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
 <label for="field-awardNumberField">Award number</label><br>
@@ -427,35 +464,70 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 
 
 <button type="button" onclick="addFunders()"> Add </button>
-<button type="button" onclick="clearFunders()"> Clear All</button>
-<button type="button" onclick="popFunders()"> Clear Last Entry</button>
+
 
 <pre id=funderInfo></pre>
+<div id="funderDiv"></div>
 
 <!-- Metadata fields are hidden -->
 <!--                            -->
 <input id="field-funderName" name="funderName" classes="control-medium" style="display:None;"
   value="{{ data.funderName }}">
+
 <input id="field-funderId" name="funderId" classes="control-medium" style="display:None;" value="{{ data.funderId }}">
+
 <input id="field-funderIdType" name="funderIdType" classes="control-medium" style="display:None;"
   value="{{ data.funderIdType }}">
+
 <input id="field-awardNumber" name="awardNumber" classes="control-medium" style="display:None;"
   value="{{ data.awardNumber }}">
+
 <input id="field-awardURI" name="awardURI" classes="control-medium" style="display:None;" value="{{ data.awardURI }}">
+
 <input id="field-awardTitle" name="awardTitle" classes="control-medium" style="display:None;"
   value="{{ data.awardTitle }}">
 
-
-<script>
-  var fname = "{{ data.funderName }}".split(",");
-  var fid = "{{ data.funderId }}".split(",");
-  var fidType = "{{ data.funderIdType }}".split(",");
-  var faNum = "{{ data.awardNumber }}".split(",");
-  var fUri = "{{ data.awardURI }}".split(",");
-  var aTitle = "{{ data.awardTitle }}".split(",");
-  if(faNum[0]!=''){
-  displayFunders();
+<style>
+  #funderDiv {
+    display: flex;
+    flex-wrap: wrap;
   }
+
+  .funder-item {
+    background-color: #f0f0f0;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    display: inline;
+  }
+
+  .funder-item .close-btn {
+    cursor: pointer;
+    margin-left: 5px;
+  }
+</style>
+<script>
+  var fname = "{{data.funderName}}".split(",");
+  var fid = "{{data.funderId}}".split(",");
+  var fidType = "{{funderIdType}}".split(",");
+  var faNum = "{{data.awardNumber}}".split(",");
+  var fUri = "{{data.awardURI}}".split(",");
+  var aTitle = "{{data.awardTitle}}".split(",");
+  const funderList = document.getElementById('funderDiv');
+  for(let i=0; i<aTitle.length; i++){
+    displayFunders(aTitle[i]);
+  }
+  function displayFunderPre(){
+
+    let p = document.getElementById("funderInfo");
+  p.innerHTML = "Funders:";
+  for(let i = 0; i < fname.length; i++){
+    let c = document.createTextNode(`Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]}, Funder: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}`);
+    p.append("\n");
+    p.append(c);
+     }
+  }
+
   function addFunders() {
     let fn = document.getElementById("field-funderNameField").value;
     let id = document.getElementById("field-funderIdField").value;
@@ -499,57 +571,41 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById("field-awardNumber").value = faNum;
     document.getElementById("field-awardURI").value = fUri;
     document.getElementById("field-awardTitle").value = aTitle;
-    document.getElementById('funderInfo').innerHTML = "Funders: " + fname;
-    displayFunders();
+    displayFunders(at);
   }
 
-  function clearFunders() {
-    fname = [];
-    fid = [];
-    fidType = [];
-    faNum = [];
-    fUri = [];
-    aTitle = [];
+  function displayFunders(title) {
+    let index = aTitle.indexOf(title);
+    const funderItem = document.createElement("div");
+    funderItem.classList.add('funder-item');
+    funderItem.innerHTML = `
+            ${title} <span class="close-btn" onclick="removeFunder(this)">X</span>
+        `;
+    funderList.appendChild(funderItem);
+    displayFunderPre();
+  }
+
+  function removeFunder(closeBtn) {
+    const funderItem = closeBtn.parentNode;
+    funderList.removeChild(funderItem);
+    let funId = funderItem.textContent.trim();
+    funId = funId.slice(0, -1);
+    funId = funId.trim()
+    let index = fid.indexOf(funId);
+    fname.splice(index, 1);
+    fid.splice(index, 1);
+    fidType.splice(index, 1);
+    faNum.splice(index, 1);
+    fUri.splice(index, 1);
+    aTitle.splice(index, 1);
     document.getElementById("field-funderName").value = fname;
     document.getElementById("field-funderId").value = fid;
     document.getElementById("field-funderIdType").value = fidType;
     document.getElementById("field-awardNumber").value = faNum;
     document.getElementById("field-awardURI").value = fUri;
     document.getElementById("field-awardTitle").value = aTitle;
-    document.getElementById("field-funderNameField").value = fname;
-    document.getElementById("field-funderIdField").value = fid;
-    document.getElementById("field-funderIdTypeField").value = fidType;
-    document.getElementById("field-awardNumberField").value = faNum;
-    document.getElementById("field-awardURIField").value = fUri;
-    document.getElementById("field-awardTitleField").value = aTitle;
-    document.getElementById('funderInfo').innerHTML = "Cleared"
-  }
-  function displayFunders(){
-  let p = document.getElementById("funderInfo");
-  p.innerHTML = "Funders:";
-  for(let i = 0; i < fname.length; i++){
-    let c = document.createTextNode(`Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]}, Funder: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}`);
-    p.append("\n");
-    p.append(c);
-    
-
-  }
-  }
-  function popFunders(){
-    fname.pop();
-    fid.pop();
-    fUri.pop();
-    faNum.pop();
-    aTitle.pop();
-    fidType.pop();
-    document.getElementById("field-funderName").value = fname;
-    document.getElementById("field-funderId").value = fid;
-    document.getElementById("field-awardURI").value = fUri;
-    document.getElementById("field-awardNumber").value = faNum;
-    document.getElementById("field-awardTitle").value = aTitle;
-    document.getElementById("field-funderIdType").value = fidType;
-
-    displayFunders();
+    displayFunderPre();
+   
   }
   // </script>
 <hr style="height:2px;border-width:0;color:black;background-color:gray">
@@ -608,29 +664,49 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   name="field-contributorAffiliationField" classes="control-medium">
 <br><br>
 <button type="button" onclick="addContributor()">Add Contributor</button>
-<button type="button" onclick="clearContributor()">Clear All</button>
-<button type="button" onclick="popContributor()">Clear Last Entry</button>
+
 <pre id='contributorMessage'></pre>
+<div id="contributorDiv"></div>
 <br>
 <!-- Metadata Field Lines for Contributors. These are not displayed, Used to store the metadatafields-->
 <input id="field-contributorType" error="errors.contributorType" name="contributorType" classes="control-medium"
-  style="display:none" value="{{ data.contributorType }}">
-<input id="field-contributorDetails" error="errors.contributorDetails" name="contributorDetails"
-  classes="control-medium" style="display:none" value="{{ data.contributorDetails }}">
+  value="{{ data.contributorType }}" style="display: none;">
+<input id="field-contributorDetails" error="errors.contributorDetails" name="contributorDetails" style="display: none;"
+  classes="control-medium" value="{{ data.contributorDetails }}">
 <input id="field-contributorId" error="errors.contributorId" name="contributorId" classes="control-medium"
-  style="display:none" value="{{ data.contributorId }}">
+  value="{{ data.contributorId }}" style="display: none;">
 <input id="field-contributorAffiliation" error="errors.contributorAffiliation" name="contributorAffiliation"
-  classes="control-medium" style="display:none" value="{{ data.contributorAffiliation }}">
+  classes="control-medium" value="{{ data.contributorAffiliation }}" style="display: none;">
 
 <!-- Contributor Functions -->
+<style>
+  #contributorDiv {
+    display: flex;
+    flex-wrap: wrap;
+  }
 
+  .contributor-item {
+    background-color: #f0f0f0;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    display: inline;
+  }
+
+  .contributor-item .close-btn {
+    cursor: pointer;
+    margin-left: 5px;
+  }
+</style>
 <script>
   var contriId = "{{ data.contributorId }}".split(",");
   var contriName = "{{ data.contributorDetails }}".split(",");
   var contriType = "{{ data.contributorType }}".split(",");
   var contriAffiliation = "{{ data.contributorAffiliation }}".split(",");
-  if(contriName[0]!=''){
-  displayContributors();
+  const contributorList = document.getElementById('contributorDiv');
+
+  for (let i = 0; i < contriName.length; i++) {
+    displayContributors(contriName[i]);
   }
   function addContributor() {
     let fn = document.getElementById('field-contributorFirstName').value;
@@ -649,6 +725,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     }
     document.getElementById('field-contributorFirstName').value = '';
     document.getElementById('field-contributorFamilyName').value = '';
+    document.getElementById('field-contributorNameId').value = '';
     document.getElementById('field-contributorNameId').value = '';
     document.getElementById('field-contributorTypeField').value = '';
     document.getElementById('field-contributorAffiliationField').value = '';
@@ -670,24 +747,11 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById('field-contributorType').value = contriType;
     document.getElementById('field-contributorAffiliation').value = contriAffiliation;
     // document.getElementById('contributorMessage').innerHTML = "Contributors added :" + contriName;
-    displayContributors();
+    displayContributors(fullname);
   }
 
-  function clearContributor() {
-    contriId = [];
-    contriName = [];
-    contriType = [];
-    contriAffiliation = [];
-    document.getElementById('field-contributorFirstName').value = '';
-    document.getElementById('field-contributorFamilyName').value = '';
-    document.getElementById('field-contributorNameId').value = '';
-    document.getElementById('contributorMessage').innerHTML = "Cleared !!!";
-    document.getElementById('field-contributorDetails').value = ""
-    document.getElementById('field-contributorId').value = ""
-    document.getElementById('field-contributorType').value = ""
 
-  }
-  function displayContributors() {
+  function displayContributorPre() {
     let p = document.getElementById('contributorMessage');
     p.innerHTML = "Contributors Added";
     for (let i = 0; i < contriName.length; i++) {
@@ -696,16 +760,35 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
       p.append(c);
     }
   }
-  function popContributor() {
-    contriId.pop();
-    contriName.pop();
-    contriType.pop();
-    contriAffiliation.pop();
+
+  function displayContributors(name) {
+    let index = contriName.indexOf(name);
+    const contributorItem = document.createElement("div");
+    contributorItem.classList.add('contributor-item');
+    contributorItem.innerHTML = `
+            ${name} <span class="close-btn" onclick="removeContributor(this)">X</span>
+        `;
+    contributorList.appendChild(contributorItem);
+    displayContributorPre();
+  }
+  function removeContributor(closeBtn) {
+    const contributorItem = closeBtn.parentNode;
+    contributorList.removeChild(contributorItem);
+    let name = contributorItem.textContent.trim();
+    name = name.slice(0, -1);
+    name = name.trim()
+    console.log(name);
+    let index = contriName.indexOf(name);
+    contriName.splice(index, 1);
+    contriId.splice(index, 1);
+    contriAffiliation.splice(index, 1);
+    contriType.splice(index, 1);
     document.getElementById('field-contributorDetails').value = contriName;
     document.getElementById('field-contributorId').value = contriId;
     document.getElementById('field-contributorType').value = contriType;
     document.getElementById('field-contributorAffiliation').value = contriAffiliation;
-    displayContributors();
+    displayContributorPre();
+
   }
 </script>
 <hr style="height:2px;border-width:0;color:black;background-color:gray">
@@ -840,8 +923,8 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   var idTypeList = "{{ data.relatedIdentifierType }}".split(",");
   var RRTypeList = "{{ data.relatedResourceType }}".split(",");
   var idList = "{{ data.relatedIdentifier }}".split(",");
-  if(relationTypeList[0]!=''){
-  displayRelatedResources();
+  if (relationTypeList[0] != '') {
+    displayRelatedResources();
   }
   function addRelated() {
     let idt = document.getElementById('field-relatedIdField').value;
@@ -863,18 +946,18 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById('field-relatedIdentifier').value = idList;
     displayRelatedResources();
   }
-  function displayRelatedResources(){
+  function displayRelatedResources() {
     let p = document.getElementById("relatedMessage");
-    p.innerHTML="Related Resources: "
-    for(let i = 0; i < idList.length; i++){
-      c = document.createTextNode(`Resource ${i+1}:: ID Type: ${idTypeList[i]}, Relation Type: ${relationTypeList[i]}, Resource Type: ${RRTypeList[i]}, ID: ${idList[i]}`);
+    p.innerHTML = "Related Resources: "
+    for (let i = 0; i < idList.length; i++) {
+      c = document.createTextNode(`Resource ${i + 1}:: ID Type: ${idTypeList[i]}, Relation Type: ${relationTypeList[i]}, Resource Type: ${RRTypeList[i]}, ID: ${idList[i]}`);
       p.append("\n");
       p.append(c);
-      
-      }
+
     }
-  
-  function popRelated(){
+  }
+
+  function popRelated() {
     idTypeList.pop();
     relationTypeList.pop();
     RRTypeList.pop();
@@ -884,7 +967,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById('field-relatedResourceType').value = RRTypeList
     document.getElementById('field-relatedIdentifier').value = idList;
     displayRelatedResources();
-  }    
+  }
 
 
   function clearRelated() {
@@ -990,8 +1073,8 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <label for="field-infraUsedField"> Research Infrastructure Used (Select All)</label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
-<div id="field-infraUsedField" name="infraUsedField" >
-  
+<div id="field-infraUsedField" name="infraUsedField">
+
   <input type="checkbox" id="if1" value="LTEs" onchange="infraAdd('LTEs')">LTEs
   <input type="checkbox" id="if2" value="LSRE" onchange="infraAdd('LSRE')">LSRE
   <input type="checkbox" id="if3" value="NWFP" onchange="infraAdd('NWFP')">NWFP
@@ -999,45 +1082,45 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   <input type="checkbox" id="if5" value="URTO" onchange="infraAdd('URTO')">URTO
   <input type="checkbox" id="if6" value="Rowden" onchange="infraAdd('Rowden')">Rowden
 </div>
-<input type="text" id="field-infraUsed" name="infraUsed"  value="{{ data.infraUsed }}" style="display: none;">
+<input type="text" id="field-infraUsed" name="infraUsed" value="{{ data.infraUsed }}" style="display: none;">
 
 <script>
-    var infra = "{{data.infraUsed}}".split(",");
-    if(infra[0]!=''){
-      for (let x=0; x<infra.length;x++){
-        checkInfra(infra[x]);
-      }
+  var infra = "{{data.infraUsed}}".split(",");
+  if (infra[0] != '') {
+    for (let x = 0; x < infra.length; x++) {
+      checkInfra(infra[x]);
     }
-    function infraAdd( val ){
-        let i = infra.indexOf(val);
-        if(i>-1){
-            infra.splice(i, 1);
-        }
-        else{
-            infra.push(val);
-        }
-        document.getElementById('field-infraUsed').value = infra;
+  }
+  function infraAdd(val) {
+    let i = infra.indexOf(val);
+    if (i > -1) {
+      infra.splice(i, 1);
     }
-    function checkInfra(val){
-      if(val == "LTEs"){
-        document.getElementById("if1").checked=true;
-      }
-      else if(val == "LSRE"){
-        document.getElementById("if2").checked=true;
-      }
-      else if(val == "NWFP"){
-        document.getElementById("if3").checked=true;
-      }
-      else if(val == "RIS"){
-        document.getElementById("if4").checked=true;
-      }
-      else if(val == "URTO"){
-        document.getElementById("if5").checked=true;
-      }
-      else if(val == "Rowden"){
-        document.getElementById("if6").checked=true;
-      }
+    else {
+      infra.push(val);
     }
+    document.getElementById('field-infraUsed').value = infra;
+  }
+  function checkInfra(val) {
+    if (val == "LTEs") {
+      document.getElementById("if1").checked = true;
+    }
+    else if (val == "LSRE") {
+      document.getElementById("if2").checked = true;
+    }
+    else if (val == "NWFP") {
+      document.getElementById("if3").checked = true;
+    }
+    else if (val == "RIS") {
+      document.getElementById("if4").checked = true;
+    }
+    else if (val == "URTO") {
+      document.getElementById("if5").checked = true;
+    }
+    else if (val == "Rowden") {
+      document.getElementById("if6").checked = true;
+    }
+  }
 </script>
 <br><br>
 <hr style="height:2px;border-width:0;color:black;background-color:gray">
@@ -1193,8 +1276,8 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   var valUri = "{{ data.valueUri }}".split(",");
   var classCode = "{{ data.classificationCode }}".split();
   var sub = "{{ data.subject }}".split(",");
-  if(sub[0]!=''){
-  displaySubject();
+  if (sub[0] != '') {
+    displaySubject();
   }
   function addSubject() {
     let ss = document.getElementById('field-subjectSchemeField').value;
@@ -1227,16 +1310,16 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     // Print Message
     displaySubject();
   }
-  function displaySubject(){
+  function displaySubject() {
     let p = document.getElementById("subjectMessage");
     p.innerHTML = "Subjects:"
-    for(let i=0; i<sub.length; i++){
-      c=document.createTextNode(`${i+1}:: Subject Scheme:${subScheme[i]}, Subject URI:${subUri[i]}, Value URI:${valUri}, Classification Code:${classCode[i]}, Subject:${sub[i]}`);
+    for (let i = 0; i < sub.length; i++) {
+      c = document.createTextNode(`${i + 1}:: Subject Scheme:${subScheme[i]}, Subject URI:${subUri[i]}, Value URI:${valUri}, Classification Code:${classCode[i]}, Subject:${sub[i]}`);
       p.append("\n");
       p.append(c);
     }
   }
-  function popSubject(){
+  function popSubject() {
     subScheme.pop();
     subUri.pop();
     valUri.pop();
@@ -1246,7 +1329,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById('field-subjectUri').value = subUri;
     document.getElementById('field-valueUri').value = valUri;
     document.getElementById('field-classificationCode').value = classCode;
-    document.getElementById('field-subject').value = sub;    
+    document.getElementById('field-subject').value = sub;
     displaySubject();
   }
   function clearSubject() {
@@ -1274,9 +1357,12 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <i class="fas fa-info-circle" title="add info here"></i><br>
 <input id="field-license" name="license" class="control-medium" style="display: none;" value="{{data.license}}">
 <div id="licenseButtons">
-  <input type="radio" id="lr1" name="licenseSelect" value="Creative Commons Attribution Licence (CC BY 4.0)">Creative Commons Attribution Licence (CC BY 4.0)
+  <input type="radio" id="lr1" name="licenseSelect" value="Creative Commons Attribution Licence (CC BY 4.0)">Creative
+  Commons Attribution Licence (CC BY 4.0)
   <br>
-  <input type="radio" id="lr2" name="licenseSelect" value="Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)">Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)
+  <input type="radio" id="lr2" name="licenseSelect"
+    value="Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)">Creative Commons Attribution Non-Commercial (CC
+  BY-NC 4.0)
   <br>
   <input type="radio" id="lr3" name="licenseSelect" value="Open Government Licence (OGL)">Open Government Licence (OGL)
 </div><br>
@@ -1284,7 +1370,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   // When New Radio Button is selected
   var licenseContainer = document.getElementById("licenseButtons");
   let selectedLicense;
-  licenseContainer.addEventListener('change', function(){
+  licenseContainer.addEventListener('change', function () {
     if (document.getElementById('lr1').checked) {
       selectedLicense = document.getElementById('lr1').value;
     } else if (document.getElementById('lr2').checked) {
@@ -1294,19 +1380,19 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     }
     document.getElementById("field-license").value = selectedLicense;
   });
-  
+
   //Retain Value
   let x = "{{ data.license }}"
-  if(x=="Creative Commons Attribution Licence (CC BY 4.0)"){
-    document.getElementById("lr1").checked=true;
+  if (x == "Creative Commons Attribution Licence (CC BY 4.0)") {
+    document.getElementById("lr1").checked = true;
   }
-  else if( x == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)" ){
+  else if (x == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)") {
     document.getElementById("lr2").checked = true;
-    }
-  else if(x == "Open Government Licence (OGL)"){
-    document.getElementById("lr3").checked=true;
-  }  
-  
+  }
+  else if (x == "Open Government Licence (OGL)") {
+    document.getElementById("lr3").checked = true;
+  }
+
 </script>
 
 
@@ -1314,10 +1400,10 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
 <input type="text" id="field-version" name="version" class="control-medium" is_required="true" error="errors.version">
 <br><br>
 <script>
-  if("{{data.version}}"){
+  if ("{{data.version}}") {
     document.getElementById("field-version").value = "{{data.version}}";
   }
-  else{
+  else {
     document.getElementById("field-version").value = 1;
   }
 </script>
