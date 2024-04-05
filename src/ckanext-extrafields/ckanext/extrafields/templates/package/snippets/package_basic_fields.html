@@ -70,10 +70,15 @@
 <!-- CREATOR Function-->
 
 <script>
-  var nameId = "{{ data.nameIdentifier }}".split(",");
-  var creator = "{{ data.author }}".split(",");
-  var affiliations = "{{ data.creatorAffiliation }}".split(",");
+  var nameId = [];
+  var creator = [];
+  var affiliations = [];
   var fullname = [];
+  if("{{ data.author }}"){
+    nameId = "{{data.nameIdentifier}}".split(",")
+    creator = "{{data.author}}".split(",");
+    affiliations = "{{ data.creatorAffiliation }}".split(",");
+  }
   const creatorList = document.getElementById('creatorDisp');
   if (creator[0] != '') {
     for (let i = 0; i < creator.length; i++) {
@@ -84,10 +89,11 @@
     let p = document.getElementById('errorMessage');
     p.innerHTML = "Creators Addded :";
     for (let i = 0; i < creator.length; i++) {
+      if(creator[i]){
       let c = document.createTextNode(`Creator ${i + 1}: ${creator[i]}, ID: ${nameId[i]}, Organization: ${affiliations[i]}`);
       p.append("\n");
       p.append(c);
-
+      }
     }
   }
 
@@ -150,7 +156,6 @@
     let name = creatorItem.textContent.trim();
     name = name.slice(0, -1);
     name = name.trim()
-    console.log(name);
     let index = creator.indexOf(name);
     creator.splice(index, 1);
     nameId.splice(index, 1);
@@ -507,14 +512,22 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   }
 </style>
 <script>
-  var fname = "{{data.funderName}}".split(",");
-  var fid = "{{data.funderId}}".split(",");
-  var fidType = "{{funderIdType}}".split(",");
-  var faNum = "{{data.awardNumber}}".split(",");
-  var fUri = "{{data.awardURI}}".split(",");
-  var aTitle = "{{data.awardTitle}}".split(",");
+    var fname = [];
+    var fid = [];
+    var fidType = []
+    var faNum = [];
+    var fUri = [];
+    var aTitle = [];
+if ("{{data.funderName}}") {
+     fname = "{{data.funderName}}".split(",");
+     fid = "{{data.funderId}}".split(",");
+     fidType = "{{funderIdType}}".split(",");
+     faNum = "{{data.awardNumber}}".split(",");
+     fUri = "{{data.awardURI}}".split(",");
+     aTitle = "{{data.awardTitle}}".split(",");
+} 
   const funderList = document.getElementById('funderDiv');
-  if (aTitle[0 != '']) {
+  if (aTitle[0] != '') {
     for (let i = 0; i < aTitle.length; i++) {
       displayFunders(aTitle[i]);
     }
@@ -701,10 +714,16 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   }
 </style>
 <script>
-  var contriId = "{{ data.contributorId }}".split(",");
-  var contriName = "{{ data.contributorDetails }}".split(",");
-  var contriType = "{{ data.contributorType }}".split(",");
-  var contriAffiliation = "{{ data.contributorAffiliation }}".split(",");
+      var contriId = [];
+      var contriName = [];
+      var contriType = [];
+      var contriAffiliation = [];
+if ("{{ data.contributorId }}") {
+     contriId = "{{ data.contributorId }}".split(",");
+     contriName = "{{ data.contributorDetails }}".split(",");
+     contriType = "{{ data.contributorType }}".split(",");
+     contriAffiliation = "{{ data.contributorAffiliation }}".split(",");
+}
   const contributorList = document.getElementById('contributorDiv');
   if (contriName[0] != '') {
     for (let i = 0; i < contriName.length; i++) {
@@ -780,7 +799,6 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     let name = contributorItem.textContent.trim();
     name = name.slice(0, -1);
     name = name.trim()
-    console.log(name);
     let index = contriName.indexOf(name);
     contriName.splice(index, 1);
     contriId.splice(index, 1);
