@@ -75,90 +75,90 @@
   var affiliations = "{{ data.creatorAffiliation }}".split(",");
   var fullname = [];
   const creatorList = document.getElementById('creatorDisp');
-
-  for(let i=0; i<creator.length; i++){
+  if (creator[0] != '') {
+    for (let i = 0; i < creator.length; i++) {
       displayCreators(creator[i]);
+    }
   }
+  function displayCreatorPre() {
+    let p = document.getElementById('errorMessage');
+    p.innerHTML = "Creators Addded :";
+    for (let i = 0; i < creator.length; i++) {
+      let c = document.createTextNode(`Creator ${i + 1}: ${creator[i]}, ID: ${nameId[i]}, Organization: ${affiliations[i]}`);
+      p.append("\n");
+      p.append(c);
 
-  function displayCreatorPre(){
-      let p = document.getElementById('errorMessage');
-      p.innerHTML = "Creators Addded :";
-      for (let i = 0; i < creator.length; i++) {
-          let c = document.createTextNode(`Creator ${i + 1}: ${creator[i]}, ID: ${nameId[i]}, Organization: ${affiliations[i]}`);
-          p.append("\n");
-          p.append(c);
-
-      }
+    }
   }
 
   function addCreator() {
-      let fn = document.getElementById('field-given_name').value;
-      let sn = document.getElementById('field-family_name').value;
-      let id = document.getElementById('field-nameIdField').value;
-      let af = document.getElementById('field-creatorAffiliationField').value;
+    let fn = document.getElementById('field-given_name').value;
+    let sn = document.getElementById('field-family_name').value;
+    let id = document.getElementById('field-nameIdField').value;
+    let af = document.getElementById('field-creatorAffiliationField').value;
 
-      //Clear the fields
-      try {
-          if (!fn || !sn || !af) {
-              throw new Error('* Fields Should Not Be Empty');
-          }
+    //Clear the fields
+    try {
+      if (!fn || !sn || !af) {
+        throw new Error('* Fields Should Not Be Empty');
       }
-      catch (err) {
-          document.getElementById('errorMessage').innerHTML = err.message;
-          return;
-      }
-      clearCreatorInputFields();
-      fullname = fn.concat(' ', sn);
-      creator.push(fullname);
-      if (id) {
-          nameId.push(id);
-      }
-      else {
-          nameId.push("NONE");
-      }
-      affiliations.push(af);
-      document.getElementById('field-author').value = creator;
-      document.getElementById('field-nameIdentifier').value = nameId;
-      document.getElementById('field-creatorAffiliation').value = affiliations;
-      // document.getElementById('errorMessage').innerHTML = "Creators Addded :" + creator;
-      displayCreators(fullname);
+    }
+    catch (err) {
+      document.getElementById('errorMessage').innerHTML = err.message;
+      return;
+    }
+    clearCreatorInputFields();
+    fullname = fn.concat(' ', sn);
+    creator.push(fullname);
+    if (id) {
+      nameId.push(id);
+    }
+    else {
+      nameId.push("NONE");
+    }
+    affiliations.push(af);
+    document.getElementById('field-author').value = creator;
+    document.getElementById('field-nameIdentifier').value = nameId;
+    document.getElementById('field-creatorAffiliation').value = affiliations;
+    // document.getElementById('errorMessage').innerHTML = "Creators Addded :" + creator;
+    displayCreators(fullname);
   }
 
   function clearCreatorInputFields() {
-      document.getElementById('field-given_name').value = '';
-      document.getElementById('field-family_name').value = '';
-      document.getElementById('field-nameIdField').value = '';
-      document.getElementById('field-creatorAffiliationField').value = '';
-      document.getElementById('errorMessage').innerHTML = '';
+    document.getElementById('field-given_name').value = '';
+    document.getElementById('field-family_name').value = '';
+    document.getElementById('field-nameIdField').value = '';
+    document.getElementById('field-creatorAffiliationField').value = '';
+    document.getElementById('errorMessage').innerHTML = '';
   }
   function displayCreators(name) {
-      let index = creator.indexOf(name);
-      const creatorItem = document.createElement("div");
-      creatorItem.classList.add('creator-item');
-      creatorItem.innerHTML = `
+    let index = creator.indexOf(name);
+    const creatorItem = document.createElement("div");
+    creatorItem.classList.add('creator-item');
+    creatorItem.innerHTML = `
           ${name} <span class="close-btn" onclick="removeCreator(this)">X</span>
       `;
-      creatorList.appendChild(creatorItem);
-      displayCreatorPre();
+    creatorList.appendChild(creatorItem);
+    displayCreatorPre();
   }
 
 
 
   function removeCreator(closeBtn) {
-      const creatorItem = closeBtn.parentNode;
-      creatorList.removeChild(creatorItem);
-      let name = creatorItem.textContent.trim();
-      name = name.slice(0, -1);
-      name = name.trim()
-      console.log(name);
-      let index = creator.indexOf(name);
-      creator.splice(index, 1);
-      nameId.splice(index, 1);
-      affiliations.splice(index, 1);
-      document.getElementById('field-author').value = creator;
-      document.getElementById('field-nameIdentifier').value = nameId;
-      document.getElementById('field-creatorAffiliation').value = affiliations;
-      displayCreatorPre();
+    const creatorItem = closeBtn.parentNode;
+    creatorList.removeChild(creatorItem);
+    let name = creatorItem.textContent.trim();
+    name = name.slice(0, -1);
+    name = name.trim()
+    console.log(name);
+    let index = creator.indexOf(name);
+    creator.splice(index, 1);
+    nameId.splice(index, 1);
+    affiliations.splice(index, 1);
+    document.getElementById('field-author').value = creator;
+    document.getElementById('field-nameIdentifier').value = nameId;
+    document.getElementById('field-creatorAffiliation').value = affiliations;
+    displayCreatorPre();
   }
 
 </script>
@@ -514,18 +514,20 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   var fUri = "{{data.awardURI}}".split(",");
   var aTitle = "{{data.awardTitle}}".split(",");
   const funderList = document.getElementById('funderDiv');
-  for(let i=0; i<aTitle.length; i++){
-    displayFunders(aTitle[i]);
+  if (aTitle[0 != '']) {
+    for (let i = 0; i < aTitle.length; i++) {
+      displayFunders(aTitle[i]);
+    }
   }
-  function displayFunderPre(){
+  function displayFunderPre() {
 
     let p = document.getElementById("funderInfo");
-  p.innerHTML = "Funders:";
-  for(let i = 0; i < fname.length; i++){
-    let c = document.createTextNode(`Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]}, Funder: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}`);
-    p.append("\n");
-    p.append(c);
-     }
+    p.innerHTML = "Funders:";
+    for (let i = 0; i < fname.length; i++) {
+      let c = document.createTextNode(`Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]}, Funder: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}`);
+      p.append("\n");
+      p.append(c);
+    }
   }
 
   function addFunders() {
@@ -605,7 +607,7 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
     document.getElementById("field-awardURI").value = fUri;
     document.getElementById("field-awardTitle").value = aTitle;
     displayFunderPre();
-   
+
   }
   // </script>
 <hr style="height:2px;border-width:0;color:black;background-color:gray">
@@ -704,9 +706,10 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   var contriType = "{{ data.contributorType }}".split(",");
   var contriAffiliation = "{{ data.contributorAffiliation }}".split(",");
   const contributorList = document.getElementById('contributorDiv');
-
-  for (let i = 0; i < contriName.length; i++) {
-    displayContributors(contriName[i]);
+  if (contriName[0] != '') {
+    for (let i = 0; i < contriName.length; i++) {
+      displayContributors(contriName[i]);
+    }
   }
   function addContributor() {
     let fn = document.getElementById('field-contributorFirstName').value;

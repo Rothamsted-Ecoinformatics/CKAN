@@ -181,6 +181,11 @@
       <th>Experiment Code</th>
       <td>{{pkg_dict.Codes}}</td>
     </tr>
+    <tr>
+      <th>Funder ID </th>
+      <td><pre id="funderField"></pre> </td>
+    </tr>
+
   </table>
   <script>
     if("{{user}}" == "true"){
@@ -197,6 +202,15 @@
       link.textContent = notebooks[i];
       document.getElementById("notebookField").append(link);
       document.getElementById("notebookField").append("\n");
+    }
+
+    var funderPrivateInfo = document.getElementById("funderField");
+    var idType = "{{ pkg_dict.funderIdType }}".split(",");
+    var fId = "{{ pkg_dict.funderId }}".split(",");
+    for(let i = 0; i<fId.length; i++){
+      let val = document.createTextNode(`ID Type: ${idType[i]} , ID: ${fId[i]}`);
+      funderPrivateInfo.append(val);
+      funderPrivateInfo.append("\n")
     }
    </script>
 </section>
