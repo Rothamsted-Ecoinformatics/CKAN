@@ -1,7 +1,7 @@
 <section class="additional-info">
- <!-- Author Information -->
- {% set can_edit = h.check_access('package_update', {'id':pkg_dict.id }) %}
- {% set user = 'true' if can_edit else 'false' %}
+  <!-- Author Information -->
+  {% set can_edit = h.check_access('package_update', {'id':pkg_dict.id }) %}
+  {% set user = 'true' if can_edit else 'false' %}
   <div><strong>Authors</strong></div>
   <pre id="author-field" style="background-color: #f3f1f1;"></pre>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
@@ -36,24 +36,59 @@
   <p style="background-color: #f3f1f1;">{{ pkg_dict.technicalInfo }}</p>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
-
+  <!-- Spatial Information -->
   <div><strong> Spatial Information </strong></div>
   <pre style="background-color: #f3f1f1;">
-    <!-- Spatial Information -->
- Geolocation Point (Latitude, Longitude) : ( {{ pkg_dict.geoLatitude }}, {{ pkg_dict.geoLongitude }} ) 
- Geolocation Box:
-    Lower Left Corner (Latitude,Longitude): ( {{ pkg_dict.geoLowLeftLatitude }}, {{ pkg_dict.geoLowLeftLongitude }} ) 
-    Top Right Corner (Latitude,Longitude): ( {{ pkg_dict.geoTopRightLatitude }}, {{ pkg_dict.geoTopRightLongitude }} ) 
+  <strong>Geolocation Point</strong> 
+    (Latitude, Longitude) : ( {{ pkg_dict.geoLatitude }}, {{ pkg_dict.geoLongitude }} ) 
   </pre>
+  <pre id="geoBox" style="display: none; background-color: #f3f1f1;"> 
+  <strong>Geolocation Box:</strong>
+     Lower Left Corner (Latitude,Longitude): ( {{ pkg_dict.geoLowLeftLatitude }}, {{ pkg_dict.geoLowLeftLongitude }} ) 
+     Top Right Corner (Latitude,Longitude): ( {{ pkg_dict.geoTopRightLatitude }}, {{ pkg_dict.geoTopRightLongitude }} ) 
+  </pre>
+  <head>
+    <title>Simple Leaflet Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #mapid {
+            height: 300px;
+            width:auto;
+        }
+    </style>
+</head>
+<div id="mapid"></div>
+
+    <script>
+        let x = parseFloat("{{ pkg_dict.geoLatitude }}");
+        let y = parseFloat("{{ pkg_dict.geoLongitude }}")
+        var mymap = L.map('mapid').setView([x, y], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(mymap);
+        L.marker([x, y]).addTo(mymap);
+        if("{{ pkg_dict.geoLowLeftLatitude }}"){
+        document.getElementById("geoBox").style.display = "block";
+        let llx = parseFloat("{{ pkg_dict.geoLowLeftLatitude }}");
+        let lly = parseFloat("{{ pkg_dict.geoLowLeftLongitude }}");
+        let trx = parseFloat("{{ pkg_dict.geoTopRightLatitude }}");
+        let trY = parseFloat("{{ pkg_dict.geoTopRightLongitude }}");
+        var bounds = [[llx, lly], [trx, trY]];
+        L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(mymap);
+
+  }
+    </script>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
 
   <!-- Collection Dates -->
   <div><strong> Collection Date </strong></div>
   {% if pkg_dict.collectionEndDate %}
-    <p style="background-color: #f3f1f1;">{{ pkg_dict.collectionStartDate }} to {{ pkg_dict.collectionEndDate }} </p>
+  <p style="background-color: #f3f1f1;">{{ pkg_dict.collectionStartDate }} to {{ pkg_dict.collectionEndDate }} </p>
   {%else%}
-    <p style="background-color: #f3f1f1;"> {{ pkg_dict.collectionStartDate }} </p>  
-  {%endif%}  
+  <p style="background-color: #f3f1f1;"> {{ pkg_dict.collectionStartDate }} </p>
+  {%endif%}
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <!-- Related Resource Fields -->
@@ -65,7 +100,7 @@
     let type = "{{pkg_dict.relationType}}".split(",");
     let Rid = "{{pkg_dict.relatedIdentifier}}".split(",");
     let p = document.getElementById("relatedResourceField");
-    for (let i=0;i<type.length; i++ ){
+    for (let i = 0; i < type.length; i++) {
 
       let link = document.createElement("a");
       link.href = Rid[i];
@@ -88,15 +123,15 @@
     let aURI = "{{pkg_dict.awardURI}}".split(",");
     let funder = "{{pkg_dict.funderName}}".split(",");
     p = document.getElementById("funderInfo");
-    for(let i=0; i<aNum.length;i++){
+    for (let i = 0; i < aNum.length; i++) {
       let link = document.createElement("a");
       link.href = aURI[i];
       link.textContent = aURI[i];
-      val = document.createTextNode(` ${i+1}. Award Number: ${aNum[i]}, Award Title: ${aTitle[i]}, Funder Name: ${funder[i]}, Award URI: `);
+      val = document.createTextNode(` ${i + 1}. Award Number: ${aNum[i]}, Award Title: ${aTitle[i]}, Funder Name: ${funder[i]}, Award URI: `);
       p.append(val);
       p.append(link);
-      p.append("\n"); 
-      }
+      p.append("\n");
+    }
   </script>
 
   <!-- Contributor Information -->
@@ -110,9 +145,9 @@
     let conID = "{{pkg_dict.contributorId}}".split(",");
     let conAff = "{{pkg_dict.contributorAffiliation}}".split(",");
     para = document.getElementById("contributorDetails");
-    
-    for (let i=0;i<conName.length;i++){
-      val = document.createTextNode(` ${i+1}. Type: ${conType[i]}, Name: ${conName[i]}, ID: ${conID[i]}, Affiliation: ${conAff[i]}  `);
+
+    for (let i = 0; i < conName.length; i++) {
+      val = document.createTextNode(` ${i + 1}. Type: ${conType[i]}, Name: ${conName[i]}, ID: ${conID[i]}, Affiliation: ${conAff[i]}  `);
       para.append(val);
       para.append("\n");
     }
@@ -130,32 +165,36 @@
       border-bottom: 1px black;
       table-layout: fixed;
     }
-    
-    td, th {
+
+    td,
+    th {
       border: 1px solid #dddddd;
       text-align: left;
       padding: 8px;
     }
-    
+
     tr:nth-child(even) {
       background-color: #dddddd;
     }
+
     pre {
-    color: rgb(0, 0, 0);
-    font: 1em sans-serif;
-  }
-  p {
-    color: black;
-    font: 1em sans-serif
-  }
-    </style>
-  <table id="table1" >
-    <tr><th>
-      
-      <strong style="color: green; font-family: Arial;">  Private Information </strong>
-     
-    </th> 
-    <td></td>
+      color: rgb(0, 0, 0);
+      font: 1em sans-serif;
+    }
+
+    p {
+      color: black;
+      font: 1em sans-serif
+    }
+  </style>
+  <table id="table1">
+    <tr>
+      <th>
+
+        <strong style="color: green; font-family: Arial;"> Private Information </strong>
+
+      </th>
+      <td></td>
     </tr>
     <tr>
       <th>Responsible Person</th>
@@ -171,7 +210,9 @@
     </tr>
     <tr>
       <th>Assoicated Notebooks</th>
-      <td> <pre id="notebookField"></pre> </td>
+      <td>
+        <pre id="notebookField"></pre>
+      </td>
     </tr>
     <tr>
       <th>Experiment Code Type</th>
@@ -183,20 +224,22 @@
     </tr>
     <tr>
       <th>Funder ID </th>
-      <td><pre id="funderField"></pre> </td>
+      <td>
+        <pre id="funderField"></pre>
+      </td>
     </tr>
 
   </table>
   <script>
-    if("{{user}}" == "true"){
-      console.log("show secret");
-      document.getElementById("table1").style.display="table";
+    if ("{{user}}" == "true") {
+      console.log("show secrets");
+      document.getElementById("table1").style.display = "table";
     }
-    else{
+    else {
       console.log("hide secrets");
     }
     var notebooks = "{{ pkg_dict.associatedNote }}".split(",");
-    for(let i=0;i<notebooks.length; i++){
+    for (let i = 0; i < notebooks.length; i++) {
       var link = document.createElement('a');
       link.href = notebooks[i];
       link.textContent = notebooks[i];
@@ -207,10 +250,10 @@
     var funderPrivateInfo = document.getElementById("funderField");
     var idType = "{{ pkg_dict.funderIdType }}".split(",");
     var fId = "{{ pkg_dict.funderId }}".split(",");
-    for(let i = 0; i<fId.length; i++){
+    for (let i = 0; i < fId.length; i++) {
       let val = document.createTextNode(`ID Type: ${idType[i]} , ID: ${fId[i]}`);
       funderPrivateInfo.append(val);
       funderPrivateInfo.append("\n")
     }
-   </script>
+  </script>
 </section>
