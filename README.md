@@ -46,4 +46,4 @@ Git Information:
 
   Styling Information:
 	
-  	 /usr/lib/ckan/default/src/ckan/ckan/public/base/css/main.css
+  	 /usr/lib/ckan/default/src/ckanext-theme/ckanext/theme/public/base/css/main.css
