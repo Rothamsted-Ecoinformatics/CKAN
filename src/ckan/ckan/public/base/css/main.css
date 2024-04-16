@@ -13479,7 +13479,7 @@ td.diff_header {
 }
 .account-masthead {
   min-height: 30px;
-  color: #fff;
+  color: #FFF;
   background: #0e6633;
 }
 .account-masthead .account {
@@ -13545,7 +13545,7 @@ td.diff_header {
 }
 
 .masthead {
-  background: #7a997a;
+  background: #fff;
 }
 .masthead .debug {
   position: fixed;
@@ -13594,12 +13594,12 @@ td.diff_header {
 }
 .masthead .main-navbar ul li a {
   padding: 0.6rem 0.9rem;
-  color: #fff;
+  color: #1E1E1E;
   text-decoration: none;
 }
 .masthead .main-navbar ul li:hover a, .masthead .main-navbar ul li:focus a, .masthead .main-navbar ul li.active a {
   border-radius: 0.3rem;
-  background-color: #0e6633;
+  background-color: #FFF;
 }
 .masthead .main-navbar .site-search button {
   display: flex;
