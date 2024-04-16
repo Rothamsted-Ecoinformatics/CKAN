@@ -13480,7 +13480,7 @@ td.diff_header {
 .account-masthead {
   min-height: 30px;
   color: #fff;
-  background: #0e6633 url("../../../base/images/bg.png");
+  background: #0e6633;
 }
 .account-masthead .account {
   float: right;
