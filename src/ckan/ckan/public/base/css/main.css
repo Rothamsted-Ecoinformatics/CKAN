@@ -11382,7 +11382,7 @@ a.tag:hover {
   padding-left: 0px;
   min-height: 205px;
   padding-top: 0.75rem;
-  background: #fbfbfb url("../../../base/images/bg.png");
+  background: #fbfbfb;
   border: 1px solid #ddd;
   border-width: 1px 0;
 }
@@ -13111,7 +13111,7 @@ td.diff_header {
 
 .main {
   padding: 20px 0;
-  background: #eee url("../../../base/images/bg.png");
+  background: #eee;
 }
 
 .main:after,
@@ -13545,7 +13545,7 @@ td.diff_header {
 }
 
 .masthead {
-  background: #7a997a url("../../../base/images/bg.png");
+  background: #7a997a;
 }
 .masthead .debug {
   position: fixed;
@@ -13640,7 +13640,7 @@ td.diff_header {
   }
 }
 .site-footer {
-  background: #0e6633 url("../../../base/images/bg.png");
+  background: #0e6633;
   padding: 20px 0;
 }
 .site-footer label,
