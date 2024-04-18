@@ -35,7 +35,7 @@
     margin-left: 5px;
   }
 </style>
-<label id="creatorLabel"><strong>* Creator Details (Mandatory)</strong></label>
+<label id="creatorLabel"><strong>*Creator Details (Mandatory)</strong></label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
 <!-- First Name -->
@@ -54,6 +54,33 @@
 <input type="text" id="field-creatorAffiliationField" placeholder="Affiliations" name="field-creatorAffiliationField"
   classes="control-medium">
 <br><br>
+<html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+<script>
+let data = [];
+
+fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/ckanStaffList.csv')
+    .then(response => response.text())
+    .then(csvString => {
+        data = Papa.parse(csvString, {header: true}).data;
+        const fullNames = data.map(item => ({label: item.firstname + ' ' + item.lastname, value: item.lastname, item}));
+        $("#field-family_name").autocomplete({
+            source: fullNames,
+            select: function(event, ui) {
+                $('#field-given_name').val(ui.item.item.firstname);
+                $('#field-family_name').val(ui.item.item.lastname);
+                $('#field-nameIdField').val(ui.item.item.identifier);
+                $('#field-creatorAffiliationField').val(ui.item.item.affiliation);
+                return false;
+            }
+        });
+    });
+</script>
+</html>
 <button type="button" onclick="addCreator()">Add Creator</button>
 
 <pre id='errorMessage'></pre>
