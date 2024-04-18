@@ -1394,10 +1394,9 @@
     var subUri = "{{ data.subjectUri }}".split(",");
     var valUri = "{{ data.valueUri }}".split(",");
     var sub = "{{ data.subject }}".split(",");
+    displaySubject();
     }
-    if (sub[0] != '') {
-      displaySubject();
-    }
+  
     function addSubject() {
       let ss = document.getElementById('field-subjectSchemeField').value;
       let su = document.getElementById('field-subjectUriField').value;
