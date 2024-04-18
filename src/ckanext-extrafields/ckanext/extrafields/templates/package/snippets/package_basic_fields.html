@@ -1370,11 +1370,6 @@
   <label for="field-valueUriField">*Value URI</label><br>
   <input type="text" id="field-valueUriField" name="valueUriField"><br><br>
 
-  <label for="field-classificationCodeField">*Classification Code</label><br>
-  <input type="text" id="field-classificationCodeField" name="clasificationCodeField"><br><br>
-
-
-
   <button type="button" onclick="addSubject()">Add</button>
   <button type="button" onclick="clearSubject()">Clear All</button>
   <button type="button" onclick="popSubject()">Clear Last Entry</button>
@@ -1386,8 +1381,7 @@
     value="{{ data.subjectScheme }}">
   <input type="text" id="field-subjectUri" name="subjectUri" style="display: none;" value="{{ data.subjectUri }}">
   <input type="text" id="field-valueUri" name="valueUri" style="display: none;" value="{{ data.valueUri }}">
-  <input type="text" id="field-classificationCode" name="clasificationCode" style="display: none;"
-    value="{{ data.classificationCode }}">
+
   <input type="text" id="field-subject" name="subject" style="display: none;" value="{{ data.subject }}">
 
   <!-- Subject Functions -->
@@ -1395,11 +1389,12 @@
   <!--                   -->
 
   <script>
+    if("{{data.subject}}"){
     var subScheme = "{{ data.subjectScheme }}".split(",");
     var subUri = "{{ data.subjectUri }}".split(",");
     var valUri = "{{ data.valueUri }}".split(",");
-    var classCode = "{{ data.classificationCode }}".split();
     var sub = "{{ data.subject }}".split(",");
+    }
     if (sub[0] != '') {
       displaySubject();
     }
@@ -1407,9 +1402,8 @@
       let ss = document.getElementById('field-subjectSchemeField').value;
       let su = document.getElementById('field-subjectUriField').value;
       let vu = document.getElementById('field-valueUriField').value;
-      let cc = document.getElementById('field-classificationCodeField').value;
       let s = document.getElementById('field-subjectField').value;
-      if (!ss || !su || !vu || !cc || !s) {
+      if (!ss || !su || !vu || !s) {
         document.getElementById('subjectMessage').innerHTML = "* fields should now be empty";
         return;
       }
@@ -1417,19 +1411,16 @@
       subScheme.push(ss);
       subUri.push(su);
       valUri.push(vu);
-      classCode.push(cc);
       sub.push(s);
       // clear Fields
       document.getElementById('field-subjectSchemeField').value = '';
       document.getElementById('field-subjectUriField').value = '';
       document.getElementById('field-valueUriField').value = '';
-      document.getElementById('field-classificationCodeField').value = '';
       document.getElementById('field-subjectField').value = '';
       // Push to Metadatafields
       document.getElementById('field-subjectScheme').value = subScheme;
       document.getElementById('field-subjectUri').value = subUri;
       document.getElementById('field-valueUri').value = valUri;
-      document.getElementById('field-classificationCode').value = classCode;
       document.getElementById('field-subject').value = sub;
       // Print Message
       displaySubject();
@@ -1438,7 +1429,7 @@
       let p = document.getElementById("subjectMessage");
       p.innerHTML = "Subjects:"
       for (let i = 0; i < sub.length; i++) {
-        c = document.createTextNode(`${i + 1}:: Subject Scheme:${subScheme[i]}, Subject URI:${subUri[i]}, Value URI:${valUri}, Classification Code:${classCode[i]}, Subject:${sub[i]}`);
+        c = document.createTextNode(`${i + 1}:: Subject Scheme:${subScheme[i]}, Subject URI:${subUri[i]}, Value URI:${valUri}, Subject:${sub[i]}`);
         p.append("\n");
         p.append(c);
       }
@@ -1447,12 +1438,10 @@
       subScheme.pop();
       subUri.pop();
       valUri.pop();
-      classCode.pop();
       sub.pop();
       document.getElementById('field-subjectScheme').value = subScheme;
       document.getElementById('field-subjectUri').value = subUri;
       document.getElementById('field-valueUri').value = valUri;
-      document.getElementById('field-classificationCode').value = classCode;
       document.getElementById('field-subject').value = sub;
       displaySubject();
     }
@@ -1460,17 +1449,14 @@
       subScheme = [];
       subUri = [];
       valUri = [];
-      classCode = [];
       sub = [];
       document.getElementById('field-subjectScheme').value = subScheme;
       document.getElementById('field-subjectUri').value = subUri;
       document.getElementById('field-valueUri').value = valUri;
-      document.getElementById('field-classificationCode').value = classCode;
       document.getElementById('field-subject').value = sub;
       document.getElementById('field-subjectSchemeField').value = '';
       document.getElementById('field-subjectUriField').value = '';
       document.getElementById('field-valueUriField').value = '';
-      document.getElementById('field-classificationCodeField').value = '';
       document.getElementById('field-subjectField').value = '';
       document.getElementById('subjectMessage').innerHTML = "Cleared !!!";
 
