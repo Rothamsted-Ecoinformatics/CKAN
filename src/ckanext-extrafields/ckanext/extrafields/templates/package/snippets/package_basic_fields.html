@@ -20,6 +20,9 @@
       font: 1em sans-serif
     }
 
+    /* .control-medium {
+      width: 500px;
+    } */
     #creatorDisp {
       display: flex;
       flex-wrap: wrap;
@@ -45,19 +48,18 @@
   <br><br>
   <!-- First Name -->
   <label for="field-family_name">*Family Name</label><br>
-  <input type="text" id="field-family_name" placeholder="Smith, Lee" name="family_name" classes="control-medium">
+  <input type="text" id="field-family_name" placeholder="Smith, Lee" name="family_name" class="control-medium">
   <br><br>
 
   <label for="field-given_name">*Given Name</label><br>
-  <input type="text" id="field-given_name" placeholder="John, Ben .." name="given_name" classes="control-medium">
+  <input type="text" id="field-given_name" placeholder="John, Ben .." name="given_name" class="control-medium">
   <br><br>
   <label for="field-nameIdField">Name Identifier (ORCID)</label><br>
-  <input type="text" id="field-nameIdField" placeholder="0000-0001-5727-2427" name="nameIdField"
-    classes="control-medium">
+  <input type="text" id="field-nameIdField" placeholder="0000-0001-5727-2427" name="nameIdField" class="control-medium">
   <br><br>
   <label for="field-creatorAffiliationField">*Affiliation</label><br>
   <input type="text" id="field-creatorAffiliationField" placeholder="Affiliations" name="field-creatorAffiliationField"
-    classes="control-medium">
+    class="control-medium">
   <br><br>
 
 
@@ -115,7 +117,6 @@
     var creator = [];
     var affiliations = [];
     var fullname = [];
-    console.log($j);
     if ("{{ data.author }}") {
       nameId = "{{data.nameIdentifier}}".split(",")
       creator = "{{data.author}}".split(",");
@@ -217,7 +218,7 @@
   <label for="field-publisher">*Publisher (Mandatory) </label>
   <i class="fas fa-info-circle" title="add info here"></i>
   <br>
-  <input type="text" id="field-publisher" name="publisher" value="Rothamsted Research">
+  <input type="text" id="field-publisher" name="publisher" value="Rothamsted Research" class="control-medium">
   <!-- Default Publisher value is set to Rothamsted-->
   <script>
     // Set the default value for the input field
@@ -225,7 +226,7 @@
   </script><br><br>
   <label for="field-publicationYear">*Publication Year (Mandatory)</label><br>
   <input type="text" id="field-publicationYear" name="publicationYear" placeholder="YYYY"
-    value="{{ data.publicationYear }}"> <br><br>
+    value="{{ data.publicationYear }}" class="control-medium"> <br><br>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
 
@@ -441,28 +442,28 @@
 
   <!-- Collected Dates -->
   <label for="field-collectionStartDate">Collection Start Date (Optional)</label><br>
-  <input type="date" id="field-collectionStartDate" name="collectionStartDate" classes="control-medium"
+  <input type="date" id="field-collectionStartDate" name="collectionStartDate" class="control-medium"
     placeholder="DD-MM-YYYY" value="{{ data.collectionStartDate }}"><br><br>
 
   <label for="field-collectionEndDate">Collection End Date (Optional)</label><br>
-  <input type="date" id="field-collectionEndDate" name="collectionEndDate" classes="control-medium"
+  <input type="date" id="field-collectionEndDate" name="collectionEndDate" class="control-medium"
     placeholder="DD-MM-YYYY" value="{{ data.collectionEndDate }}"><br><br>
   <!-- Created Dates -->
   <label for="field-createdDate">Created Date (Optional)</label><br>
-  <input type="date" id="field-createdDate" name="createdDate" classes="control-medium" placeholder="DD-MM-YYYY"
+  <input type="date" id="field-createdDate" name="createdDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.createdDate }}"><br><br>
   <!-- Submitted Dates -->
   <label type="date" for="field-submittedDate">*Submitted Date (Mandatory)</label><br>
-  <input id="field-submittedDate" name="submittedDate" classes="control-medium" placeholder="DD-MM-YYYY"
+  <input id="field-submittedDate" name="submittedDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.submittedDate }}"><br><br>
 
   <!-- Available Dates -->
   <label for="field-availableDate">Available Date (Optional)</label><br>
-  <input type="date" id="field-availableDate" name="availableDate" classes="control-medium" placeholder="DD-MM-YYYY"
+  <input type="date" id="field-availableDate" name="availableDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.availableDate }}"><br><br>
   <!-- Withdrawn Dates -->
   <label for="field-withdrawnDate">Withdrawn Date (Optional)</label><br>
-  <input type="date" id="field-withdrawnDate" name="withdrawnDate" classes="control-medium" placeholder="DD-MM-YYYY"
+  <input type="date" id="field-withdrawnDate" name="withdrawnDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.withdrawnDate }}"><br><br>
 
 
@@ -485,29 +486,32 @@
   <label><strong> Funder Information (Mandatory)</strong></label>
   <i class="fas fa-info-circle" title="add info here"></i>
   <br><br>
-  <label for="field-awardNumberField">Award number</label><br>
-  <input id="field-awardNumberField" name="awardNumberField" classes="control-medium"><br><br>
-
-  <label for="field-awardTitleField">*Award Title</label><br>
-  <input id="field-awardTitleField" name="awardTitleField" classes="control-medium"><br><br>
-
-  <label for="field-awardURIField">Award URI</label><br>
-  <input id="field-awardURIField" name="awardURIField" classes="control-medium"><br><br>
 
   <label for="field-funderNameField">*Funder Name </label><br>
-  <input id="field-funderNameField" name="funderNameField" classes="control-medium"><br><br>
+  <input id="field-funderNameField" name="funderNameField" class="control-medium" style="width: 500px;"><br><br>
 
   <label for="field-funderIdField">*Funder Identifier</label><br>
-  <input id="field-funderIdField" name="funderIdField" classes="control-medium"><br><br>
+  <input id="field-funderIdField" name="funderIdField" class="control-medium" style="width: 500px;"><br><br>
 
   <label for="field-funderIdTypeField">*Funder ID Type</label><br>
-  <select id="field-funderIdTypeField" name="funderIdTypeField" classes="control-medium">
+  <select id="field-funderIdTypeField" name="funderIdTypeField" class="control-medium">
     <option value="Crossref Funder ID">Crossref Funder ID </option>
     <option value="GRID">GRID </option>
     <option value="ISNI">ISNI</option>
     <option value="ROR">ROR</option>
     <option value="Other">Other</option>
   </select><br><br>
+
+  <label for="field-awardNumberField">Award number</label><br>
+  <input id="field-awardNumberField" name="awardNumberField" class="control-medium" style="width: 500px;"><br><br>
+
+  <label for="field-awardTitleField">*Award Title</label><br>
+  <input id="field-awardTitleField" name="awardTitleField" class="control-medium" style="width: 500px;"><br><br>
+
+  <label for="field-awardURIField">Award URI</label><br>
+  <input id="field-awardURIField" name="awardURIField" class="control-medium" style="width: 500px;"><br><br>
+
+
   <script>
     let awardData = [];
 
@@ -534,16 +538,13 @@
       .then(response => response.text())
       .then(csvString => {
         funData = Papa.parse(csvString, { header: true }).data;
-        console.log("1");
         let funders = funData.map(item => ({ label: item.funderName + ' (' + item.funderAbbreviation + ')', value: item.funderName, item }));
 
         $j("#field-funderNameField").autocomplete({
           source: funders,
 
           select: function (event, ui) {
-            console.log("1.5");
             let selectedData = funData.find(row => row.funderName === ui.item.value);
-            console.log(selectedData.funderIDType);
             $j('#field-funderNameField').val(selectedData.funderName);
             $j('#field-funderIdField').val(selectedData.funderIdentifer);
             document.getElementById('field-funderIdTypeField').value = selectedData.funderIDType;
@@ -562,20 +563,20 @@
 
   <!-- Metadata fields are hidden -->
   <!--                            -->
-  <input id="field-funderName" name="funderName" classes="control-medium" style="display:None;"
+  <input id="field-funderName" name="funderName" class="control-medium" style="display:None;"
     value="{{ data.funderName }}">
 
-  <input id="field-funderId" name="funderId" classes="control-medium" style="display:None;" value="{{ data.funderId }}">
+  <input id="field-funderId" name="funderId" class="control-medium" style="display:None;" value="{{ data.funderId }}">
 
-  <input id="field-funderIdType" name="funderIdType" classes="control-medium" style="display:None;"
+  <input id="field-funderIdType" name="funderIdType" class="control-medium" style="display:None;"
     value="{{ data.funderIdType }}">
 
-  <input id="field-awardNumber" name="awardNumber" classes="control-medium" style="display:None;"
+  <input id="field-awardNumber" name="awardNumber" class="control-medium" style="display:None;"
     value="{{ data.awardNumber }}">
 
-  <input id="field-awardURI" name="awardURI" classes="control-medium" style="display:None;" value="{{ data.awardURI }}">
+  <input id="field-awardURI" name="awardURI" class="control-medium" style="display:None;" value="{{ data.awardURI }}">
 
-  <input id="field-awardTitle" name="awardTitle" classes="control-medium" style="display:None;"
+  <input id="field-awardTitle" name="awardTitle" class="control-medium" style="display:None;"
     value="{{ data.awardTitle }}">
 
   <style>
@@ -747,37 +748,56 @@
 
   <label for="field-contributorFamilyName">*Family Name</label><br>
   <input type="text" id="field-contributorFamilyName" placeholder="Smith, Lee" name="contributorFamilyName"
-    classes="control-medium">
+    class="control-medium">
   <br><br>
 
   <label for="field-contributorFirstName">*Given Name</label><br>
   <input type="text" id="field-contributorFirstName" placeholder="John, Ben .." name="contributorFirstName"
-    classes="control-medium">
+    class="control-medium">
   <br><br>
 
   <label for="field-contributorNameId">Name Identifier</label><br>
   <input type="text" id="field-contributorNameId" placeholder="https://orcid.org/0000-0001-5727-2427"
-    name="contributorNameId" classes="control-medium">
+    name="contributorNameId" class="control-medium">
   <br>
   <br>
   <label for="field-contributorAffiliationField">*Affiliation</label><br>
   <input type="text" id="field-contributorAffiliationField" placeholder="affiliation"
-    name="field-contributorAffiliationField" classes="control-medium">
+    name="field-contributorAffiliationField" class="control-medium">
   <br><br>
   <button type="button" onclick="addContributor()">Add Contributor</button>
+  <script>
+    let contriData = [];
 
+    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/ckanStaffList.csv')
+      .then(response => response.text())
+      .then(csvString => {
+        contriData = Papa.parse(csvString, { header: true }).data;
+        const fullNames = contriData.map(item => ({ label: item.firstname + ' ' + item.lastname, value: item.lastname, item }));
+        $j("#field-contributorFamilyName").autocomplete({
+          source: fullNames,
+          select: function (event, ui) {
+            $j('#field-contributorFirstName').val(ui.item.item.firstname);
+            $j('#field-contributorFamilyName').val(ui.item.item.lastname);
+            $j('#field-contributorNameId').val(ui.item.item.identifier);
+            $j('#field-contributorAffiliationField').val(ui.item.item.affiliation);
+            return false;
+          }
+        });
+      });
+  </script>
   <pre id='contributorMessage'></pre>
   <div id="contributorDiv"></div>
   <br>
   <!-- Metadata Field Lines for Contributors. These are not displayed, Used to store the metadatafields-->
-  <input id="field-contributorType" error="errors.contributorType" name="contributorType" classes="control-medium"
+  <input id="field-contributorType" error="errors.contributorType" name="contributorType" class="control-medium"
     value="{{ data.contributorType }}" style="display: none;">
   <input id="field-contributorDetails" error="errors.contributorDetails" name="contributorDetails"
-    style="display: none;" classes="control-medium" value="{{ data.contributorDetails }}">
-  <input id="field-contributorId" error="errors.contributorId" name="contributorId" classes="control-medium"
+    style="display: none;" class="control-medium" value="{{ data.contributorDetails }}">
+  <input id="field-contributorId" error="errors.contributorId" name="contributorId" class="control-medium"
     value="{{ data.contributorId }}" style="display: none;">
   <input id="field-contributorAffiliation" error="errors.contributorAffiliation" name="contributorAffiliation"
-    classes="control-medium" value="{{ data.contributorAffiliation }}" style="display: none;">
+    class="control-medium" value="{{ data.contributorAffiliation }}" style="display: none;">
 
   <!-- Contributor Functions -->
   <style>
@@ -1009,20 +1029,21 @@
   </select><br><br>
 
   <label for="field-relatedIdentifierField">*Enter the Identifier</label><br>
-  <input id="field-relatedIdentifierField" name="relatedIdentifierField" classes="control-medium"><br>
+  <input id="field-relatedIdentifierField" name="relatedIdentifierField" class="control-medium"
+    style="width: 500px;"><br>
   <button type="button" onclick="addRelated()">Add Resources</button>
   <button type="button" onclick="clearRelated()">Clear All</button>
   <button type="button" onclick="popRelated()">Clear Last Entry</button>
 
   <pre id="relatedMessage"></pre>
   <!-- Metadata Fields for Related Resources -->
-  <input id="field-relatedIdentifierType" name="relatedIdentifierType" classes="control-medium" style="display:none"
+  <input id="field-relatedIdentifierType" name="relatedIdentifierType" class="control-medium" style="display:none"
     value="{{ data.relatedIdentifierType }}">
-  <input id="field-relationType" name="relationType" classes="control-medium" style="display:none"
+  <input id="field-relationType" name="relationType" class="control-medium" style="display:none"
     value="{{ data.relationType }}">
-  <input id="field-relatedResourceType" name="relatedResourceType" classes="control-medium" style="display:none"
+  <input id="field-relatedResourceType" name="relatedResourceType" class="control-medium" style="display:none"
     value="{{ data.relatedResourceType }}">
-  <input id="field-relatedIdentifier" name="relatedIdentifier" classes="control-medium" style="display:none"
+  <input id="field-relatedIdentifier" name="relatedIdentifier" class="control-medium" style="display:none"
     value="{{ data.relatedIdentifier }}">
 
   <script>
@@ -1337,7 +1358,8 @@
   <label><strong> Subject Details (Optional)</strong></label>
   <i class="fas fa-info-circle" title="add info here"></i>
   <br><br>
-
+  <label for="field-subjectField">*Subject</label><br>
+  <input type="text" id="field-subjectField" name="subjectField"><br><br>
 
   <label for="field-subjectSchemeField">*Subject Scheme</label><br>
   <input type="text" id="field-subjectSchemeField" name="subjectSchemeField"><br><br>
@@ -1351,8 +1373,7 @@
   <label for="field-classificationCodeField">*Classification Code</label><br>
   <input type="text" id="field-classificationCodeField" name="clasificationCodeField"><br><br>
 
-  <label for="field-subjectField">*Subject</label><br>
-  <input type="text" id="field-subjectField" name="subjectField"><br><br>
+
 
   <button type="button" onclick="addSubject()">Add</button>
   <button type="button" onclick="clearSubject()">Clear All</button>
