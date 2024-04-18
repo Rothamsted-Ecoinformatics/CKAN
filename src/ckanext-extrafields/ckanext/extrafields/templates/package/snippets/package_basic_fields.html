@@ -115,6 +115,7 @@
     var creator = [];
     var affiliations = [];
     var fullname = [];
+    console.log($j);
     if ("{{ data.author }}") {
       nameId = "{{data.nameIdentifier}}".split(",")
       creator = "{{data.author}}".split(",");
@@ -507,7 +508,50 @@
     <option value="ROR">ROR</option>
     <option value="Other">Other</option>
   </select><br><br>
+  <script>
+    let awardData = [];
 
+    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/awardInformation.csv')
+      .then(response => response.text())
+      .then(csvString => {
+        awardData = Papa.parse(csvString, { header: true }).data;
+        $j("#field-awardNumberField").autocomplete({
+          source: awardData.map(row => row.awardNumber),
+          select: function (event, ui) {
+            let selectedData = awardData.find(row => row.awardNumber === ui.item.value);
+            $j('#field-awardNumberField').val(ui.item.value);
+            $j('#field-awardTitleField').val(selectedData.awardTitle);
+            $j('#field-awardURIField').val(selectedData.awardURI);
+            return false;
+          }
+        });
+      });
+  </script>
+  <script>
+    let funData = [];
+
+    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/funderInformation.csv')
+      .then(response => response.text())
+      .then(csvString => {
+        funData = Papa.parse(csvString, { header: true }).data;
+        console.log("1");
+        let funders = funData.map(item => ({ label: item.funderName + ' (' + item.funderAbbreviation + ')', value: item.funderName, item }));
+
+        $j("#field-funderNameField").autocomplete({
+          source: funders,
+
+          select: function (event, ui) {
+            console.log("1.5");
+            let selectedData = funData.find(row => row.funderName === ui.item.value);
+            console.log(selectedData.funderIDType);
+            $j('#field-funderNameField').val(selectedData.funderName);
+            $j('#field-funderIdField').val(selectedData.funderIdentifer);
+            document.getElementById('field-funderIdTypeField').value = selectedData.funderIDType;
+            return false;
+          }
+        });
+      });
+  </script>
 
 
   <button type="button" onclick="addFunders()"> Add </button>
