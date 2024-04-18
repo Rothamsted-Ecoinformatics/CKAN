@@ -1,7 +1,18 @@
 {% ckan_extends %}
 {% block package_basic_fields_custom %}
 {% set user = current_user %}
-
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript"></script>
+  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+    integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+    crossorigin=""></script>
+  </head>
 <!--  Creator Frelds-->
 <!--                -->
 <!--                -->
@@ -35,6 +46,9 @@
     margin-left: 5px;
   }
 </style>
+<!-- Creator Field -->
+<!--              -->
+<body>
 <label id="creatorLabel"><strong>*Creator Details (Mandatory)</strong></label>
 <i class="fas fa-info-circle" title="add info here"></i>
 <br><br>
@@ -54,33 +68,30 @@
 <input type="text" id="field-creatorAffiliationField" placeholder="Affiliations" name="field-creatorAffiliationField"
   classes="control-medium">
 <br><br>
-<html>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
 
-<script>
-let data = [];
 
-fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/ckanStaffList.csv')
+<script type="text/javascript">
+  let data = [];
+
+  fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/ckanStaffList.csv')
     .then(response => response.text())
     .then(csvString => {
-        data = Papa.parse(csvString, {header: true}).data;
-        const fullNames = data.map(item => ({label: item.firstname + ' ' + item.lastname, value: item.lastname, item}));
-        $("#field-family_name").autocomplete({
-            source: fullNames,
-            select: function(event, ui) {
-                $('#field-given_name').val(ui.item.item.firstname);
-                $('#field-family_name').val(ui.item.item.lastname);
-                $('#field-nameIdField').val(ui.item.item.identifier);
-                $('#field-creatorAffiliationField').val(ui.item.item.affiliation);
-                return false;
-            }
-        });
+      data = Papa.parse(csvString, { header: true }).data;
+      const fullNames = data.map(item => ({ label: item.firstname + ' ' + item.lastname, value: item.lastname, item }));
+      $("#field-family_name").autocomplete({
+        source: fullNames,
+        select: function (event, ui) {
+          $('#field-given_name').val(ui.item.item.firstname);
+          $('#field-family_name').val(ui.item.item.lastname);
+          $('#field-nameIdField').val(ui.item.item.identifier);
+          $('#field-creatorAffiliationField').val(ui.item.item.affiliation);
+          return false;
+        }
+      });
     });
 </script>
-</html>
+
+
 <button type="button" onclick="addCreator()">Add Creator</button>
 
 <pre id='errorMessage'></pre>
@@ -101,7 +112,7 @@ fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/s
   var creator = [];
   var affiliations = [];
   var fullname = [];
-  if("{{ data.author }}"){
+  if ("{{ data.author }}") {
     nameId = "{{data.nameIdentifier}}".split(",")
     creator = "{{data.author}}".split(",");
     affiliations = "{{ data.creatorAffiliation }}".split(",");
@@ -116,10 +127,10 @@ fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/s
     let p = document.getElementById('errorMessage');
     p.innerHTML = "Creators Addded :";
     for (let i = 0; i < creator.length; i++) {
-      if(creator[i]){
-      let c = document.createTextNode(`Creator ${i + 1}: ${creator[i]}, ID: ${nameId[i]}, Organization: ${affiliations[i]}`);
-      p.append("\n");
-      p.append(c);
+      if (creator[i]) {
+        let c = document.createTextNode(`Creator ${i + 1}: ${creator[i]}, ID: ${nameId[i]}, Organization: ${affiliations[i]}`);
+        p.append("\n");
+        p.append(c);
       }
     }
   }
@@ -539,20 +550,20 @@ Info'), value=data.resourceType, error=errors.resourceType, classes=['control-me
   }
 </style>
 <script>
-    var fname = [];
-    var fid = [];
-    var fidType = []
-    var faNum = [];
-    var fUri = [];
-    var aTitle = [];
-if ("{{data.funderName}}") {
-     fname = "{{data.funderName}}".split(",");
-     fid = "{{data.funderId}}".split(",");
-     fidType = "{{funderIdType}}".split(",");
-     faNum = "{{data.awardNumber}}".split(",");
-     fUri = "{{data.awardURI}}".split(",");
-     aTitle = "{{data.awardTitle}}".split(",");
-} 
+  var fname = [];
+  var fid = [];
+  var fidType = []
+  var faNum = [];
+  var fUri = [];
+  var aTitle = [];
+  if ("{{data.funderName}}") {
+    fname = "{{data.funderName}}".split(",");
+    fid = "{{data.funderId}}".split(",");
+    fidType = "{{funderIdType}}".split(",");
+    faNum = "{{data.awardNumber}}".split(",");
+    fUri = "{{data.awardURI}}".split(",");
+    aTitle = "{{data.awardTitle}}".split(",");
+  }
   const funderList = document.getElementById('funderDiv');
   if (aTitle[0] != '') {
     for (let i = 0; i < aTitle.length; i++) {
@@ -741,16 +752,16 @@ if ("{{data.funderName}}") {
   }
 </style>
 <script>
-      var contriId = [];
-      var contriName = [];
-      var contriType = [];
-      var contriAffiliation = [];
-if ("{{ data.contributorId }}") {
-     contriId = "{{ data.contributorId }}".split(",");
-     contriName = "{{ data.contributorDetails }}".split(",");
-     contriType = "{{ data.contributorType }}".split(",");
-     contriAffiliation = "{{ data.contributorAffiliation }}".split(",");
-}
+  var contriId = [];
+  var contriName = [];
+  var contriType = [];
+  var contriAffiliation = [];
+  if ("{{ data.contributorId }}") {
+    contriId = "{{ data.contributorId }}".split(",");
+    contriName = "{{ data.contributorDetails }}".split(",");
+    contriType = "{{ data.contributorType }}".split(",");
+    contriAffiliation = "{{ data.contributorAffiliation }}".split(",");
+  }
   const contributorList = document.getElementById('contributorDiv');
   if (contriName[0] != '') {
     for (let i = 0; i < contriName.length; i++) {
@@ -1184,12 +1195,8 @@ if ("{{ data.contributorId }}") {
 
 <!--      World Map         -->
 <!-- Load Leaflet -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
-  integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-  crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
-  integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
-  crossorigin=""></script>
+
+
 <br><br>
 <label for="'mapid">Select the location in the map to fill Latitude and Longitude Automatically</label><br>
 <div id="mapid"></div>
@@ -1455,4 +1462,5 @@ if ("{{ data.contributorId }}") {
     document.getElementById("field-version").value = 1;
   }
 </script>
+</body>
 {% endblock %}
