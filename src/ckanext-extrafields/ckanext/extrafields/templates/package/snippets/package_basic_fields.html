@@ -1389,14 +1389,18 @@
   <!--                   -->
 
   <script>
-    if("{{data.subject}}"){
-    var subScheme = "{{ data.subjectScheme }}".split(",");
-    var subUri = "{{ data.subjectUri }}".split(",");
-    var valUri = "{{ data.valueUri }}".split(",");
-    var sub = "{{ data.subject }}".split(",");
-    displaySubject();
+    var subScheme = [];
+    var subUri = [];
+    var valUri = [];
+    var sub = [];
+    if ("{{data.subject}}") {
+      subScheme = "{{ data.subjectScheme }}".split(",");
+      subUri = "{{ data.subjectUri }}".split(",");
+      valUri = "{{ data.valueUri }}".split(",");
+      sub = "{{ data.subject }}".split(",");
+      displaySubject();
     }
-  
+
     function addSubject() {
       let ss = document.getElementById('field-subjectSchemeField').value;
       let su = document.getElementById('field-subjectUriField').value;
