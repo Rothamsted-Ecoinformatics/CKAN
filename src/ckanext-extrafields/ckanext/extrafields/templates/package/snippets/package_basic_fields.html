@@ -1,15 +1,186 @@
-{% ckan_extends %}
-{% block package_basic_fields_custom %}
-{% set user = current_user %}
-<html>
+<section class="additional-info">
+  <!-- Author Information -->
+  {% set can_edit = h.check_access('package_update', {'id':pkg_dict.id }) %}
+  {% set user = 'true' if can_edit else 'false' %}
+  <div><strong>Authors</strong></div>
+  <pre id="author-field" style="background-color: #f3f1f1;"></pre>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <script>
+    let auths = "{{pkg_dict.author}}".split(",");
+    let ids = "{{ pkg_dict.nameIdentifier }}".split(",");
+    let affils = "{{ pkg_dict.creatorAffiliation }}".split(",");
+
+    for (let i = 0; i < auths.length; i++) {
+      let p = document.getElementById("author-field");
+      val = document.createTextNode(`${auths[i]}         Affiliation:${affils[i]}         ID:`);
+      let link = document.createElement("a");
+      link.href = ids[i];
+      link.textContent = ids[i];
+      p.append(val);
+      p.append(link);
+      p.append("\n");
+    }
+  </script>
+  <!-- Abstract, Methods and Technical Information  -->
+  <div><strong> Abstract </strong></div>
+  <p style="background-color: #f3f1f1;">{{ pkg_dict.abstract }}</p>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <div><strong> Methods </strong></div>
+  <p style="background-color: #f3f1f1;">{{ pkg_dict.methods }}</p>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
 
-<body>
-  <!--  Creator Frelds-->
-  <!--                -->
-  <!--                -->
+  <div><strong> Technical Information </strong></div>
+  <p style="background-color: #f3f1f1;">{{ pkg_dict.technicalInfo }}</p>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <!-- Spatial Information -->
+  <div><strong> Spatial Information </strong></div>
+  <pre style="background-color: #f3f1f1;">
+  <strong>Geolocation Point</strong> 
+    (Latitude, Longitude) : ( {{ pkg_dict.geoLatitude }}, {{ pkg_dict.geoLongitude }} ) 
+  </pre>
+  <pre id="geoBox" style="display: none; background-color: #f3f1f1;"> 
+  <strong>Geolocation Box:</strong>
+     Lower Left Corner (Latitude,Longitude): ( {{ pkg_dict.geoLowLeftLatitude }}, {{ pkg_dict.geoLowLeftLongitude }} ) 
+     Top Right Corner (Latitude,Longitude): ( {{ pkg_dict.geoTopRightLatitude }}, {{ pkg_dict.geoTopRightLongitude }} ) 
+  </pre>
+  <head>
+    <title>Simple Leaflet Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+    integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+    crossorigin=""></script>
+    <style>
+        #mapid {
+            height: 300px;
+            width:auto;
+        }
+    </style>
+</head>
+<div id="mapid"></div>
+
+    <script>
+        let x = parseFloat("{{ pkg_dict.geoLatitude }}");
+        let y = parseFloat("{{ pkg_dict.geoLongitude }}")
+        var mymap = L.map('mapid').setView([x, y], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(mymap);
+        L.marker([x, y]).addTo(mymap);
+        if("{{ pkg_dict.geoLowLeftLatitude }}"){
+        document.getElementById("geoBox").style.display = "block";
+        let llx = parseFloat("{{ pkg_dict.geoLowLeftLatitude }}");
+        let lly = parseFloat("{{ pkg_dict.geoLowLeftLongitude }}");
+        let trx = parseFloat("{{ pkg_dict.geoTopRightLatitude }}");
+        let trY = parseFloat("{{ pkg_dict.geoTopRightLongitude }}");
+        var bounds = [[llx, lly], [trx, trY]];
+        L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(mymap);
+
+  }
+    </script>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+
+  <!-- Collection Dates -->
+  <div><strong> Collection Date </strong></div>
+  {% if pkg_dict.collectionEndDate %}
+  <p style="background-color: #f3f1f1;">{{ pkg_dict.collectionStartDate }} to {{ pkg_dict.collectionEndDate }} </p>
+  {%else%}
+  <p style="background-color: #f3f1f1;"> {{ pkg_dict.collectionStartDate }} </p>
+  {%endif%}
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <!-- Related Resource Fields -->
+  <div><strong> Related Resources</strong> </div>
+  <pre id="relatedResourceField" style="background-color: #f3f1f1;"></pre>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <script>
+    let type = "{{pkg_dict.relationType}}".split(",");
+    let Rid = "{{pkg_dict.relatedIdentifier}}".split(",");
+    let p = document.getElementById("relatedResourceField");
+    for (let i = 0; i < type.length; i++) {
+
+      let link = document.createElement("a");
+      link.href = Rid[i];
+      link.textContent = Rid[i];
+      val = document.createTextNode(` ${i + 1}: ${type[i]} `);
+
+      p.append(val);
+      p.append(link);
+      p.append("\n");
+    }
+  </script>
+  <!-- Funder Information -->
+  <div><strong> Funder Information</strong></div>
+  <pre id="funderInfo" style="background-color: #f3f1f1;"></pre>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <script>
+    let aNum = "{{pkg_dict.awardNumber}}".split(",");
+    let aTitle = "{{pkg_dict.awardTitle}}".split(",");
+    let aURI = "{{pkg_dict.awardURI}}".split(",");
+    let funder = "{{pkg_dict.funderName}}".split(",");
+    p = document.getElementById("funderInfo");
+    for (let i = 0; i < aNum.length; i++) {
+      let link = document.createElement("a");
+      link.href = aURI[i];
+      link.textContent = aURI[i];
+      val = document.createTextNode(` ${i + 1}. Award Number: ${aNum[i]}, Award Title: ${aTitle[i]}, Funder Name: ${funder[i]}, Award URI: `);
+      p.append(val);
+      p.append(link);
+      p.append("\n");
+    }
+  </script>
+
+  <!-- Contributor Information -->
+  <div><strong> Contributors</strong></div>
+  <pre id="contributorDetails" style="background-color: #f3f1f1;"></pre>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <script>
+    let conType = "{{pkg_dict.contributorType}}".split(",");
+    let conName = "{{pkg_dict.contributorDetails}}".split(",");
+    let conID = "{{pkg_dict.contributorId}}".split(",");
+    let conAff = "{{pkg_dict.contributorAffiliation}}".split(",");
+    para = document.getElementById("contributorDetails");
+
+    for (let i = 0; i < conName.length; i++) {
+      val = document.createTextNode(` ${i + 1}. Type: ${conType[i]}, Name: ${conName[i]}, ID: ${conID[i]}, Affiliation: ${conAff[i]}  `);
+      para.append(val);
+      para.append("\n");
+    }
+
+  </script>
+
+
+  <!-- Private Information -->
   <style>
-    /* Apply green color to all <p> elements */
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+      display: none;
+      border-bottom: 1px black;
+      table-layout: fixed;
+    }
+
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+
     pre {
       color: rgb(0, 0, 0);
       font: 1em sans-serif;
@@ -19,1530 +190,74 @@
       color: black;
       font: 1em sans-serif
     }
-
-    /* .control-medium {
-      width: 500px;
-    } */
-    #creatorDisp {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .creator-item {
-      background-color: #f0f0f0;
-      padding: 5px;
-      margin: 5px;
-      border-radius: 5px;
-      display: block;
-    }
-
-    .creator-item .close-btn {
-      cursor: pointer;
-      margin-left: 5px;
-    }
   </style>
-  <!-- Creator Field -->
-  <!--              -->
-  <label id="creatorLabel"><strong>*Creator Details (Mandatory)</strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-  <!-- First Name -->
-  <label for="field-family_name">*Family Name</label><br>
-  <input type="text" id="field-family_name" placeholder="Smith, Lee" name="family_name" class="control-medium">
-  <br><br>
+  <table id="table1">
+    <tr>
+      <th>
 
-  <label for="field-given_name">*Given Name</label><br>
-  <input type="text" id="field-given_name" placeholder="John, Ben .." name="given_name" class="control-medium">
-  <br><br>
-  <label for="field-nameIdField">Name Identifier (ORCID)</label><br>
-  <input type="text" id="field-nameIdField" placeholder="0000-0001-5727-2427" name="nameIdField" class="control-medium">
-  <br><br>
-  <label for="field-creatorAffiliationField">*Affiliation</label><br>
-  <input type="text" id="field-creatorAffiliationField" placeholder="Affiliations" name="field-creatorAffiliationField"
-    class="control-medium">
-  <br><br>
+        <strong style="color: green; font-family: Arial;"> Private Information </strong>
 
+      </th>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Responsible Person</th>
+      <td>{{pkg_dict.responsiblePerson}}</td>
+    </tr>
+    <tr>
+      <th>Research Infrastructure Used</th>
+      <td>{{ pkg_dict.infraUsed }}</td>
+    </tr>
+    <tr>
+      <th>Data Locations</th>
+      <td>{{ pkg_dict.dataLocation }}</td>
+    </tr>
+    <tr>
+      <th>Assoicated Notebooks</th>
+      <td>
+        <pre id="notebookField"></pre>
+      </td>
+    </tr>
+    <tr>
+      <th>Experiment Code Type</th>
+      <td>{{pkg_dict.experimentCode}}</td>
+    </tr>
+    <tr>
+      <th>Experiment Code</th>
+      <td>{{pkg_dict.Codes}}</td>
+    </tr>
+    <tr>
+      <th>Funder ID </th>
+      <td>
+        <pre id="funderField"></pre>
+      </td>
+    </tr>
 
-  <head>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript"></script>
-    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
-      integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-      crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
-      integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
-      crossorigin=""></script>
-  </head>
-  <script type="text/javascript">
-    let data = [];
-    var $j = jQuery.noConflict();
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/ckanStaffList.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        data = Papa.parse(csvString, { header: true }).data;
-        const fullNames = data.map(item => ({ label: item.firstname + ' ' + item.lastname, value: item.lastname, item }));
-        $j("#field-family_name").autocomplete({
-          source: fullNames,
-          select: function (event, ui) {
-            $j('#field-given_name').val(ui.item.item.firstname);
-            $j('#field-family_name').val(ui.item.item.lastname);
-            $j('#field-nameIdField').val(ui.item.item.identifier);
-            $j('#field-creatorAffiliationField').val(ui.item.item.affiliation);
-            return false;
-          }
-        });
-      });
-  </script>
-
-
-  <button type="button" onclick="addCreator()">Add Creator</button>
-
-  <pre id='errorMessage'></pre>
-  <div id="creatorDisp"></div>
-  <br>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-  <input type="text" name="author" id="field-author" value="{{ data.author }}" error="errors.author"
-    style="display: none;">
-  <input type="text" id="field-nameIdentifier" name="nameIdentifier" value="{{ data.nameIdentifier }}"
-    style="display: none;">
-  <input type="text" id="field-creatorAffiliation" name="creatorAffiliation" value="{{ data.creatorAffiliation }}"
-    style="display: none;">
-  <!-- CREATOR Function-->
-
+  </table>
   <script>
-    var nameId = [];
-    var creator = [];
-    var affiliations = [];
-    var fullname = [];
-    if ("{{ data.author }}") {
-      nameId = "{{data.nameIdentifier}}".split(",")
-      creator = "{{data.author}}".split(",");
-      affiliations = "{{ data.creatorAffiliation }}".split(",");
-    }
-    const creatorList = document.getElementById('creatorDisp');
-    if (creator[0] != '') {
-      for (let i = 0; i < creator.length; i++) {
-        displayCreators(creator[i]);
-      }
-    }
-    function displayCreatorPre() {
-      let p = document.getElementById('errorMessage');
-      p.innerHTML = "Creators Addded :";
-      for (let i = 0; i < creator.length; i++) {
-        if (creator[i]) {
-          let c = document.createTextNode(`Creator ${i + 1}: ${creator[i]}, ID: ${nameId[i]}, Organization: ${affiliations[i]}`);
-          p.append("\n");
-          p.append(c);
-        }
-      }
-    }
-
-    function addCreator() {
-      let fn = document.getElementById('field-given_name').value;
-      let sn = document.getElementById('field-family_name').value;
-      let id = document.getElementById('field-nameIdField').value;
-      let af = document.getElementById('field-creatorAffiliationField').value;
-
-      //Clear the fields
-      try {
-        if (!fn || !sn || !af) {
-          throw new Error('* Fields Should Not Be Empty');
-        }
-      }
-      catch (err) {
-        document.getElementById('errorMessage').innerHTML = err.message;
-        return;
-      }
-      clearCreatorInputFields();
-      fullname = fn.concat(' ', sn);
-      creator.push(fullname);
-      if (id) {
-        nameId.push(id);
-      }
-      else {
-        nameId.push("NONE");
-      }
-      affiliations.push(af);
-      document.getElementById('field-author').value = creator;
-      document.getElementById('field-nameIdentifier').value = nameId;
-      document.getElementById('field-creatorAffiliation').value = affiliations;
-      // document.getElementById('errorMessage').innerHTML = "Creators Addded :" + creator;
-      displayCreators(fullname);
-    }
-
-    function clearCreatorInputFields() {
-      document.getElementById('field-given_name').value = '';
-      document.getElementById('field-family_name').value = '';
-      document.getElementById('field-nameIdField').value = '';
-      document.getElementById('field-creatorAffiliationField').value = '';
-      document.getElementById('errorMessage').innerHTML = '';
-    }
-    function displayCreators(name) {
-      let index = creator.indexOf(name);
-      const creatorItem = document.createElement("div");
-      creatorItem.classList.add('creator-item');
-      creatorItem.innerHTML = `
-          ${name} <span class="close-btn" onclick="removeCreator(this)">X</span>
-      `;
-      creatorList.appendChild(creatorItem);
-      displayCreatorPre();
-    }
-
-
-
-    function removeCreator(closeBtn) {
-      const creatorItem = closeBtn.parentNode;
-      creatorList.removeChild(creatorItem);
-      let name = creatorItem.textContent.trim();
-      name = name.slice(0, -1);
-      name = name.trim()
-      let index = creator.indexOf(name);
-      creator.splice(index, 1);
-      nameId.splice(index, 1);
-      affiliations.splice(index, 1);
-      document.getElementById('field-author').value = creator;
-      document.getElementById('field-nameIdentifier').value = nameId;
-      document.getElementById('field-creatorAffiliation').value = affiliations;
-      displayCreatorPre();
-    }
-
-  </script>
-
-
-  <!-- PUBLISHER and Publication Year -->
-  <!--                                -->
-  <!--                                -->
-  <label for="field-publisher">*Publisher (Mandatory) </label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br>
-  <input type="text" id="field-publisher" name="publisher" value="Rothamsted Research" class="control-medium">
-  <!-- Default Publisher value is set to Rothamsted-->
-  <script>
-    // Set the default value for the input field
-    document.getElementById("field-publisher").value = "Rothamsted Research";
-  </script><br><br>
-  <label for="field-publicationYear">*Publication Year (Mandatory)</label><br>
-  <input type="text" id="field-publicationYear" name="publicationYear" placeholder="YYYY"
-    value="{{ data.publicationYear }}" class="control-medium"> <br><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-
-  <label><strong> Description </strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-
-  <!-- Abstract Field -->
-  <style>
-    textarea {
-      width: 500px;
-      /* Adjust as needed */
-    }
-  </style>
-  <label for="field-abstract">*Abstract (Mandatory) </label><br>
-  <textarea id="field-abstract" name="abstract" placeholder="Enter Abstract" error="errors.abstract"
-    class="control-medium" rows="5">{{ data.abstract }}
-  </textarea><br>
-  <!-- Methods Field -->
-  <style>
-    textarea {
-      width: 500px;
-      /* Adjust as needed */
-    }
-  </style>
-  <label for="field-methods">*Methods (Mandatory) </label><br>
-  <textarea id="field-methods" name="methods" placeholder="Enter Methods" error="errors.methods" class="control-medium"
-    rows="5">{{ data.methods }}
-  </textarea><br>
-
-  <!-- TechnicalInfo Field -->
-
-  <style>
-    textarea {
-      width: 500px;
-      /* Adjust as needed */
-    }
-  </style>
-  <label for="field-technicalInfo">Technical Information (Optional) </label><br>
-  <textarea id="field-technicalInfo" name="technicalInfo" error="errors.technicalInfo"
-    placeholder="Enter TEchnical Information" class="control-medium" rows="5">{{ data.technicalInfo }}
-  </textarea><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-  <!-- Experiment Code -->
-
-  <label for="field-experimentCode">Select Experiment Code (Optional)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-  <input type="text" id="field-experimentCode" name="experimentCode" style="display: none;"
-    value="{{data.experimentCode}}">
-
-  <div>
-    <input type="radio" id="exp1" name="expCode" checked="true" onchange="assignCode('None')" value="None">N/A
-    <input type="radio" id="exp2" name="expCode" value="RRES Farms Field Experiment Code"
-      onchange="assignCode('RRES Farms Field Experiment Code')">RRES Farms Field Experiment Code
-    <input type="radio" id="exp3" name="expCode" value="NWFP Code" onchange="assignCode('NWFP Code')">NWFP Code
-    <input type="radio" id="exp4" name="expCode" value="NW Experiment Code"
-      onchange="assignCode('NW Experiment Code')">NW
-    Experiment Code
-    <input type="radio" id="exp5" name="expCode" value="Other" onchange="assignCode('Other')">Other Codes
-  </div>
-  <br>
-  <div id="codesField" style="display: none;">
-    <label for="field-Codes">*Codes (Mandatory) </label><br>
-    <input type="text" id="field-Codes" name="Codes" value="{{ data.Codes }}" error="errors.Codes">
-  </div>
-
-  <script>
-    // Initializattion
-    // selectElement('field-experimentCode', "{{ data.experimentCode }}");
-    if ("{{data.Codes}}") {
-      let f = document.getElementById("field-experimentCode").value;
-      if (f == "RRES Farms Field Experiment Code") {
-        document.getElementById("exp2").checked = true;
-      }
-      else if (f == "NWFP Code") {
-        document.getElementById("exp3").checked = true;
-      }
-      else if (f == "NW Experiment Code") {
-        document.getElementById("exp4").checked = true;
-      }
-      else if (f == "Other") {
-        document.getElementById("exp5").checked = true;
-      }
-      displayCodesField();
-    }
-
-    function assignCode(val) {
-      document.getElementById("field-experimentCode").value = val;
-      displayCodesField();
-    }
-    function selectElement(id, valueToSelect) {
-      let element = document.getElementById(id);
-      element.value = valueToSelect;
-    }
-
-    function displayCodesField() {
-      var selectField = document.getElementById('field-experimentCode');
-      var codesField = document.getElementById('codesField');
-      if (selectField.value == 'None') {
-        codesField.style.display = 'none';
-        document.getElementById('field-Codes').value = "N/A";
-      } else {
-        codesField.style.display = 'block';
-        document.getElementById("field-Codes").value = "{{ data.Codes }}";
-      }
-    }
-
-  </script><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:grey">
-
-  <!-- Resource Type  -->
-  <!--                -->
-  <!--                -->
-  <label for="field-resourceTypeGeneral">*General Resource Type (Mandatory) </label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-  <input id="field-resourceTypeGeneral" name="resourceTypeGeneral" class="control-medium"
-    value="{{ data.resourceTypeGeneral }}" style="display: none;">
-
-  <div id="resourceTypeSelect">
-    <input type="radio" id="rt1" name="resourceSelect" value="Dataset">Dataset
-    <input type="radio" id="rt2" name="resourceSelect" value="Instrument">Instrument
-    <input type="radio" id="rt3" name="resourceSelect" value="Model">Instrument
-    <input type="radio" id="rt4" name="resourceSelect" value="Software">Software
-    <input type="radio" id="rt5" name="resourceSelect" value="Image">Image
-    <input type="radio" id="rt6" name="resourceSelect" value="AudioVisual">Audio Visual
-    <input type="radio" id="rt7" name="resourceSelect" value="ComputationalNotebook">Computational Notebook
-  </div>
-  <br>
-  <script>
-    let resourceTypeContainer = document.getElementById("resourceTypeSelect");
-    let selectedResource;
-    resourceTypeContainer.addEventListener('change', function () {
-      if (document.getElementById("rt1").checked) {
-        selectedResource = document.getElementById("rt1").value;
-      }
-      else if (document.getElementById("rt2").checked) {
-        selectedResource = document.getElementById("rt2").value;
-      }
-      else if (document.getElementById("rt3").checked) {
-        selectedResource = document.getElementById("rt3").value;
-      }
-      else if (document.getElementById("rt4").checked) {
-        selectedResource = document.getElementById("rt4").value;
-      }
-      else if (document.getElementById("rt5").checked) {
-        selectedResource = document.getElementById("rt5").value;
-      }
-      else if (document.getElementById("rt6").checked) {
-        selectedResource = document.getElementById("rt6").value;
-      }
-      else if (document.getElementById("rt7").checked) {
-        selectedResource = document.getElementById("rt7").value;
-      }
-      document.getElementById("field-resourceTypeGeneral").value = selectedResource;
-    });
-    //retain value
-    let resid = "N/A";
-    if ("{{data.resourceTypeGeneral}}" == "Dataset") {
-      resid = "rt1"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "Instrument") {
-      resid = "rt2"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "Instrument") {
-      resid = "rt3"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "Software") {
-      resid = "rt4"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "Image") {
-      resid = "rt5"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "AudioVisual") {
-      resid = "rt6"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "ComputationalNotebook") {
-      resid = "rt7"
-    }
-
-    document.getElementById("rt1").checked = true
-
-
-  </script>
-
-  {{ form.input('resourceType', label=_('*ResourceType (Mandatory) '), id='field-resourceType', placeholder=_('More
-  Info'), value=data.resourceType, error=errors.resourceType, classes=['control-medium']) }}
-
-
-  <!-- Language -->
-  <!--          -->
-  <!--          -->
-  <label for="field-language">*Language (Mandatory) </label><br>
-  <select id="field-language" name="language" class="control-medium">
-    <option value="en">English</option>
-    <option value="es">Spanish</option>
-    <option value="de">German</option>
-    <option value="fr">French</option>
-    <option value="el">Greek</option>
-    <option value="hi">Hindi</option>
-    <option value="ru">Russian</option>
-    <option value="zh">Chinese</option>
-    <option value="ja">Japanese</option>
-    <option value="Other">Other</option>
-  </select><br><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-  <!-- Dates Fields  -->
-  <label><strong> Dates </strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-
-  <!-- Collected Dates -->
-  <label for="field-collectionStartDate">Collection Start Date (Optional)</label><br>
-  <input type="date" id="field-collectionStartDate" name="collectionStartDate" class="control-medium"
-    placeholder="DD-MM-YYYY" value="{{ data.collectionStartDate }}"><br><br>
-
-  <label for="field-collectionEndDate">Collection End Date (Optional)</label><br>
-  <input type="date" id="field-collectionEndDate" name="collectionEndDate" class="control-medium"
-    placeholder="DD-MM-YYYY" value="{{ data.collectionEndDate }}"><br><br>
-  <!-- Created Dates -->
-  <label for="field-createdDate">Created Date (Optional)</label><br>
-  <input type="date" id="field-createdDate" name="createdDate" class="control-medium" placeholder="DD-MM-YYYY"
-    value="{{ data.createdDate }}"><br><br>
-  <!-- Submitted Dates -->
-  <label type="date" for="field-submittedDate">*Submitted Date (Mandatory)</label><br>
-  <input id="field-submittedDate" name="submittedDate" class="control-medium" placeholder="DD-MM-YYYY"
-    value="{{ data.submittedDate }}"><br><br>
-
-  <!-- Available Dates -->
-  <label for="field-availableDate">Available Date (Optional)</label><br>
-  <input type="date" id="field-availableDate" name="availableDate" class="control-medium" placeholder="DD-MM-YYYY"
-    value="{{ data.availableDate }}"><br><br>
-  <!-- Withdrawn Dates -->
-  <label for="field-withdrawnDate">Withdrawn Date (Optional)</label><br>
-  <input type="date" id="field-withdrawnDate" name="withdrawnDate" class="control-medium" placeholder="DD-MM-YYYY"
-    value="{{ data.withdrawnDate }}"><br><br>
-
-
-  <script>
-    // Script to set submitted date to today's date 
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = today.getFullYear();
-
-    today = yyyy + '-' + mm + '-' + dd;
-
-    document.getElementById('field-submittedDate').value = today;
-  </script>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-  <!-- Funder Information -->
-  <!--                    -->
-  <!--                    -->
-  <label><strong> Funder Information (Mandatory)</strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-
-  <label for="field-funderNameField">*Funder Name </label><br>
-  <input id="field-funderNameField" name="funderNameField" class="control-medium" style="width: 500px;"><br><br>
-
-  <label for="field-funderIdField">*Funder Identifier</label><br>
-  <input id="field-funderIdField" name="funderIdField" class="control-medium" style="width: 500px;"><br><br>
-
-  <label for="field-funderIdTypeField">*Funder ID Type</label><br>
-  <select id="field-funderIdTypeField" name="funderIdTypeField" class="control-medium">
-    <option value="Crossref Funder ID">Crossref Funder ID </option>
-    <option value="GRID">GRID </option>
-    <option value="ISNI">ISNI</option>
-    <option value="ROR">ROR</option>
-    <option value="Other">Other</option>
-  </select><br><br>
-
-  <label for="field-awardNumberField">Award number</label><br>
-  <input id="field-awardNumberField" name="awardNumberField" class="control-medium" style="width: 500px;"><br><br>
-
-  <label for="field-awardTitleField">*Award Title</label><br>
-  <input id="field-awardTitleField" name="awardTitleField" class="control-medium" style="width: 500px;"><br><br>
-
-  <label for="field-awardURIField">Award URI</label><br>
-  <input id="field-awardURIField" name="awardURIField" class="control-medium" style="width: 500px;"><br><br>
-
-
-  <script>
-    let awardData = [];
-
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/awardInformation.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        awardData = Papa.parse(csvString, { header: true }).data;
-        $j("#field-awardNumberField").autocomplete({
-          source: awardData.map(row => row.awardNumber),
-          select: function (event, ui) {
-            let selectedData = awardData.find(row => row.awardNumber === ui.item.value);
-            $j('#field-awardNumberField').val(ui.item.value);
-            $j('#field-awardTitleField').val(selectedData.awardTitle);
-            $j('#field-awardURIField').val(selectedData.awardURI);
-            return false;
-          }
-        });
-      });
-  </script>
-  <script>
-    let funData = [];
-
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/funderInformation.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        funData = Papa.parse(csvString, { header: true }).data;
-        let funders = funData.map(item => ({ label: item.funderName + ' (' + item.funderAbbreviation + ')', value: item.funderName, item }));
-
-        $j("#field-funderNameField").autocomplete({
-          source: funders,
-
-          select: function (event, ui) {
-            let selectedData = funData.find(row => row.funderName === ui.item.value);
-            $j('#field-funderNameField').val(selectedData.funderName);
-            $j('#field-funderIdField').val(selectedData.funderIdentifer);
-            document.getElementById('field-funderIdTypeField').value = selectedData.funderIDType;
-            return false;
-          }
-        });
-      });
-  </script>
-
-
-  <button type="button" onclick="addFunders()"> Add </button>
-
-
-  <pre id=funderInfo></pre>
-  <div id="funderDiv"></div>
-
-  <!-- Metadata fields are hidden -->
-  <!--                            -->
-  <input id="field-funderName" name="funderName" class="control-medium" style="display:None;"
-    value="{{ data.funderName }}">
-
-  <input id="field-funderId" name="funderId" class="control-medium" style="display:None;" value="{{ data.funderId }}">
-
-  <input id="field-funderIdType" name="funderIdType" class="control-medium" style="display:None;"
-    value="{{ data.funderIdType }}">
-
-  <input id="field-awardNumber" name="awardNumber" class="control-medium" style="display:None;"
-    value="{{ data.awardNumber }}">
-
-  <input id="field-awardURI" name="awardURI" class="control-medium" style="display:None;" value="{{ data.awardURI }}">
-
-  <input id="field-awardTitle" name="awardTitle" class="control-medium" style="display:None;"
-    value="{{ data.awardTitle }}">
-
-  <style>
-    #funderDiv {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .funder-item {
-      background-color: #f0f0f0;
-      padding: 5px;
-      margin: 5px;
-      border-radius: 5px;
-      display: inline;
-    }
-
-    .funder-item .close-btn {
-      cursor: pointer;
-      margin-left: 5px;
-    }
-  </style>
-  <script>
-    var fname = [];
-    var fid = [];
-    var fidType = [];
-    var faNum = [];
-    var fUri = [];
-    var aTitle = [];
-    if ("{{data.funderName}}") {
-      fname = "{{data.funderName}}".split(",");
-      fid = "{{data.funderId}}".split(",");
-      fidType = "{{data.funderIdType}}".split(",");
-      faNum = "{{data.awardNumber}}".split(",");
-      fUri = "{{data.awardURI}}".split(",");
-      aTitle = "{{data.awardTitle}}".split(",");
-    }
-    const funderList = document.getElementById('funderDiv');
-    if (aTitle[0] != '') {
-      for (let i = 0; i < aTitle.length; i++) {
-        displayFunders(aTitle[i]);
-      }
-    }
-    function displayFunderPre() {
-
-      let p = document.getElementById("funderInfo");
-      p.innerHTML = "Funders:";
-      for (let i = 0; i < fname.length; i++) {
-        let c = document.createTextNode(`Funder ${i+1}: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}, Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]} `);
-        p.append("\n");
-        p.append(c);
-      }
-    }
-
-    function addFunders() {
-      let fn = document.getElementById("field-funderNameField").value;
-      let id = document.getElementById("field-funderIdField").value;
-      let idt = document.getElementById("field-funderIdTypeField").value;
-      let an = document.getElementById("field-awardNumberField").value;
-      let uri = document.getElementById("field-awardURIField").value;
-      let at = document.getElementById("field-awardTitleField").value;
-
-      if (!fn || !id || !idt || !at) {
-        document.getElementById('funderInfo').innerHTML = "* Fields Should Not Be Empty";
-        return;
-      }
-      //  Clear Fields
-      document.getElementById("field-funderNameField").value = '';
-      document.getElementById("field-funderIdField").value = '';
-      document.getElementById("field-funderIdTypeField").value = '';
-      document.getElementById("field-awardNumberField").value = '';
-      document.getElementById("field-awardURIField").value = '';
-      document.getElementById("field-awardTitleField").value = '';
-
-      // Pushing data to metadata fields
-      fname.push(fn);
-      fid.push(id);
-      fidType.push(idt);
-      if (an) {
-        faNum.push(an);
-      }
-      else {
-        faNum.push("NONE");
-      }
-      if (uri) {
-        fUri.push(uri);
-      }
-      else {
-        fUri.push("NONE");
-      }
-      aTitle.push(at);
-      document.getElementById("field-funderName").value = fname;
-      document.getElementById("field-funderId").value = fid;
-      document.getElementById("field-funderIdType").value = fidType;
-      document.getElementById("field-awardNumber").value = faNum;
-      document.getElementById("field-awardURI").value = fUri;
-      document.getElementById("field-awardTitle").value = aTitle;
-      displayFunders(at);
-    }
-
-    function displayFunders(title) {
-      let index = aTitle.indexOf(title);
-      const funderItem = document.createElement("div");
-      funderItem.classList.add('funder-item');
-      funderItem.innerHTML = `
-            ${title} <span class="close-btn" onclick="removeFunder(this)">X</span>
-        `;
-      funderList.appendChild(funderItem);
-      displayFunderPre();
-    }
-
-    function removeFunder(closeBtn) {
-      const funderItem = closeBtn.parentNode;
-      funderList.removeChild(funderItem);
-      let funId = funderItem.textContent.trim();
-      funId = funId.slice(0, -1);
-      funId = funId.trim()
-      let index = fid.indexOf(funId);
-      fname.splice(index, 1);
-      fid.splice(index, 1);
-      fidType.splice(index, 1);
-      faNum.splice(index, 1);
-      fUri.splice(index, 1);
-      aTitle.splice(index, 1);
-      document.getElementById("field-funderName").value = fname;
-      document.getElementById("field-funderId").value = fid;
-      document.getElementById("field-funderIdType").value = fidType;
-      document.getElementById("field-awardNumber").value = faNum;
-      document.getElementById("field-awardURI").value = fUri;
-      document.getElementById("field-awardTitle").value = aTitle;
-      displayFunderPre();
-
-    }
-    // </script>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-  <!-- Contributor Details -->
-  <!--                     -->
-  <!--                     -->
-  <label><strong> Contributors Details (Optional) </strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-  <label for="field-contributorTypeField">*Contributor Type</label><br>
-  <select id="field-contributorTypeField" name="contributorTypeField" class="control-medium">
-    <option value="None"></option>
-    <option value="ContactPerson">ContactPerson</option>
-    <option value="DataCollector">DataCollector</option>
-    <option value="DataCurator">DataCurator</option>
-    <option value="DataManager">DataManager</option>
-    <option value="Distributor">Distributor</option>
-    <option value="Editor">Editor</option>
-    <option value="HostingInstitution">HostingInstitution</option>
-    <option value="Producer">Producer</option>
-    <option value="ProjectLeader">ProjectLeader</option>
-    <option value="ProjectManager">ProjectManager</option>
-    <option value="ProjectMember">ProjectMember</option>
-    <option value="RegistrationAgency">RegistrationAgency</option>
-    <option value="RegistrationAuthority">RegistrationAuthority</option>
-    <option value="RelatedPerson">RelatedPerson</option>
-    <option value="Researcher">Researcher</option>
-    <option value="ResearchGroup">ResearchGroup</option>
-    <option value="RightsHolder">RightsHolder</option>
-    <option value="Sponsor">Sponsor</option>
-    <option value="Supervisor">Supervisor</option>
-    <option value="WorkPackageLeader">WorkPackageLeader</option>
-    <option value="Other">Other</option>
-  </select><br><br>
-
-  <!-- Input Lines -->
-
-  <label for="field-contributorFamilyName">*Family Name</label><br>
-  <input type="text" id="field-contributorFamilyName" placeholder="Smith, Lee" name="contributorFamilyName"
-    class="control-medium">
-  <br><br>
-
-  <label for="field-contributorFirstName">*Given Name</label><br>
-  <input type="text" id="field-contributorFirstName" placeholder="John, Ben .." name="contributorFirstName"
-    class="control-medium">
-  <br><br>
-
-  <label for="field-contributorNameId">Name Identifier</label><br>
-  <input type="text" id="field-contributorNameId" placeholder="https://orcid.org/0000-0001-5727-2427"
-    name="contributorNameId" class="control-medium">
-  <br>
-  <br>
-  <label for="field-contributorAffiliationField">*Affiliation</label><br>
-  <input type="text" id="field-contributorAffiliationField" placeholder="affiliation"
-    name="field-contributorAffiliationField" class="control-medium">
-  <br><br>
-  <button type="button" onclick="addContributor()">Add Contributor</button>
-  <script>
-    let contriData = [];
-
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/ckanStaffList.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        contriData = Papa.parse(csvString, { header: true }).data;
-        const fullNames = contriData.map(item => ({ label: item.firstname + ' ' + item.lastname, value: item.lastname, item }));
-        $j("#field-contributorFamilyName").autocomplete({
-          source: fullNames,
-          select: function (event, ui) {
-            $j('#field-contributorFirstName').val(ui.item.item.firstname);
-            $j('#field-contributorFamilyName').val(ui.item.item.lastname);
-            $j('#field-contributorNameId').val(ui.item.item.identifier);
-            $j('#field-contributorAffiliationField').val(ui.item.item.affiliation);
-            return false;
-          }
-        });
-      });
-  </script>
-  <pre id='contributorMessage'></pre>
-  <div id="contributorDiv"></div>
-  <br>
-  <!-- Metadata Field Lines for Contributors. These are not displayed, Used to store the metadatafields-->
-  <input id="field-contributorType" error="errors.contributorType" name="contributorType" class="control-medium"
-    value="{{ data.contributorType }}" style="display: none;">
-  <input id="field-contributorDetails" error="errors.contributorDetails" name="contributorDetails"
-    style="display: none;" class="control-medium" value="{{ data.contributorDetails }}">
-  <input id="field-contributorId" error="errors.contributorId" name="contributorId" class="control-medium"
-    value="{{ data.contributorId }}" style="display: none;">
-  <input id="field-contributorAffiliation" error="errors.contributorAffiliation" name="contributorAffiliation"
-    class="control-medium" value="{{ data.contributorAffiliation }}" style="display: none;">
-
-  <!-- Contributor Functions -->
-  <style>
-    #contributorDiv {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .contributor-item {
-      background-color: #f0f0f0;
-      padding: 5px;
-      margin: 5px;
-      border-radius: 5px;
-      display: inline;
-    }
-
-    .contributor-item .close-btn {
-      cursor: pointer;
-      margin-left: 5px;
-    }
-  </style>
-  <script>
-    var contriId = [];
-    var contriName = [];
-    var contriType = [];
-    var contriAffiliation = [];
-    if ("{{ data.contributorId }}") {
-      contriId = "{{ data.contributorId }}".split(",");
-      contriName = "{{ data.contributorDetails }}".split(",");
-      contriType = "{{ data.contributorType }}".split(",");
-      contriAffiliation = "{{ data.contributorAffiliation }}".split(",");
-    }
-    const contributorList = document.getElementById('contributorDiv');
-    if (contriName[0] != '') {
-      for (let i = 0; i < contriName.length; i++) {
-        displayContributors(contriName[i]);
-      }
-    }
-    function addContributor() {
-      let fn = document.getElementById('field-contributorFirstName').value;
-      let sn = document.getElementById('field-contributorFamilyName').value;
-      let id = document.getElementById('field-contributorNameId').value;
-      let ct = document.getElementById('field-contributorTypeField').value;
-      let af = document.getElementById('field-contributorAffiliationField').value;
-      //Clear the fields
-      try {
-        if (!fn || !sn || !ct || !af) {
-          throw new Error('* Fields Cannot Be Empty');
-        }
-      } catch (err) {
-        document.getElementById('contributorMessage').innerHTML = err.message;
-        return;
-      }
-      document.getElementById('field-contributorFirstName').value = '';
-      document.getElementById('field-contributorFamilyName').value = '';
-      document.getElementById('field-contributorNameId').value = '';
-      document.getElementById('field-contributorNameId').value = '';
-      document.getElementById('field-contributorTypeField').value = '';
-      document.getElementById('field-contributorAffiliationField').value = '';
-
-      let fullname = fn.concat(' ', sn);
-
-      contriName.push(fullname);
-
-      if (id) {
-        contriId.push(id);
-      }
-      else {
-        contriId.push("NONE");
-      }
-      contriType.push(ct);
-      contriAffiliation.push(af);
-      document.getElementById('field-contributorDetails').value = contriName;
-      document.getElementById('field-contributorId').value = contriId;
-      document.getElementById('field-contributorType').value = contriType;
-      document.getElementById('field-contributorAffiliation').value = contriAffiliation;
-      // document.getElementById('contributorMessage').innerHTML = "Contributors added :" + contriName;
-      displayContributors(fullname);
-    }
-
-
-    function displayContributorPre() {
-      let p = document.getElementById('contributorMessage');
-      p.innerHTML = "Contributors Added";
-      for (let i = 0; i < contriName.length; i++) {
-        let c = document.createTextNode(`Contributor ${i + 1}: Type ${contriType[i]}, Name: ${contriName[i]}, Organization: ${contriAffiliation[i]} ID: ${contriId[i]}`);
-        p.append("\n");
-        p.append(c);
-      }
-    }
-
-    function displayContributors(name) {
-      let index = contriName.indexOf(name);
-      const contributorItem = document.createElement("div");
-      contributorItem.classList.add('contributor-item');
-      contributorItem.innerHTML = `
-            ${name} <span class="close-btn" onclick="removeContributor(this)">X</span>
-        `;
-      contributorList.appendChild(contributorItem);
-      displayContributorPre();
-    }
-    function removeContributor(closeBtn) {
-      const contributorItem = closeBtn.parentNode;
-      contributorList.removeChild(contributorItem);
-      let name = contributorItem.textContent.trim();
-      name = name.slice(0, -1);
-      name = name.trim()
-      let index = contriName.indexOf(name);
-      contriName.splice(index, 1);
-      contriId.splice(index, 1);
-      contriAffiliation.splice(index, 1);
-      contriType.splice(index, 1);
-      document.getElementById('field-contributorDetails').value = contriName;
-      document.getElementById('field-contributorId').value = contriId;
-      document.getElementById('field-contributorType').value = contriType;
-      document.getElementById('field-contributorAffiliation').value = contriAffiliation;
-      displayContributorPre();
-
-    }
-  </script>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-
-  <!-- Related Resources Fields -->
-  <!--                          -->
-  <!--                          -->
-  <label><strong>Related Resources (Optional) </strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-  <label for="field-relatedIdField"> Select Related ID Type </label><br>
-  <select id="field-relatedIdField" name="relatedIdField" class="control-medium">
-    <option value="">N/A</option>
-    <option value="ARK">ARK</option>
-    <option value="arXiv">arXiv</option>
-    <option value="bibcode">bibcode</option>
-    <option value="DOI">DOI</option>
-    <option value="EAN13">EAN13</option>
-    <option value="EISSN">EISSN</option>
-    <option value="Handle">Handle</option>
-    <option value="IGSN">IGSN</option>
-    <option value="ISBN">ISBN</option>
-    <option value="ISSN">ISSN</option>
-    <option value="ISTC">ISTC</option>
-    <option value="LISSN">LISSN</option>
-    <option value="LSID">LSID</option>
-    <option value="PMID">PMID</option>
-    <option value="PURL">PURL</option>
-    <option value="UPC">UPC</option>
-    <option value="URL">URL</option>
-    <option value="URN">URN</option>
-    <option value="w3id">w3id</option>
-  </select><br><br>
-
-  <label for="field-relationTypeField">* Select Relation Type </label><br>
-  <select id="field-relationTypeField" name="relationTypeField" class="control-medium">
-    <option value="">N/A</option>
-    <option value="IsCitedBy">IsCitedBy</option>
-    <option value="Cites">Cites</option>
-    <option value="IsSupplementTo">IsSupplementTo</option>
-    <option value="IsSupplementedBy">IsSupplementedBy</option>
-    <option value="IsContinuedBy">IsContinuedBy</option>
-    <option value="Continues">Continues</option>
-    <option value="IsDescribedBy">IsDescribedBy</option>
-    <option value="Describes">Describes</option>
-    <option value="HasMetadata">HasMetadata</option>
-    <option value="IsMetadataFor">IsMetadataFor</option>
-    <option value="HasVersion">HasVersion</option>
-    <option value="IsVersionOf">IsVersionOf</option>
-    <option value="IsNewVersionOf">IsNewVersionOf</option>
-    <option value="IsPreviousVersionOf">IsPreviousVersionOf</option>
-    <option value="IsPartOf">IsPartOf</option>
-    <option value="HasPart">HasPart</option>
-    <option value="IsPublishedIn">IsPublishedIn</option>
-    <option value="IsReferencedBy">IsReferencedBy</option>
-    <option value="References">References</option>
-    <option value="IsDocumentedBy">IsDocumentedBy</option>
-    <option value="Documents">Documents</option>
-    <option value="IsCompiledBy">IsCompiledBy</option>
-    <option value="Compiles">Compiles</option>
-    <option value="IsVariantFormOf">IsVariantFormOf</option>
-    <option value="IsOriginalFormOf">IsOriginalFormOf</option>
-    <option value="IsIdenticalTo">IsIdenticalTo</option>
-    <option value="IsReviewedBy">IsReviewedBy</option>
-    <option value="Reviews">Reviews</option>
-    <option value="IsDerivedFrom">IsDerivedFrom</option>
-    <option value="IsSourceOf">IsSourceOf</option>
-    <option value="IsRequiredBy">IsRequiredBy</option>
-    <option value="Requires">Requires</option>
-    <option value="IsObsoletedBy">IsObsoletedBy</option>
-    <option value="Obsoletes">Obsoletes</option>
-    <option value="IsCollectedBy">IsCollectedBy</option>
-    <option value="Collects">Collects</option>
-  </select><br><br>
-
-
-  <label for="field-relatedResourceTypeField">* Select Resource Type </label><br>
-  <select id="field-relatedResourceTypeField" name="relatedResourceTypeField" class="control-medium">
-    <option value="">N/A</option>
-    <option value="Audiovisual">Audiovisual</option>
-    <option value="Book">Book</option>
-    <option value="BookChapter">BookChapter</option>
-    <option value="Collection">Collection</option>
-    <option value="ComputationalNotebook">ComputationalNotebook</option>
-    <option value="ConferencePaper">ConferencePaper</option>
-    <option value="ConferenceProceeding">ConferenceProceeding</option>
-    <option value="DataPaper">DataPaper</option>
-    <option value="Dataset">Dataset</option>
-    <option value="Dissertation">Dissertation</option>
-    <option value="Event">Event</option>
-    <option value="Image">Image</option>
-    <option value="InteractiveResource">InteractiveResource</option>
-    <option value="Instrument">Instrument</option>
-    <option value="Journal">Journal</option>
-    <option value="JournalArticle">JournalArticle</option>
-    <option value="Model">Model</option>
-    <option value="OutputManagementPlan">OutputManagementPlan</option>
-    <option value="PeerReview">PeerReview</option>
-    <option value="PhysicalObject">PhysicalObject</option>
-    <option value="Preprint">Preprint</option>
-    <option value="Report">Report</option>
-    <option value="Service">Service</option>
-    <option value="Software">Software</option>
-    <option value="Sound">Sound</option>
-    <option value="Standard">Standard</option>
-    <option value="StudyRegistration">StudyRegistration</option>
-    <option value="Text">Text</option>
-    <option value="Workflow">Workflow</option>
-    <option value="Other">Other</option>
-  </select><br><br>
-
-  <label for="field-relatedIdentifierField">*Enter the Identifier</label><br>
-  <input id="field-relatedIdentifierField" name="relatedIdentifierField" class="control-medium"
-    style="width: 500px;"><br>
-  <button type="button" onclick="addRelated()">Add Resources</button>
-  <button type="button" onclick="clearRelated()">Clear All</button>
-  <button type="button" onclick="popRelated()">Clear Last Entry</button>
-
-  <pre id="relatedMessage"></pre>
-  <!-- Metadata Fields for Related Resources -->
-  <input id="field-relatedIdentifierType" name="relatedIdentifierType" class="control-medium" style="display:none"
-    value="{{ data.relatedIdentifierType }}">
-  <input id="field-relationType" name="relationType" class="control-medium" style="display:none"
-    value="{{ data.relationType }}">
-  <input id="field-relatedResourceType" name="relatedResourceType" class="control-medium" style="display:none"
-    value="{{ data.relatedResourceType }}">
-  <input id="field-relatedIdentifier" name="relatedIdentifier" class="control-medium" style="display:none"
-    value="{{ data.relatedIdentifier }}">
-
-  <script>
-    var relationTypeList = "{{ data.relationType }}".split(",");
-    var idTypeList = "{{ data.relatedIdentifierType }}".split(",");
-    var RRTypeList = "{{ data.relatedResourceType }}".split(",");
-    var idList = "{{ data.relatedIdentifier }}".split(",");
-    if (relationTypeList[0] != '') {
-      displayRelatedResources();
-    }
-    function addRelated() {
-      let idt = document.getElementById('field-relatedIdField').value;
-      let relt = document.getElementById('field-relationTypeField').value;
-      let rest = document.getElementById('field-relatedResourceTypeField').value;
-      let rid = document.getElementById('field-relatedIdentifierField').value;
-      if (!idt || !relt || !rest || !rid) {
-        document.getElementById('relatedMessage').innerHTML = "Fill all the fields";
-        return;
-      }
-      relationTypeList.push(relt);
-      idTypeList.push(idt);
-      RRTypeList.push(rest);
-      idList.push(rid);
-      document.getElementById('field-relatedIdentifierField').value = '';
-      document.getElementById('field-relatedIdentifierType').value = idTypeList;
-      document.getElementById('field-relationType').value = relationTypeList;
-      document.getElementById('field-relatedResourceType').value = RRTypeList
-      document.getElementById('field-relatedIdentifier').value = idList;
-      displayRelatedResources();
-    }
-    function displayRelatedResources() {
-      let p = document.getElementById("relatedMessage");
-      p.innerHTML = "Related Resources: "
-      for (let i = 0; i < idList.length; i++) {
-        c = document.createTextNode(`Resource ${i + 1}:: ID Type: ${idTypeList[i]}, Relation Type: ${relationTypeList[i]}, Resource Type: ${RRTypeList[i]}, ID: ${idList[i]}`);
-        p.append("\n");
-        p.append(c);
-
-      }
-    }
-
-    function popRelated() {
-      idTypeList.pop();
-      relationTypeList.pop();
-      RRTypeList.pop();
-      idList.pop();
-      document.getElementById('field-relatedIdentifierType').value = idTypeList;
-      document.getElementById('field-relationType').value = relationTypeList;
-      document.getElementById('field-relatedResourceType').value = RRTypeList
-      document.getElementById('field-relatedIdentifier').value = idList;
-      displayRelatedResources();
-    }
-
-
-    function clearRelated() {
-      relationTypeList = [];
-      idTypeList = [];
-      RRTypeList = [];
-      idList = [];
-      document.getElementById('field-relatedIdentifierType').value = idTypeList;
-      document.getElementById('field-relationType').value = relationTypeList;
-      document.getElementById('field-relatedResourceType').value = RRTypeList
-      document.getElementById('field-relatedIdentifier').value = idList;
-      document.getElementById('relatedMessage').innerHTML = "Cleared";
-
-    }
-  </script>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-
-  <!-- Associated Research Notebooks Field -->
-  <!--                                     -->
-  <!--                                     -->
-  <label for="field-associatedNotesField">Associated Research Notebooks (Optional) </label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br>
-  <input type="text" id="field-associatedNoteField" name="associatedNoteField" style="width: 500px;"> <br>
-  <button type="button" onclick="addNoteBooks()"> Add </button>
-  <button type="button" onclick="clearNoteBooks()">Clear</button>
-  <pre id="notebookAdded"> Associated Notes: {{ data.associatedNote }} </pre>
-  <input type="text" id="field-associatedNote" name="associatedNote" style="display:none;"
-    value="{{ data.associatedNote }}">
-  <script>
-    var notes = [];
-
-    function addNoteBooks() {
-      let notebook = document.getElementById("field-associatedNoteField").value;
-      notes.push(notebook);
-      document.getElementById("field-associatedNote").value = notes;
-      document.getElementById('notebookAdded').innerHTML = "Associated Notebooks: " + notes;
-      document.getElementById("field-associatedNoteField").value = "";
-    }
-
-    function clearNoteBooks() {
-
-      notes = [];
-      document.getElementById("field-associatedNote").value = notes;
-      document.getElementById('notebookAdded').innerHTML = "Cleared !!!";
-      document.getElementById("field-associatedNoteField").value = "";
-    }
-
-  </script>
-
-
-  <!-- Data Location Field -->
-  <!--                     -->
-  <!--                     -->
-
-  <label for="field-dataLocationField"> *Data Locations (Mandatory)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br>
-  <input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
-  <button type="button" onclick="addDataLocation()"> Add </button>
-  <button type="button" onclick="clearDataLocation()">Clear</button>
-  <pre id="dataLocationAdded"> Data Locations: {{ data.dataLocation }} </pre>
-  <input type="text" id="field-dataLocation" name="dataLocation" style="display:none;" value="{{ data.dataLocation }}">
-
-  <script>
-    var dataLoc = [];
-
-    function addDataLocation() {
-      let loc = document.getElementById('field-dataLocationField').value;
-      dataLoc.push(loc);
-      document.getElementById('field-dataLocation').value = dataLoc;
-      document.getElementById('dataLocationAdded').innerHTML = "Data Locations Added:" + dataLoc
-      document.getElementById('field-dataLocationField').value = "";
-    }
-
-    function clearDataLocation() {
-
-      dataLoc = [];
-      document.getElementById('field-dataLocation').value = dataLoc;
-      document.getElementById('field-dataLocationField').value = "";
-      document.getElementById('dataLocationAdded').innerHTML = "Cleared !!!";
-
-
-    }
-
-  </script>
-
-
-  <!-- Responsible Person Field -->
-  <!--                          -->
-  <!--                          -->
-  <label for="field-responsiblePerson">*Responsible Person (Mandatory)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br>
-  <input id="field-responsiblePerson" name="responsiblePerson" style="width: 500px;"
-    value="{{ data.responsiblePerson }}"><br><br>
-
-
-  <!-- Research Infrastructure Used -->
-  <!--                              -->
-  <!--                              -->
-  <label for="field-infraUsedField"> Research Infrastructure Used (Select All)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-  <div id="field-infraUsedField" name="infraUsedField">
-
-    <input type="checkbox" id="if1" value="LTEs" onchange="infraAdd('LTEs')">LTEs
-    <input type="checkbox" id="if2" value="LSRE" onchange="infraAdd('LSRE')">LSRE
-    <input type="checkbox" id="if3" value="NWFP" onchange="infraAdd('NWFP')">NWFP
-    <input type="checkbox" id="if4" value="RIS" onchange="infraAdd('RIS')">RIS
-    <input type="checkbox" id="if5" value="URTO" onchange="infraAdd('URTO')">URTO
-    <input type="checkbox" id="if6" value="Rowden" onchange="infraAdd('Rowden')">Rowden
-  </div>
-  <input type="text" id="field-infraUsed" name="infraUsed" value="{{ data.infraUsed }}" style="display: none;">
-
-  <script>
-    var infra = "{{data.infraUsed}}".split(",");
-    if (infra[0] != '') {
-      for (let x = 0; x < infra.length; x++) {
-        checkInfra(infra[x]);
-      }
-    }
-    function infraAdd(val) {
-      let i = infra.indexOf(val);
-      if (i > -1) {
-        infra.splice(i, 1);
-      }
-      else {
-        infra.push(val);
-      }
-      document.getElementById('field-infraUsed').value = infra;
-    }
-    function checkInfra(val) {
-      if (val == "LTEs") {
-        document.getElementById("if1").checked = true;
-      }
-      else if (val == "LSRE") {
-        document.getElementById("if2").checked = true;
-      }
-      else if (val == "NWFP") {
-        document.getElementById("if3").checked = true;
-      }
-      else if (val == "RIS") {
-        document.getElementById("if4").checked = true;
-      }
-      else if (val == "URTO") {
-        document.getElementById("if5").checked = true;
-      }
-      else if (val == "Rowden") {
-        document.getElementById("if6").checked = true;
-      }
-    }
-  </script>
-  <br><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-  <!-- Geo location fields -->
-  <!--                     -->
-  <!--                     -->
-  <label><strong> Geolocation Point (Optional)</strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-
-  <label for="field-geoLocation"> Enter The Geolocation (Name of the place) </label>
-  <input type="text" id="field-geoLocation" name="geoLocation" style="width:auto" value="{{ data.geoLocation }}">
-
-  <!--      World Map         -->
-  <!-- Load Leaflet -->
-
-
-  <br><br>
-  <label for="'mapid">Select the location in the map to fill Latitude and Longitude Automatically</label><br>
-  <div id="mapid"></div>
-  <br><br>
-  <label for="field-geoLatitude"> Latitude </label><br>
-  <input type="text" id="field-geoLatitude" name="geoLatitude" value="{{ data.geoLatitude }}"><br><br>
-  <label for="field-geoLongitude"> Longitude </label><br>
-  <input type="text" id="field-geoLongitude" name="geoLongitude" value="{{ data.geoLongitude }}"><br><br>
-  <style>
-    #mapid {
-      height: 400px;
-    }
-  </style>
-
-  <script>
-    var latitude;
-    var logitude;
-    var mymap = L
-      .map('mapid')
-      .setView([50, -0.1], 4);
-    L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
-      maxZoom: 100,
-    }).addTo(mymap);
-    mymap.on('click', function (e) {
-      latitude = e.latlng.lat;
-      longitude = e.latlng.lng;
-      document.getElementById('field-geoLatitude').value = latitude.toFixed(4);
-      document.getElementById('field-geoLongitude').value = longitude.toFixed(4);
-    });
-  </script>
-
-  <!-- Add 2 buttons to this map such that when clicked, the map will zoom to Harpenden UK and North Wyke UK -->
-  <script>
-    // Add buttons to zoom to specific locations
-    var harpendenButton = L.control({ position: 'topright' });
-    harpendenButton.onAdd = function (map) {
-      var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-      div.innerHTML = '<button type="button" onclick="zoomToHarpenden()">Zoom to Harpenden</button>';
-      return div;
-    };
-    harpendenButton.addTo(mymap);
-
-    var northWykeButton = L.control({ position: 'topright' });
-    northWykeButton.onAdd = function (map) {
-      var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-      div.innerHTML = '<button type="button" onclick="zoomToNorthWyke()">Zoom to North Wyke</button>';
-      return div;
-    };
-    northWykeButton.addTo(mymap);
-
-    // Functions to zoom to specific locations
-    function zoomToHarpenden() {
-      mymap.setView([51.8142, -0.3589], 14);
-    }
-
-    function zoomToNorthWyke() {
-      mymap.setView([50.7873, -3.9267], 16);
-    }
-  </script>
-
-
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-  <!-- Geo Location Box -->
-  <!--                  -->
-  <label><strong> Geolocation Box (Optional)</strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-
-  <label for="field-geoLowLeftLatitude"> Geo Latitude Lower Left Corner </label><br>
-  <input type="text" id="field-geoLowLeftLatitude" name="geoLowLeftLatitude"
-    value="{{ data.geoLowLeftLatitude }}"><br><br>
-
-  <label for="field-geoLowLeftLongitude"> Geo Longitude Lower Left Corner </label><br>
-  <input type="text" id="field-geoLowLeftLongitude" name="geoLowLeftLongitude"
-    value="{{ data.geoLowLeftLongitude }}"><br><br>
-
-  <label for="field-geoTopRightLatitude"> Geo Latitude Top Right Corner </label><br>
-  <input type="text" id="field-geoTopRightLatitude" name="geoTopRightLatitude"
-    value="{{ data.geoTopRightLatitude }}"><br><br>
-
-  <label for="field-geoTopRightLongitude"> Geo Longitude Top Right Corner </label><br>
-  <input type="text" id="field-geoTopRightLongitude" name="geoTopRightLongitude"
-    value="{{ data.geoTopRightLongitude }}"><br><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
-  <!-- Subject Fields -->
-  <!--                 -->
-  <!--                 -->
-  <label><strong> Subject Details (Optional)</strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-  <label for="field-subjectField">*Subject</label><br>
-  <input type="text" id="field-subjectField" name="subjectField" style="width: 500px;"><br><br>
-
-  <label for="field-subjectSchemeField">*Subject Scheme</label><br>
-  <input type="text" id="field-subjectSchemeField" name="subjectSchemeField" style="width: 500px;"><br><br>
-
-  <label for="field-subjectUriField">*Subject URI</label><br>
-  <input type="text" id="field-subjectUriField" name="subjectUriField" style="width: 500px;"><br><br>
-
-  <label for="field-valueUriField">*Value URI</label><br>
-  <input type="text" id="field-valueUriField" name="valueUriField" style="width: 500px;"><br><br>
-
-  <button type="button" onclick="addSubject()">Add</button>
-  <button type="button" onclick="clearSubject()">Clear All</button>
-  <button type="button" onclick="popSubject()">Clear Last Entry</button>
-
-  <pre id="subjectMessage"></pre>
-  <script>
-    let subData = [];
-
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/subjectsList.csv')
-        .then(response => response.text())
-        .then(csvString => {
-            subData = Papa.parse(csvString, { header: true }).data;
-            const subList = subData.map(row => row.subject);
-            $j("#field-subjectField").autocomplete({
-                source: subList,
-                select: function (event, ui) {
-                    let selectedData = subData.find(row => row.subject === ui.item.value);
-                    $j('#field-subjectField').val(selectedData.subject);
-                    $j('#field-subjectSchemeField').val(selectedData.subjectScheme);
-                    $j('#field-subjectUriField').val(selectedData.subjectURI);
-                    $j('#field-valueUriField').val(selectedData.valueURI);
-                    return false;
-                }
-            });
-        });
-</script>
-  <!-- Metadata Fields -->
-  <input type="text" id="field-subjectScheme" name="subjectScheme" style="display: none;"
-    value="{{ data.subjectScheme }}">
-  <input type="text" id="field-subjectUri" name="subjectUri" style="display: none;" value="{{ data.subjectUri }}">
-  <input type="text" id="field-valueUri" name="valueUri" style="display: none;" value="{{ data.valueUri }}">
-
-  <input type="text" id="field-subject" name="subject" style="display: none;" value="{{ data.subject }}">
-
-  <!-- Subject Functions -->
-  <!--                   -->
-  <!--                   -->
-
-  <script>
-    var subScheme = [];
-    var subUri = [];
-    var valUri = [];
-    var sub = [];
-    if ("{{data.subject}}") {
-      subScheme = "{{ data.subjectScheme }}".split(",");
-      subUri = "{{ data.subjectUri }}".split(",");
-      valUri = "{{ data.valueUri }}".split(",");
-      sub = "{{ data.subject }}".split(",");
-      displaySubject();
-    }
-
-    function addSubject() {
-      let ss = document.getElementById('field-subjectSchemeField').value;
-      let su = document.getElementById('field-subjectUriField').value;
-      let vu = document.getElementById('field-valueUriField').value;
-      let s = document.getElementById('field-subjectField').value;
-      if (!ss || !su || !vu || !s) {
-        document.getElementById('subjectMessage').innerHTML = "* fields should now be empty";
-        return;
-      }
-      // Push to Array
-      subScheme.push(ss);
-      subUri.push(su);
-      valUri.push(vu);
-      sub.push(s);
-      // clear Fields
-      document.getElementById('field-subjectSchemeField').value = '';
-      document.getElementById('field-subjectUriField').value = '';
-      document.getElementById('field-valueUriField').value = '';
-      document.getElementById('field-subjectField').value = '';
-      // Push to Metadatafields
-      document.getElementById('field-subjectScheme').value = subScheme;
-      document.getElementById('field-subjectUri').value = subUri;
-      document.getElementById('field-valueUri').value = valUri;
-      document.getElementById('field-subject').value = sub;
-      // Print Message
-      displaySubject();
-    }
-    function displaySubject() {
-      let p = document.getElementById("subjectMessage");
-      p.innerHTML = "Subjects:"
-      for (let i = 0; i < sub.length; i++) {
-        c = document.createTextNode(`${i + 1}: Subject Scheme:${subScheme[i]}, Subject URI:${subUri[i]}, Value URI:${valUri}, Subject:${sub[i]}`);
-        p.append("\n");
-        p.append(c);
-      }
-    }
-    function popSubject() {
-      subScheme.pop();
-      subUri.pop();
-      valUri.pop();
-      sub.pop();
-      document.getElementById('field-subjectScheme').value = subScheme;
-      document.getElementById('field-subjectUri').value = subUri;
-      document.getElementById('field-valueUri').value = valUri;
-      document.getElementById('field-subject').value = sub;
-      displaySubject();
-    }
-    function clearSubject() {
-      subScheme = [];
-      subUri = [];
-      valUri = [];
-      sub = [];
-      document.getElementById('field-subjectScheme').value = subScheme;
-      document.getElementById('field-subjectUri').value = subUri;
-      document.getElementById('field-valueUri').value = valUri;
-      document.getElementById('field-subject').value = sub;
-      document.getElementById('field-subjectSchemeField').value = '';
-      document.getElementById('field-subjectUriField').value = '';
-      document.getElementById('field-valueUriField').value = '';
-      document.getElementById('field-subjectField').value = '';
-      document.getElementById('subjectMessage').innerHTML = "Cleared !!!";
-
-    }
-  </script>
-
-  <label for="field-license">Select the License (optional)</label>
-  <i class="fas fa-info-circle" title="add info here"></i><br>
-  <input id="field-license" name="license" class="control-medium" style="display: none;" value="{{data.license}}">
-  <div id="licenseButtons">
-    <input type="radio" id="lr1" name="licenseSelect" value="Creative Commons Attribution Licence (CC BY 4.0)">Creative
-    Commons Attribution Licence (CC BY 4.0)
-    <br>
-    <input type="radio" id="lr2" name="licenseSelect"
-      value="Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)">Creative Commons Attribution Non-Commercial (CC
-    BY-NC 4.0)
-    <br>
-    <input type="radio" id="lr3" name="licenseSelect" value="Open Government Licence (OGL)">Open Government Licence
-    (OGL)
-  </div><br>
-  <script>
-    // When New Radio Button is selected
-    var licenseContainer = document.getElementById("licenseButtons");
-    let selectedLicense;
-    licenseContainer.addEventListener('change', function () {
-      if (document.getElementById('lr1').checked) {
-        selectedLicense = document.getElementById('lr1').value;
-      } else if (document.getElementById('lr2').checked) {
-        selectedLicense = document.getElementById('lr2').value;
-      } else if (document.getElementById('lr3').checked) {
-        selectedLicense = document.getElementById('lr3').value;
-      }
-      document.getElementById("field-license").value = selectedLicense;
-    });
-
-    //Retain Value
-    let x = "{{ data.license }}"
-    if (x == "Creative Commons Attribution Licence (CC BY 4.0)") {
-      document.getElementById("lr1").checked = true;
-    }
-    else if (x == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)") {
-      document.getElementById("lr2").checked = true;
-    }
-    else if (x == "Open Government Licence (OGL)") {
-      document.getElementById("lr3").checked = true;
-    }
-
-  </script>
-
-
-  <label for="field-version"><strong>*Version (Mandatory)</strong></label><br>
-  <input type="text" id="field-version" name="version" class="control-medium" is_required="true" error="errors.version">
-  <br><br>
-  <script>
-    if ("{{data.version}}") {
-      document.getElementById("field-version").value = "{{data.version}}";
+    if ("{{user}}" == "true") {
+      console.log("show secrets");
+      document.getElementById("table1").style.display = "table";
     }
     else {
-      document.getElementById("field-version").value = 1;
+      console.log("hide secrets");
+    }
+    var notebooks = "{{ pkg_dict.associatedNote }}".split(",");
+    for (let i = 0; i < notebooks.length; i++) {
+      var link = document.createElement('a');
+      link.href = notebooks[i];
+      link.textContent = notebooks[i];
+      document.getElementById("notebookField").append(link);
+      document.getElementById("notebookField").append("\n");
+    }
+
+    var funderPrivateInfo = document.getElementById("funderField");
+    var idType = "{{ pkg_dict.funderIdType }}".split(",");
+    var fId = "{{ pkg_dict.funderId }}".split(",");
+    for (let i = 0; i < fId.length; i++) {
+      let val = document.createTextNode(`ID Type: ${idType[i]} , ID: ${fId[i]}`);
+      funderPrivateInfo.append(val);
+      funderPrivateInfo.append("\n")
     }
   </script>
-</body>
-
-</html>
-
-{% endblock %}
+</section>
