@@ -1,4 +1,4 @@
 subjectScheme,subjectURI,valueURI,subject
-AGROVOC,http://aims.fao.org/aos/agrovoc,http://aims.fao.org/aos/agrovoc/c_8412,winter wheat
-AGROVOC,http://aims.fao.org/aos/agrovoc,http://aims.fao.org/aos/agrovoc/c_7337,spring wheat
-WIKIDATA,https://www.wikidata.org/wiki/,https://www.wikidata.org/wiki/Q41331872,Broadbalk long-term experiment
+AGROVOC,http://aims.fao.org/aos/agrovoc,http://aims.fao.org/aos/agrovoc/c_8412,winter wheat,
+AGROVOC,http://aims.fao.org/aos/agrovoc,http://aims.fao.org/aos/agrovoc/c_7337,spring wheat,
+WIKIDATA,https://www.wikidata.org/wiki/,https://www.wikidata.org/wiki/Q41331872,Broadbalk long-term experiment,
