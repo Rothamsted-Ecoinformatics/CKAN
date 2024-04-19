@@ -601,14 +601,14 @@
   <script>
     var fname = [];
     var fid = [];
-    var fidType = []
+    var fidType = [];
     var faNum = [];
     var fUri = [];
     var aTitle = [];
     if ("{{data.funderName}}") {
       fname = "{{data.funderName}}".split(",");
       fid = "{{data.funderId}}".split(",");
-      fidType = "{{funderIdType}}".split(",");
+      fidType = "{{data.funderIdType}}".split(",");
       faNum = "{{data.awardNumber}}".split(",");
       fUri = "{{data.awardURI}}".split(",");
       aTitle = "{{data.awardTitle}}".split(",");
@@ -624,7 +624,7 @@
       let p = document.getElementById("funderInfo");
       p.innerHTML = "Funders:";
       for (let i = 0; i < fname.length; i++) {
-        let c = document.createTextNode(`Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]}, Funder: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}`);
+        let c = document.createTextNode(`Funder ${i+1}: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}, Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]} `);
         p.append("\n");
         p.append(c);
       }
@@ -1359,23 +1359,43 @@
   <i class="fas fa-info-circle" title="add info here"></i>
   <br><br>
   <label for="field-subjectField">*Subject</label><br>
-  <input type="text" id="field-subjectField" name="subjectField"><br><br>
+  <input type="text" id="field-subjectField" name="subjectField" style="width: 500px;"><br><br>
 
   <label for="field-subjectSchemeField">*Subject Scheme</label><br>
-  <input type="text" id="field-subjectSchemeField" name="subjectSchemeField"><br><br>
+  <input type="text" id="field-subjectSchemeField" name="subjectSchemeField" style="width: 500px;"><br><br>
 
   <label for="field-subjectUriField">*Subject URI</label><br>
-  <input type="text" id="field-subjectUriField" name="subjectUriField"><br><br>
+  <input type="text" id="field-subjectUriField" name="subjectUriField" style="width: 500px;"><br><br>
 
   <label for="field-valueUriField">*Value URI</label><br>
-  <input type="text" id="field-valueUriField" name="valueUriField"><br><br>
+  <input type="text" id="field-valueUriField" name="valueUriField" style="width: 500px;"><br><br>
 
   <button type="button" onclick="addSubject()">Add</button>
   <button type="button" onclick="clearSubject()">Clear All</button>
   <button type="button" onclick="popSubject()">Clear Last Entry</button>
 
   <pre id="subjectMessage"></pre>
+  <script>
+    let subData = [];
 
+    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/subjectsList.csv')
+        .then(response => response.text())
+        .then(csvString => {
+            subData = Papa.parse(csvString, { header: true }).data;
+            const subList = subData.map(row => row.subject);
+            $j("#field-subjectField").autocomplete({
+                source: subList,
+                select: function (event, ui) {
+                    let selectedData = subData.find(row => row.subject === ui.item.value);
+                    $j('#field-subjectField').val(selectedData.subject);
+                    $j('#field-subjectSchemeField').val(selectedData.subjectScheme);
+                    $j('#field-subjectUriField').val(selectedData.subjectURI);
+                    $j('#field-valueUriField').val(selectedData.valueURI);
+                    return false;
+                }
+            });
+        });
+</script>
   <!-- Metadata Fields -->
   <input type="text" id="field-subjectScheme" name="subjectScheme" style="display: none;"
     value="{{ data.subjectScheme }}">
@@ -1432,7 +1452,7 @@
       let p = document.getElementById("subjectMessage");
       p.innerHTML = "Subjects:"
       for (let i = 0; i < sub.length; i++) {
-        c = document.createTextNode(`${i + 1}:: Subject Scheme:${subScheme[i]}, Subject URI:${subUri[i]}, Value URI:${valUri}, Subject:${sub[i]}`);
+        c = document.createTextNode(`${i + 1}: Subject Scheme:${subScheme[i]}, Subject URI:${subUri[i]}, Value URI:${valUri}, Subject:${sub[i]}`);
         p.append("\n");
         p.append(c);
       }
