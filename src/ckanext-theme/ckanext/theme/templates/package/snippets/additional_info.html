@@ -2,24 +2,63 @@
   <!-- Author Information -->
   {% set can_edit = h.check_access('package_update', {'id':pkg_dict.id }) %}
   {% set user = 'true' if can_edit else 'false' %}
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+      display: none;
+      border-bottom: 1px black;
+      table-layout: fixed;
+    }
+
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+
+    pre {
+      color: rgb(0, 0, 0);
+      font: 1em sans-serif;
+    }
+
+    p {
+      color: black;
+      font: 1em sans-serif
+    }
+  </style>
   <div><strong>Authors</strong></div>
-  <pre id="author-field" style="background-color: #f3f1f1;"></pre>
+  <table id="authorTable" style="display: table;">
+    <tr>
+        <th>Name</th>
+        <th>ORCID</th>
+        <th>Affiliation</th>
+    </tr>
+
+</table>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <script>
-    let auths = "{{pkg_dict.author}}".split(",");
-    let ids = "{{ pkg_dict.nameIdentifier }}".split(",");
+    let name = "{{pkg_dict.author}}".split(",");
+    let orcid = "{{ pkg_dict.nameIdentifier }}".split(",");
     let affils = "{{ pkg_dict.creatorAffiliation }}".split(",");
 
-    for (let i = 0; i < auths.length; i++) {
-      let p = document.getElementById("author-field");
-      val = document.createTextNode(`${auths[i]}         Affiliation:${affils[i]}         ID:`);
-      let link = document.createElement("a");
-      link.href = ids[i];
-      link.textContent = ids[i];
-      p.append(val);
-      p.append(link);
-      p.append("\n");
+    let table = document.getElementById("authorTable");
+    for(let i=0; i<name.length ; i++){
+        row = table.insertRow();
+        cell1 = row.insertCell();
+        cell2 = row.insertCell();
+        cell3 = row.insertCell();
+
+        cell1.innerHTML = name[i];
+        cell2.innerHTML = orcid[i];
+        cell3.innerHTML = affils[i];
     }
   </script>
   <!-- Abstract, Methods and Technical Information  -->
@@ -160,37 +199,7 @@
 
 
   <!-- Private Information -->
-  <style>
-    table {
-      font-family: arial, sans-serif;
-      border-collapse: collapse;
-      width: 100%;
-      display: none;
-      border-bottom: 1px black;
-      table-layout: fixed;
-    }
 
-    td,
-    th {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-    }
-
-    tr:nth-child(even) {
-      background-color: #dddddd;
-    }
-
-    pre {
-      color: rgb(0, 0, 0);
-      font: 1em sans-serif;
-    }
-
-    p {
-      color: black;
-      font: 1em sans-serif
-    }
-  </style>
   <table id="table1">
     <tr>
       <th>
