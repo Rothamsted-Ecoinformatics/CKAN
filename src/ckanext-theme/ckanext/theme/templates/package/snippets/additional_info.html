@@ -8,19 +8,19 @@
      @type: "Dataset"
      "id": 'https://doi.org/{{ pkg_dict['doi'] }}',
      "url": "https:pursuit.rothamsted.ac.uk",
-     "name": {{ pkg_dict.name }},
-     "author": {{pkg_dict.author}},
-     "author_id": {{pkg_dict.nameIdentifier}},
-     "author_affiliations": {{pkg_dict.creatorAffiliation}},
+     "name": "{{ pkg_dict.name }}",
+     "author": "{{pkg_dict.author}}",
+     "author_id": "{{pkg_dict.nameIdentifier}}",
+     "author_affiliations": "{{pkg_dict.creatorAffiliation}}",
      "publisher": {
         "@type": "Organization",
-        "name": {{pkg_dict.publisher}}
+        "name": "{{pkg_dict.publisher}}"
      },
-     "subjects": {{pkg_dict.subject}},
-     "version": {{pkg_dict.version}},
-     "description": {{ pkg_dict.abstract }},
-     "license": {{ pkg_dict.license }},
-     "datePublished": {{pkg_dict.submittedDate}},
+     "subjects": "{{pkg_dict.subject}}",
+     "version": "{{pkg_dict.version}}",
+     "description": "{{ pkg_dict.abstract }}",
+     "license": "{{ pkg_dict.license }}",
+     "datePublished": "{{pkg_dict.submittedDate}}",
   }
      
 
