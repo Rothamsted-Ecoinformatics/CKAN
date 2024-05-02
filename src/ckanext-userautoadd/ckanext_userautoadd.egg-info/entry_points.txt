@@ -1,0 +1,6 @@
+
+        [ckan.plugins]
+        userautoadd=ckanext.userautoadd.plugin:UserautoaddPlugin
+	[babel.extractors]
+	ckan = ckan.lib.extract:extract_ckan
+    
