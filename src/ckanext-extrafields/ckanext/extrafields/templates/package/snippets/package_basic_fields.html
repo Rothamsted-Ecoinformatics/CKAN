@@ -9,7 +9,6 @@
   <!--                -->
   <!--                -->
   <style>
-    /* Apply green color to all <p> elements */
     pre {
       color: rgb(0, 0, 0);
       font: 1em sans-serif;
@@ -20,9 +19,7 @@
       font: 1em sans-serif
     }
 
-    /* .control-medium {
-      width: 500px;
-    } */
+
     #creatorDisp {
       display: flex;
       flex-wrap: wrap;
@@ -392,7 +389,7 @@
     else if ("{{data.resourceTypeGeneral}}" == "Instrument") {
       resid = "rt2"
     }
-    else if ("{{data.resourceTypeGeneral}}" == "Instrument") {
+    else if ("{{data.resourceTypeGeneral}}" == "Model") {
       resid = "rt3"
     }
     else if ("{{data.resourceTypeGeneral}}" == "Software") {
@@ -624,7 +621,7 @@
       let p = document.getElementById("funderInfo");
       p.innerHTML = "Funders:";
       for (let i = 0; i < fname.length; i++) {
-        let c = document.createTextNode(`Funder ${i+1}: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}, Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]} `);
+        let c = document.createTextNode(`Funder ${i + 1}: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}, Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]} `);
         p.append("\n");
         p.append(c);
       }
@@ -1379,23 +1376,23 @@
     let subData = [];
 
     fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/subjectsList.csv')
-        .then(response => response.text())
-        .then(csvString => {
-            subData = Papa.parse(csvString, { header: true }).data;
-            const subList = subData.map(row => row.subject);
-            $j("#field-subjectField").autocomplete({
-                source: subList,
-                select: function (event, ui) {
-                    let selectedData = subData.find(row => row.subject === ui.item.value);
-                    $j('#field-subjectField').val(selectedData.subject);
-                    $j('#field-subjectSchemeField').val(selectedData.subjectScheme);
-                    $j('#field-subjectUriField').val(selectedData.subjectURI);
-                    $j('#field-valueUriField').val(selectedData.valueURI);
-                    return false;
-                }
-            });
+      .then(response => response.text())
+      .then(csvString => {
+        subData = Papa.parse(csvString, { header: true }).data;
+        const subList = subData.map(row => row.subject);
+        $j("#field-subjectField").autocomplete({
+          source: subList,
+          select: function (event, ui) {
+            let selectedData = subData.find(row => row.subject === ui.item.value);
+            $j('#field-subjectField').val(selectedData.subject);
+            $j('#field-subjectSchemeField').val(selectedData.subjectScheme);
+            $j('#field-subjectUriField').val(selectedData.subjectURI);
+            $j('#field-valueUriField').val(selectedData.valueURI);
+            return false;
+          }
         });
-</script>
+      });
+  </script>
   <!-- Metadata Fields -->
   <input type="text" id="field-subjectScheme" name="subjectScheme" style="display: none;"
     value="{{ data.subjectScheme }}">
