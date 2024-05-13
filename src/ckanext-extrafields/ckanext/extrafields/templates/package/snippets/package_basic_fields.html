@@ -404,9 +404,13 @@
     else if ("{{data.resourceTypeGeneral}}" == "ComputationalNotebook") {
       resid = "rt7"
     }
-
-    document.getElementById("rt1").checked = true
-
+    // initialize
+    if(!"{{data.resourceTypeGeneral}}"){
+    document.getElementById("rt1").checked = true;
+    }
+    else{
+      document.getElementById(resid).checked = true
+    }
 
   </script>
 
