@@ -277,13 +277,18 @@
 
   <div>
     <input type="radio" id="exp1" name="expCode" checked="true" onchange="assignCode('None')" value="None">N/A
+    <br>
     <input type="radio" id="exp2" name="expCode" value="RRES Farms Field Experiment Code"
       onchange="assignCode('RRES Farms Field Experiment Code')">RRES Farms Field Experiment Code
+    <br>
     <input type="radio" id="exp3" name="expCode" value="NWFP Code" onchange="assignCode('NWFP Code')">NWFP Code
+    <br>
     <input type="radio" id="exp4" name="expCode" value="NW Experiment Code"
       onchange="assignCode('NW Experiment Code')">NW
     Experiment Code
+    <br>
     <input type="radio" id="exp5" name="expCode" value="Other" onchange="assignCode('Other')">Other Codes
+    <br>
   </div>
   <br>
   <div id="codesField" style="display: none;">
@@ -346,11 +351,17 @@
 
   <div id="resourceTypeSelect">
     <input type="radio" id="rt1" name="resourceSelect" value="Dataset">Dataset
+    <br>
     <input type="radio" id="rt2" name="resourceSelect" value="Instrument">Instrument
+    <br>
     <input type="radio" id="rt3" name="resourceSelect" value="Model">Model
+    <br>
     <input type="radio" id="rt4" name="resourceSelect" value="Software">Software
+    <br>
     <input type="radio" id="rt5" name="resourceSelect" value="Image">Image
+    <br>
     <input type="radio" id="rt6" name="resourceSelect" value="AudioVisual">Audio Visual
+    <br>
     <input type="radio" id="rt7" name="resourceSelect" value="ComputationalNotebook">Computational Notebook
   </div>
   <br>
@@ -405,10 +416,10 @@
       resid = "rt7"
     }
     // initialize
-    if(!"{{data.resourceTypeGeneral}}"){
-    document.getElementById("rt1").checked = true;
+    if (!"{{data.resourceTypeGeneral}}") {
+      document.getElementById("rt1").checked = true;
     }
-    else{
+    else {
       document.getElementById(resid).checked = true
     }
 
@@ -1205,10 +1216,15 @@
   <div id="field-infraUsedField" name="infraUsedField">
 
     <input type="checkbox" id="if1" value="LTEs" onchange="infraAdd('LTEs')">LTEs
+    <br>
     <input type="checkbox" id="if2" value="LSRE" onchange="infraAdd('LSRE')">LSRE
+    <br>
     <input type="checkbox" id="if3" value="NWFP" onchange="infraAdd('NWFP')">NWFP
+    <br>
     <input type="checkbox" id="if4" value="RIS" onchange="infraAdd('RIS')">RIS
+    <br>
     <input type="checkbox" id="if5" value="URTO" onchange="infraAdd('URTO')">URTO
+    <br>
     <input type="checkbox" id="if6" value="Rowden" onchange="infraAdd('Rowden')">Rowden
   </div>
   <input type="text" id="field-infraUsed" name="infraUsed" value="{{ data.infraUsed }}" style="display: none;">
