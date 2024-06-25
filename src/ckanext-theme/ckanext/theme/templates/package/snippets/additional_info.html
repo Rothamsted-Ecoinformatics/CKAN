@@ -2,29 +2,8 @@
   <!-- Author Information -->
   {% set can_edit = h.check_access('package_update', {'id':pkg_dict.id }) %}
   {% set user = 'true' if can_edit else 'false' %}
-  <script type="application/ld+json">
-  {  
-    "@context": "http://schema.org",
-     @type: "Dataset"
-     "id": 'https://doi.org/{{ pkg_dict['doi'] }}',
-     "url": "https:pursuit.rothamsted.ac.uk",
-     "name": "{{ pkg_dict.name }}",
-     "author": "{{pkg_dict.author}}",
-     "author_id": "{{pkg_dict.nameIdentifier}}",
-     "author_affiliations": "{{pkg_dict.creatorAffiliation}}",
-     "publisher": {
-        "@type": "Organization",
-        "name": "{{pkg_dict.publisher}}"
-     },
-     "subjects": "{{pkg_dict.subject}}",
-     "version": "{{pkg_dict.version}}",
-     "description": "{{ pkg_dict.abstract }}",
-     "license": "{{ pkg_dict.license }}",
-     "datePublished": "{{pkg_dict.submittedDate}}",
-  }
-     
 
-  </script>
+
   <style>
     table {
       font-family: arial, sans-serif;
@@ -86,7 +65,7 @@
   </script>
   <!-- Abstract, Methods and Technical Information  -->
   <div><strong> Abstract </strong></div>
-  <p style="background-color: #f3f1f1;">{{ pkg_dict.abstract }}</p>
+  <p style="background-color: #f3f1f1;" id="p-abstract">{{ pkg_dict.abstract }}</p>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <div><strong> Methods </strong></div>
@@ -293,4 +272,57 @@
       funderPrivateInfo.append("\n")
     }
   </script>
+
+<body>
+  <script>
+    let author_names =  "{{pkg_dict.author}}".split(",");
+    let author_org =  "{{ pkg_dict.creatorAffiliation }}".split(",");
+    let subs = "{{pkg_dict.subject}}".split(",");
+    let abss = document.getElementById("p-abstract").innerHTML;
+    let licenseText = "{{ pkg_dict.license }}";
+    let licenseLink = "";
+    if (licenseText == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)"){
+         licenseLink = "https://creativecommons.org/licenses/by-nc/4.0/";
+         console.log("1");
+    }
+    else if (licenseText == "Creative Commons Attribution Licence (CC BY 4.0)"){
+         licenseLink = "https://creativecommons.org/licenses/by/4.0/";
+         console.log("2");
+    }
+    else if (licenseText == "Open Government Licence (OGL)"){
+         licenseLink = "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/";
+         console.log("3");
+    }
+
+    //Create JSON-LD Structure
+    const jsonld = {
+      "@context":  "http://schema.org",
+      "@type": "Dataset",
+      "id": "https://doi.org/{{ pkg_dict['doi'] }}",
+      "url": "https:pursuit.rothamsted.ac.uk",
+      "name": "{{ pkg_dict.name }}",
+      "creator": author_names.map((name, index) => ({
+        "@type": "Person",
+        "name": name,
+        "affiliation": author_org[index]
+      })),
+      "publisher": { "@type": "Organization", "name": "Rothamsted Research" },
+      "subjects": subs,
+      "version": "{{pkg_dict.version}}",
+     "license": licenseLink,
+     "datePublished": "{{pkg_dict.submittedDate}}",
+     "description": abss.trim()
+    }
+    // Convert the JSON-LD structure to a string
+    const jsonldScript = JSON.stringify(jsonld, null, 2);
+
+    // Create a script element and set its type and content
+    const scriptElement = document.createElement('script');
+    scriptElement.type = 'application/ld+json';
+    scriptElement.text = jsonldScript;
+
+    // Append the script element to the head of the document
+    document.head.appendChild(scriptElement);
+  </script>
+</body>
 </section>
