@@ -11202,7 +11202,7 @@ a.tag:hover {
 
 .box, .wrapper {
   background-color: #fff;
-  border: 5px solid #fed316;
+  border: 5px solid #EEEEEE;
   border-radius: 4px;
   box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
 }
@@ -13365,13 +13365,13 @@ td.diff_header {
 .homepage .module-promotion {
   background: #fff;
   padding:  20px;
-  border: 5px solid #fed316;
+  border: 5px solid #EEEEEE;
 
 }
 .homepage .module-search {
   color: #fff;
   padding: 10px;
-  border-left: 5px solid #fed316;
+  border-left: 5px solid #EEEEEE;
   border-right: 0px;
   border-top: 0px;
   border-bottom: 0px;
@@ -13416,7 +13416,7 @@ td.diff_header {
 .homepage .module-stats {
   margin-top: 1rem;
   color: #444;
-  border: 5px solid #fed316;
+  border: 5px solid #EEEEEE;
 
 }
 .homepage .module-stats .card {
@@ -13427,7 +13427,7 @@ td.diff_header {
   margin: 0;
   list-style: none;
   padding: 10;
-  border: 5px solid #fed316;
+  border: 5px solid #EEEEEE;
 
 
 }
@@ -13459,7 +13459,7 @@ td.diff_header {
 }
 .homepage .module-feeds .module-stats {
   margin-top: 0;
-  border: 5px solid #fed316;
+  border: 5px solid #EEEEEE;
 
 }
 
@@ -13470,13 +13470,13 @@ td.diff_header {
   .homepage .module-stats {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-    border: 5px solid #fed316;
+    border: 5px solid #EEEEEE;
 
   }
   .homepage .module-feeds .card {
     margin-top: 1rem;
     margin-bottom: 1rem;
-    border: 5px solid #fed316;
+    border: 5px solid #EEEEEE;
 
   }
 }
@@ -13557,7 +13557,7 @@ td.diff_header {
   color: #fff;
   background-color: #206b82;
   padding: 2px 4px;
-  border: #fed316 5px solid;
+  border: #EEEEEE 5px solid;
   border-left: 0px;
   z-index: 9;
 }
