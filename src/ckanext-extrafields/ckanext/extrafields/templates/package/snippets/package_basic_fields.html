@@ -41,7 +41,7 @@
   <!-- Creator Field -->
   <!--              -->
   <label id="creatorLabel"><strong>*Creator Details (Mandatory)</strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The main researchers involved in producing the data, or the authors of the publication, in priority order."></i>
   <br><br>
   <!-- First Name -->
   <label for="field-family_name">*Family Name</label><br>
@@ -213,7 +213,8 @@
   <!--                                -->
   <!--                                -->
   <label for="field-publisher">*Publisher (Mandatory) </label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The name of the entity that holds, archives, publishes, prints, distributes, releases, issues, or produces the resource. 
+For software, use Publisher for the code repository."></i>
   <br>
   <input type="text" id="field-publisher" name="publisher" value="Rothamsted Research" class="control-medium">
   <!-- Default Publisher value is set to Rothamsted-->
@@ -221,14 +222,15 @@
     // Set the default value for the input field
     document.getElementById("field-publisher").value = "Rothamsted Research";
   </script><br><br>
-  <label for="field-publicationYear">*Publication Year (Mandatory)</label><br>
+  <label for="field-publicationYear">*Publication Year (Mandatory)</label>
+  <i class="fas fa-info-circle" title="The year when the data was or will be made publicly available."></i><br>
   <input type="text" id="field-publicationYear" name="publicationYear" placeholder="YYYY"
     value="{{ data.publicationYear }}" class="control-medium"> <br><br>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
 
   <label><strong> Description </strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  
   <br><br>
 
   <!-- Abstract Field -->
@@ -238,31 +240,26 @@
       /* Adjust as needed */
     }
   </style>
-  <label for="field-abstract">*Abstract (Mandatory) </label><br>
+  <label for="field-abstract">*Abstract (Mandatory) </label>
+  <i class="fas fa-info-circle" title="A brief description of the resource and the context in which the resource was created."></i><br>
   <textarea id="field-abstract" name="abstract" placeholder="Enter Abstract" error="errors.abstract"
     class="control-medium" rows="5">{{ data.abstract }}
   </textarea><br>
+
   <!-- Methods Field -->
-  <style>
-    textarea {
-      width: 500px;
-      /* Adjust as needed */
-    }
-  </style>
-  <label for="field-methods">*Methods (Mandatory) </label><br>
+
+  <label for="field-methods">*Methods (Mandatory) </label>
+  <i class="fas fa-info-circle" title="The methodology employed for the study or research."></i><br>
   <textarea id="field-methods" name="methods" placeholder="Enter Methods" error="errors.methods" class="control-medium"
     rows="5">{{ data.methods }}
   </textarea><br>
 
   <!-- TechnicalInfo Field -->
 
-  <style>
-    textarea {
-      width: 500px;
-      /* Adjust as needed */
-    }
-  </style>
-  <label for="field-technicalInfo">Technical Information (Optional) </label><br>
+
+  <label for="field-technicalInfo">Technical Information (Optional) </label>
+  <i class="fas fa-info-circle" title="Detailed information that may be associated with design, implementation, operation, use, system, or instrument.
+This might be a “readme.txt"></i><br>
   <textarea id="field-technicalInfo" name="technicalInfo" error="errors.technicalInfo"
     placeholder="Enter TEchnical Information" class="control-medium" rows="5">{{ data.technicalInfo }}
   </textarea><br>
@@ -270,24 +267,23 @@
   <!-- Experiment Code -->
 
   <label for="field-experimentCode">Select Experiment Code (Optional)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="Any experiment code that serves as an identifier other than the primary Identifier applied to the resource being registered."></i>
   <br><br>
   <input type="text" id="field-experimentCode" name="experimentCode" style="display: none;"
     value="{{data.experimentCode}}">
 
   <div>
-    <input type="radio" id="exp1" name="expCode" checked="true" onchange="assignCode('None')" value="None">N/A
+    <input type="radio" id="exp1" name="expCode" checked="true" onchange="assignCode('None')" value="None">  N/A
     <br>
     <input type="radio" id="exp2" name="expCode" value="RRES Farms Field Experiment Code"
-      onchange="assignCode('RRES Farms Field Experiment Code')">RRES Farms Field Experiment Code
+      onchange="assignCode('RRES Farms Field Experiment Code')">  RRES Farms Field Experiment Code
     <br>
-    <input type="radio" id="exp3" name="expCode" value="NWFP Code" onchange="assignCode('NWFP Code')">NWFP Code
+    <input type="radio" id="exp3" name="expCode" value="NWFP Code" onchange="assignCode('NWFP Code')">  NWFP Code
     <br>
     <input type="radio" id="exp4" name="expCode" value="NW Experiment Code"
-      onchange="assignCode('NW Experiment Code')">NW
-    Experiment Code
+      onchange="assignCode('NW Experiment Code')">  NW Experiment Code
     <br>
-    <input type="radio" id="exp5" name="expCode" value="Other" onchange="assignCode('Other')">Other Codes
+    <input type="radio" id="exp5" name="expCode" value="Other" onchange="assignCode('Other')">  Other Codes
     <br>
   </div>
   <br>
@@ -344,7 +340,22 @@
   <!--                -->
   <!--                -->
   <label for="field-resourceTypeGeneral">*General Resource Type (Mandatory) </label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="Dataset
+    Data encoded in a defined structure.
+Instrument
+    A device, tool or apparatus used to obtain, measure and/or analyze data.
+Model
+    An abstract, conceptual, graphical, mathematical or visualization model that represents empirical objects, phenomena, or physical processes.
+Software
+    A computer program other than a computational notebook, in either source code (text) or compiled form.
+    Use this type for general software components supporting scholarly research. Use the “ComputationalNotebook” value for virtual notebooks.
+Image
+    A visual representation other than text
+Audio Visual
+    A series of visual representations imparting an impression of motion when shown in succession. 
+    May or may not include sound. May be used for films, video, etc. 
+Computational Notebook  
+    A virtual notebook environment used for literate programming"></i>
   <br><br>
   <input id="field-resourceTypeGeneral" name="resourceTypeGeneral" class="control-medium"
     value="{{ data.resourceTypeGeneral }}" style="display: none;">
@@ -424,9 +435,12 @@
     }
 
   </script>
-
-  {{ form.input('resourceType', label=_('*ResourceType (Mandatory) '), id='field-resourceType', placeholder=_('More
-  Info'), value=data.resourceType, error=errors.resourceType, classes=['control-medium']) }}
+  <label for="field-resourceType">*Resource Type (Mandatory)</label>
+  <i class="fas fa-info-circle" title="A brief definition of the type of resource. 
+For example: a Dataset resource might be a survey dataset, a plant phenotyping dataset, or an Image resource might be UAV drone images."></i><br>
+  <input type="text" name="resourceType" id="field-resourceType" errors="errors.resourceType" style="width: 500px;" ><br><br>
+  <!-- {{ form.input('resourceType', label=_('*ResourceType (Mandatory) '), id='field-resourceType', placeholder=_('More
+  Info'), value=data.resourceType, error=errors.resourceType, classes=['control-medium']) }} -->
 
 
   <!-- Language -->
@@ -453,38 +467,38 @@
 
   <!-- Collected Dates -->
   <label for="field-collectionStartDate">Collection Start Date (Optional)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The Date in which resource content collection was started"></i>
   <br>
   <input type="date" id="field-collectionStartDate" name="collectionStartDate" class="control-medium"
     placeholder="DD-MM-YYYY" value="{{ data.collectionStartDate }}"><br><br>
 
   <label for="field-collectionEndDate">Collection End Date (Optional)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The Date in which resource content collection was ended"></i>
   <br>
   <input type="date" id="field-collectionEndDate" name="collectionEndDate" class="control-medium"
     placeholder="DD-MM-YYYY" value="{{ data.collectionEndDate }}"><br><br>
   <!-- Created Dates -->
   <label for="field-createdDate">Created Date (Optional)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The date the resource itself was put together"></i>
   <br>
   <input type="date" id="field-createdDate" name="createdDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.createdDate }}"><br><br>
   <!-- Submitted Dates -->
   <label type="date" for="field-submittedDate">*Submitted Date (Mandatory)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The date the creator submits the resource to the publisher. "></i>
   <br>
   <input id="field-submittedDate" name="submittedDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.submittedDate }}"><br><br>
 
   <!-- Available Dates -->
   <label for="field-availableDate">Available Date (Optional)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The date the resource is made publicly available"></i>
   <br>
   <input type="date" id="field-availableDate" name="availableDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.availableDate }}"><br><br>
   <!-- Withdrawn Dates -->
   <label for="field-withdrawnDate">Withdrawn Date (Optional)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The date the resource is removed"></i>
   <br>
   <input type="date" id="field-withdrawnDate" name="withdrawnDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.withdrawnDate }}"><br><br>
@@ -507,16 +521,19 @@
   <!--                    -->
   <!--                    -->
   <label><strong> Funder Information (Mandatory)</strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="Information about financial support (funding) for the resource being registered. "></i>
   <br><br>
 
-  <label for="field-funderNameField">*Funder Name </label><br>
+  <label for="field-funderNameField">*Funder Name </label>
+  <i class="fas fa-info-circle" title="Name of the funding provider."></i><br>
   <input id="field-funderNameField" name="funderNameField" class="control-medium" style="width: 500px;"><br><br>
 
-  <label for="field-funderIdField">*Funder Identifier</label><br>
+  <label for="field-funderIdField">*Funder Identifier</label>
+  <i class="fas fa-info-circle" title="Uniquely identifies a funding entity, according to various types."></i><br>
   <input id="field-funderIdField" name="funderIdField" class="control-medium" style="width: 500px;"><br><br>
 
-  <label for="field-funderIdTypeField">*Funder ID Type</label><br>
+  <label for="field-funderIdTypeField">*Funder ID Type</label>
+  <i class="fas fa-info-circle" title="The type of the funder Identifier."></i><br>
   <select id="field-funderIdTypeField" name="funderIdTypeField" class="control-medium">
     <option value="Crossref Funder ID">Crossref Funder ID </option>
     <option value="GRID">GRID </option>
@@ -525,13 +542,16 @@
     <option value="Other">Other</option>
   </select><br><br>
 
-  <label for="field-awardNumberField">Award number</label><br>
+  <label for="field-awardNumberField">Award number</label>
+  <i class="fas fa-info-circle" title="The code assigned by the funder to a sponsored award (grant)."></i><br>
   <input id="field-awardNumberField" name="awardNumberField" class="control-medium" style="width: 500px;"><br><br>
 
-  <label for="field-awardTitleField">*Award Title</label><br>
+  <label for="field-awardTitleField">*Award Title</label>
+  <i class="fas fa-info-circle" title="The human readable title or name of the award (grant)."></i><br>
   <input id="field-awardTitleField" name="awardTitleField" class="control-medium" style="width: 500px;"><br><br>
 
-  <label for="field-awardURIField">Award URI</label><br>
+  <label for="field-awardURIField">Award URI</label>
+  <i class="fas fa-info-circle" title="The URI leading to a page provided by the funder for more information about the award (grant)."></i><br>
   <input id="field-awardURIField" name="awardURIField" class="control-medium" style="width: 500px;"><br><br>
 
 
@@ -739,7 +759,7 @@
   <!--                     -->
   <!--                     -->
   <label><strong> Contributors Details (Optional) </strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource."></i>
   <br><br>
   <label for="field-contributorTypeField">*Contributor Type</label><br>
   <select id="field-contributorTypeField" name="contributorTypeField" class="control-medium">
@@ -948,7 +968,7 @@
   <!--                          -->
   <!--                          -->
   <label><strong>Related Resources (Optional) </strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="Information about a resource related to the one being registered."></i>
   <br><br>
   <label for="field-relatedIdField"> Select Related ID Type </label><br>
   <select id="field-relatedIdField" name="relatedIdField" class="control-medium">
@@ -1141,7 +1161,7 @@
   <!--                                     -->
   <!--                                     -->
   <label for="field-associatedNotesField">Associated Research Notebooks (Optional) </label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The URI of the Electronic Research Notebook where the information about that resource is recorded."></i>
   <br>
   <input type="text" id="field-associatedNoteField" name="associatedNoteField" style="width: 500px;"> <br>
   <button type="button" onclick="addNoteBooks()"> Add </button>
@@ -1176,7 +1196,8 @@
   <!--                     -->
 
   <label for="field-dataLocationField"> *Data Locations (Mandatory)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="Full path describing the location of the resource. 
+This could be a network shared drive, Sharepoint, Teams or electronic research notebook URI. E.g. \\salt\Data1"></i>
   <br>
   <input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
   <button type="button" onclick="addDataLocation()"> Add </button>
@@ -1212,7 +1233,7 @@
   <!--                          -->
   <!--                          -->
   <label for="field-responsiblePerson">*Responsible Person (Mandatory)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="Names of researcher responsible for that resource. These are the main contacts when it comes to requesting the resource."></i>
   <br>
   <input id="field-responsiblePerson" name="responsiblePerson" style="width: 500px;"
     value="{{ data.responsiblePerson }}"><br><br>
@@ -1226,15 +1247,15 @@
   <br><br>
   <div id="field-infraUsedField" name="infraUsedField">
 
-    <input type="checkbox" id="if1" value="LTEs" onchange="infraAdd('LTEs')">LTEs
+    <input type="checkbox" id="if1" value="LTEs" onchange="infraAdd('LTEs')">  LTEs
     <br>
-    <input type="checkbox" id="if2" value="LSRE" onchange="infraAdd('LSRE')">LSRE
+    <input type="checkbox" id="if2" value="LSRE" onchange="infraAdd('LSRE')">  LSRE
     <br>
-    <input type="checkbox" id="if3" value="NWFP" onchange="infraAdd('NWFP')">NWFP
+    <input type="checkbox" id="if3" value="NWFP" onchange="infraAdd('NWFP')">  NWFP
     <br>
-    <input type="checkbox" id="if4" value="RIS" onchange="infraAdd('RIS')">RIS
+    <input type="checkbox" id="if4" value="RIS" onchange="infraAdd('RIS')">  RIS
     <br>
-    <input type="checkbox" id="if5" value="URTO" onchange="infraAdd('URTO')">URTO
+    <input type="checkbox" id="if5" value="URTO" onchange="infraAdd('URTO')">  URTO
     <br>
     <input type="checkbox" id="if6" value="Rowden" onchange="infraAdd('Rowden')">Rowden
   </div>
@@ -1283,11 +1304,11 @@
   <!-- Geo location fields -->
   <!--                     -->
   <!--                     -->
-  <label><strong> Geolocation Point (Optional)</strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <label><strong> GeoLocation (Optional)</strong></label>
   <br><br>
 
-  <label for="field-geoLocation"> Enter The Geolocation (Name of the place) </label>
+  <label for="field-geoLocation"> Enter The location (Name of the place) </label>
+  <i class="fas fa-info-circle" title="Spatial region or named place where the data was gathered or about which the data is focused."></i><br>
   <input type="text" id="field-geoLocation" name="geoLocation" style="width:auto" value="{{ data.geoLocation }}">
 
   <!--      World Map         -->
@@ -1361,7 +1382,8 @@
   <!-- Geo Location Box -->
   <!--                  -->
   <label><strong> Geolocation Box (Optional)</strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The spatial limits of a box.
+ A box is defined by two geographic points, its lower left corner and the top right corner"></i>
   <br><br>
 
   <label for="field-geoLowLeftLatitude"> Geo Latitude Lower Left Corner </label><br>
@@ -1384,7 +1406,7 @@
   <!--                 -->
   <!--                 -->
   <label><strong> Subject Details (Optional)</strong></label>
-  <i class="fas fa-info-circle" title="add info here"></i>
+  <i class="fas fa-info-circle" title="The name of the subject scheme or classification code or authority if one is used."></i>
   <br><br>
   <label for="field-subjectField">*Subject</label><br>
   <input type="text" id="field-subjectField" name="subjectField" style="width: 500px;"><br><br>
