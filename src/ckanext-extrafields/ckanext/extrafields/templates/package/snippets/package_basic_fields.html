@@ -1411,14 +1411,11 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
   <label for="field-subjectField">*Subject</label><br>
   <input type="text" id="field-subjectField" name="subjectField" style="width: 500px;"><br><br>
 
-  <label for="field-subjectSchemeField">*Subject Scheme</label><br>
-  <input type="text" id="field-subjectSchemeField" name="subjectSchemeField" style="width: 500px;"><br><br>
+  <input type="text" id="field-subjectSchemeField" name="subjectSchemeField" style="width: 500px; display: none;">
 
-  <label for="field-subjectUriField">*Subject URI</label><br>
-  <input type="text" id="field-subjectUriField" name="subjectUriField" style="width: 500px;"><br><br>
+  <input type="text" id="field-subjectUriField" name="subjectUriField" style="width: 500px; display:none;">
 
-  <label for="field-valueUriField">*Value URI</label><br>
-  <input type="text" id="field-valueUriField" name="valueUriField" style="width: 500px;"><br><br>
+  <input type="text" id="field-valueUriField" name="valueUriField" style="width: 500px;  display: none;">
 
   <button type="button" onclick="addSubject()">Add</button>
   <button type="button" onclick="clearSubject()">Clear All</button>
@@ -1476,14 +1473,26 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
       let su = document.getElementById('field-subjectUriField').value;
       let vu = document.getElementById('field-valueUriField').value;
       let s = document.getElementById('field-subjectField').value;
-      if (!ss || !su || !vu || !s) {
-        document.getElementById('subjectMessage').innerHTML = "* fields should now be empty";
+      if (!s) {
+        document.getElementById('subjectMessage').innerHTML = "Enter Subject";
         return;
       }
       // Push to Array
-      subScheme.push(ss);
-      subUri.push(su);
-      valUri.push(vu);
+      if(ss){
+      subScheme.push(ss);}
+      else{
+        subScheme.push("None");
+      }
+      if(su){
+      subUri.push(su);}
+      else{
+        subUri.push("None");
+      }
+      if(vu){
+      valUri.push(vu);}
+      else{
+        valUri.push("None");
+      }
       sub.push(s);
       // clear Fields
       document.getElementById('field-subjectSchemeField').value = '';
@@ -1502,7 +1511,7 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
       let p = document.getElementById("subjectMessage");
       p.innerHTML = "Subjects:"
       for (let i = 0; i < sub.length; i++) {
-        c = document.createTextNode(`${i + 1}: Subject Scheme:${subScheme[i]}, Subject URI:${subUri[i]}, Value URI:${valUri}, Subject:${sub[i]}`);
+        c = document.createTextNode(`${i + 1}: ${sub[i]}`);
         p.append("\n");
         p.append(c);
       }
@@ -1537,7 +1546,18 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
   </script>
 
   <label for="field-license">Select the License (optional)</label>
-  <i class="fas fa-info-circle" title="add info here"></i><br>
+  <i class="fas fa-info-circle" title="Provide a rights management statement for the resource or reference a service providing such information.
+Include embargo information if applicable. 
+
+CC-BY 4.0: This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format, 
+                 so long as attribution is given to the creator. The license allows for commercial use.  
+  
+CC-BY NC 4.0: This license enables reusers to distribute, remix, adapt, and build upon the material in any medium or format for
+                  noncommercial purposes only, and only so long as attribution is given to the creator.             
+
+OGL:      This license allows you to copy, publish, distribute and transmit the Information. You can adapt and combine the information, exploit
+               commercially and non-commercially. You need to give acknowledgement to the information source by including a link or attribution 
+               statement.             "></i><br>
   <input id="field-license" name="license" class="control-medium" style="display: none;" value="{{data.license}}">
   <div id="licenseButtons">
     <input type="radio" id="lr1" name="licenseSelect" value="Creative Commons Attribution Licence (CC BY 4.0)">Creative
