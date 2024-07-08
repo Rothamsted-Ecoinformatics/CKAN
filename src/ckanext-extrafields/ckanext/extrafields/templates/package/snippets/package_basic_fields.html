@@ -40,9 +40,13 @@
   </style>
   <!-- Creator Field -->
   <!--              -->
-  <label id="creatorLabel"><strong>*Creator Details (Mandatory)</strong></label>
-  <i class="fas fa-info-circle" title="The main researchers involved in producing the data, or the authors of the publication, in priority order."></i>
-  <br><br>
+  <label id="creatorLabel"><strong>*Dataset Authors (Mandatory)</strong></label>
+  <i class="fas fa-info-circle"
+    title="The main researchers involved in producing the data, or the authors of the publication, in priority order."></i>
+  <br>
+  <p style="color: grey; font-style: italic; font-size: small;"> Authors are the main people involved in producing the
+    data, in priority order
+  </p>
   <!-- First Name -->
   <label for="field-family_name">*Family Name</label><br>
   <input type="text" id="field-family_name" placeholder="Smith, Lee" name="family_name" class="control-medium">
@@ -122,20 +126,10 @@
     const creatorList = document.getElementById('creatorDisp');
     if (creator[0] != '') {
       for (let i = 0; i < creator.length; i++) {
-        displayCreators(creator[i]);
+        displayCreators(creator[i], nameId[i], affiliations[i]);
       }
     }
-    function displayCreatorPre() {
-      let p = document.getElementById('errorMessage');
-      p.innerHTML = "Creators Addded :";
-      for (let i = 0; i < creator.length; i++) {
-        if (creator[i]) {
-          let c = document.createTextNode(`Creator ${i + 1}: ${creator[i]}, ID: ${nameId[i]}, Organization: ${affiliations[i]}`);
-          p.append("\n");
-          p.append(c);
-        }
-      }
-    }
+
 
     function addCreator() {
       let fn = document.getElementById('field-given_name').value;
@@ -160,14 +154,15 @@
         nameId.push(id);
       }
       else {
-        nameId.push("NONE");
+        id = "NONE";
+        nameId.push(id);
       }
       affiliations.push(af);
       document.getElementById('field-author').value = creator;
       document.getElementById('field-nameIdentifier').value = nameId;
       document.getElementById('field-creatorAffiliation').value = affiliations;
-      // document.getElementById('errorMessage').innerHTML = "Creators Addded :" + creator;
-      displayCreators(fullname);
+
+      displayCreators(fullname, id, af);
     }
 
     function clearCreatorInputFields() {
@@ -177,15 +172,15 @@
       document.getElementById('field-creatorAffiliationField').value = '';
       document.getElementById('errorMessage').innerHTML = '';
     }
-    function displayCreators(name) {
+    function displayCreators(name, id, aff) {
       let index = creator.indexOf(name);
       const creatorItem = document.createElement("div");
       creatorItem.classList.add('creator-item');
       creatorItem.innerHTML = `
-          ${name} <span class="close-btn" onclick="removeCreator(this)">X</span>
+          ${name}, ${id}, ${aff}     <span class="close-btn" onclick="removeCreator(this)"><i class="fas fa-trash"></i></span>
       `;
       creatorList.appendChild(creatorItem);
-      displayCreatorPre();
+      //displayCreatorPre();
     }
 
 
@@ -203,564 +198,20 @@
       document.getElementById('field-author').value = creator;
       document.getElementById('field-nameIdentifier').value = nameId;
       document.getElementById('field-creatorAffiliation').value = affiliations;
-      displayCreatorPre();
+      //displayCreatorPre();
     }
 
   </script>
 
-
-  <!-- PUBLISHER and Publication Year -->
-  <!--                                -->
-  <!--                                -->
-  <label for="field-publisher">*Publisher (Mandatory) </label>
-  <i class="fas fa-info-circle" title="The name of the entity that holds, archives, publishes, prints, distributes, releases, issues, or produces the resource. 
-For software, use Publisher for the code repository."></i>
-  <br>
-  <input type="text" id="field-publisher" name="publisher" value="Rothamsted Research" class="control-medium">
-  <!-- Default Publisher value is set to Rothamsted-->
-  <script>
-    // Set the default value for the input field
-    document.getElementById("field-publisher").value = "Rothamsted Research";
-  </script><br><br>
-  <label for="field-publicationYear">*Publication Year (Mandatory)</label>
-  <i class="fas fa-info-circle" title="The year when the data was or will be made publicly available."></i><br>
-  <input type="text" id="field-publicationYear" name="publicationYear" placeholder="YYYY"
-    value="{{ data.publicationYear }}" class="control-medium"> <br><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-
-  <label><strong> Description </strong></label>
-  
-  <br><br>
-
-  <!-- Abstract Field -->
-  <style>
-    textarea {
-      width: 500px;
-      /* Adjust as needed */
-    }
-  </style>
-  <label for="field-abstract">*Abstract (Mandatory) </label>
-  <i class="fas fa-info-circle" title="A brief description of the resource and the context in which the resource was created."></i><br>
-  <textarea id="field-abstract" name="abstract" placeholder="Enter Abstract" error="errors.abstract"
-    class="control-medium" rows="5">{{ data.abstract }}
-  </textarea><br>
-
-  <!-- Methods Field -->
-
-  <label for="field-methods">*Methods (Mandatory) </label>
-  <i class="fas fa-info-circle" title="The methodology employed for the study or research."></i><br>
-  <textarea id="field-methods" name="methods" placeholder="Enter Methods" error="errors.methods" class="control-medium"
-    rows="5">{{ data.methods }}
-  </textarea><br>
-
-  <!-- TechnicalInfo Field -->
-
-
-  <label for="field-technicalInfo">Technical Information (Optional) </label>
-  <i class="fas fa-info-circle" title="Detailed information that may be associated with design, implementation, operation, use, system, or instrument.
-This might be a “readme.txt"></i><br>
-  <textarea id="field-technicalInfo" name="technicalInfo" error="errors.technicalInfo"
-    placeholder="Enter TEchnical Information" class="control-medium" rows="5">{{ data.technicalInfo }}
-  </textarea><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-  <!-- Experiment Code -->
-
-  <label for="field-experimentCode">Select Experiment Code (Optional)</label>
-  <i class="fas fa-info-circle" title="Any experiment code that serves as an identifier other than the primary Identifier applied to the resource being registered."></i>
-  <br><br>
-  <input type="text" id="field-experimentCode" name="experimentCode" style="display: none;"
-    value="{{data.experimentCode}}">
-
-  <div>
-    <input type="radio" id="exp1" name="expCode" checked="true" onchange="assignCode('None')" value="None">  N/A
-    <br>
-    <input type="radio" id="exp2" name="expCode" value="RRES Farms Field Experiment Code"
-      onchange="assignCode('RRES Farms Field Experiment Code')">  RRES Farms Field Experiment Code
-    <br>
-    <input type="radio" id="exp3" name="expCode" value="NWFP Code" onchange="assignCode('NWFP Code')">  NWFP Code
-    <br>
-    <input type="radio" id="exp4" name="expCode" value="NW Experiment Code"
-      onchange="assignCode('NW Experiment Code')">  NW Experiment Code
-    <br>
-    <input type="radio" id="exp5" name="expCode" value="Other" onchange="assignCode('Other')">  Other Codes
-    <br>
-  </div>
-  <br>
-  <div id="codesField" style="display: none;">
-    <label for="field-Codes">*Codes (Mandatory) </label><br>
-    <input type="text" id="field-Codes" name="Codes" value="{{ data.Codes }}" error="errors.Codes">
-  </div>
-
-  <script>
-    // Initializattion
-    // selectElement('field-experimentCode', "{{ data.experimentCode }}");
-    if ("{{data.Codes}}") {
-      let f = document.getElementById("field-experimentCode").value;
-      if (f == "RRES Farms Field Experiment Code") {
-        document.getElementById("exp2").checked = true;
-      }
-      else if (f == "NWFP Code") {
-        document.getElementById("exp3").checked = true;
-      }
-      else if (f == "NW Experiment Code") {
-        document.getElementById("exp4").checked = true;
-      }
-      else if (f == "Other") {
-        document.getElementById("exp5").checked = true;
-      }
-      displayCodesField();
-    }
-
-    function assignCode(val) {
-      document.getElementById("field-experimentCode").value = val;
-      displayCodesField();
-    }
-    function selectElement(id, valueToSelect) {
-      let element = document.getElementById(id);
-      element.value = valueToSelect;
-    }
-
-    function displayCodesField() {
-      var selectField = document.getElementById('field-experimentCode');
-      var codesField = document.getElementById('codesField');
-      if (selectField.value == 'None') {
-        codesField.style.display = 'none';
-        document.getElementById('field-Codes').value = "N/A";
-      } else {
-        codesField.style.display = 'block';
-        document.getElementById("field-Codes").value = "{{ data.Codes }}";
-      }
-    }
-
-  </script><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:grey">
-
-  <!-- Resource Type  -->
-  <!--                -->
-  <!--                -->
-  <label for="field-resourceTypeGeneral">*General Resource Type (Mandatory) </label>
-  <i class="fas fa-info-circle" title="Dataset
-    Data encoded in a defined structure.
-Instrument
-    A device, tool or apparatus used to obtain, measure and/or analyze data.
-Model
-    An abstract, conceptual, graphical, mathematical or visualization model that represents empirical objects, phenomena, or physical processes.
-Software
-    A computer program other than a computational notebook, in either source code (text) or compiled form.
-    Use this type for general software components supporting scholarly research. Use the “ComputationalNotebook” value for virtual notebooks.
-Image
-    A visual representation other than text
-Audio Visual
-    A series of visual representations imparting an impression of motion when shown in succession. 
-    May or may not include sound. May be used for films, video, etc. 
-Computational Notebook  
-    A virtual notebook environment used for literate programming"></i>
-  <br><br>
-  <input id="field-resourceTypeGeneral" name="resourceTypeGeneral" class="control-medium"
-    value="{{ data.resourceTypeGeneral }}" style="display: none;">
-
-  <div id="resourceTypeSelect">
-    <input type="radio" id="rt1" name="resourceSelect" value="Dataset">Dataset
-    <br>
-    <input type="radio" id="rt2" name="resourceSelect" value="Instrument">Instrument
-    <br>
-    <input type="radio" id="rt3" name="resourceSelect" value="Model">Model
-    <br>
-    <input type="radio" id="rt4" name="resourceSelect" value="Software">Software
-    <br>
-    <input type="radio" id="rt5" name="resourceSelect" value="Image">Image
-    <br>
-    <input type="radio" id="rt6" name="resourceSelect" value="AudioVisual">Audio Visual
-    <br>
-    <input type="radio" id="rt7" name="resourceSelect" value="ComputationalNotebook">Computational Notebook
-  </div>
-  <br>
-  <script>
-    let resourceTypeContainer = document.getElementById("resourceTypeSelect");
-    let selectedResource;
-    resourceTypeContainer.addEventListener('change', function () {
-      if (document.getElementById("rt1").checked) {
-        selectedResource = document.getElementById("rt1").value;
-      }
-      else if (document.getElementById("rt2").checked) {
-        selectedResource = document.getElementById("rt2").value;
-      }
-      else if (document.getElementById("rt3").checked) {
-        selectedResource = document.getElementById("rt3").value;
-      }
-      else if (document.getElementById("rt4").checked) {
-        selectedResource = document.getElementById("rt4").value;
-      }
-      else if (document.getElementById("rt5").checked) {
-        selectedResource = document.getElementById("rt5").value;
-      }
-      else if (document.getElementById("rt6").checked) {
-        selectedResource = document.getElementById("rt6").value;
-      }
-      else if (document.getElementById("rt7").checked) {
-        selectedResource = document.getElementById("rt7").value;
-      }
-      document.getElementById("field-resourceTypeGeneral").value = selectedResource;
-    });
-    //retain value
-    let resid = "N/A";
-    if ("{{data.resourceTypeGeneral}}" == "Dataset") {
-      resid = "rt1"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "Instrument") {
-      resid = "rt2"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "Model") {
-      resid = "rt3"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "Software") {
-      resid = "rt4"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "Image") {
-      resid = "rt5"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "AudioVisual") {
-      resid = "rt6"
-    }
-    else if ("{{data.resourceTypeGeneral}}" == "ComputationalNotebook") {
-      resid = "rt7"
-    }
-    // initialize
-    if (!"{{data.resourceTypeGeneral}}") {
-      document.getElementById("rt1").checked = true;
-    }
-    else {
-      document.getElementById(resid).checked = true
-    }
-
-  </script>
-  <label for="field-resourceType">*Resource Type (Mandatory)</label>
-  <i class="fas fa-info-circle" title="A brief definition of the type of resource. 
-For example: a Dataset resource might be a survey dataset, a plant phenotyping dataset, or an Image resource might be UAV drone images."></i><br>
-  <input type="text" name="resourceType" id="field-resourceType" errors="errors.resourceType" style="width: 500px;" ><br><br>
-  <!-- {{ form.input('resourceType', label=_('*ResourceType (Mandatory) '), id='field-resourceType', placeholder=_('More
-  Info'), value=data.resourceType, error=errors.resourceType, classes=['control-medium']) }} -->
-
-
-  <!-- Language -->
-  <!--          -->
-  <!--          -->
-  <label for="field-language">*Language (Mandatory) </label><br>
-  <select id="field-language" name="language" class="control-medium">
-    <option value="en">English</option>
-    <option value="es">Spanish</option>
-    <option value="de">German</option>
-    <option value="fr">French</option>
-    <option value="el">Greek</option>
-    <option value="hi">Hindi</option>
-    <option value="ru">Russian</option>
-    <option value="zh">Chinese</option>
-    <option value="ja">Japanese</option>
-    <option value="Other">Other</option>
-  </select><br><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-  <!-- Dates Fields  -->
-  <label><strong> Dates </strong></label>
-  <br><br>
-
-  <!-- Collected Dates -->
-  <label for="field-collectionStartDate">Collection Start Date (Optional)</label>
-  <i class="fas fa-info-circle" title="The Date in which resource content collection was started"></i>
-  <br>
-  <input type="date" id="field-collectionStartDate" name="collectionStartDate" class="control-medium"
-    placeholder="DD-MM-YYYY" value="{{ data.collectionStartDate }}"><br><br>
-
-  <label for="field-collectionEndDate">Collection End Date (Optional)</label>
-  <i class="fas fa-info-circle" title="The Date in which resource content collection was ended"></i>
-  <br>
-  <input type="date" id="field-collectionEndDate" name="collectionEndDate" class="control-medium"
-    placeholder="DD-MM-YYYY" value="{{ data.collectionEndDate }}"><br><br>
-  <!-- Created Dates -->
-  <label for="field-createdDate">Created Date (Optional)</label>
-  <i class="fas fa-info-circle" title="The date the resource itself was put together"></i>
-  <br>
-  <input type="date" id="field-createdDate" name="createdDate" class="control-medium" placeholder="DD-MM-YYYY"
-    value="{{ data.createdDate }}"><br><br>
-  <!-- Submitted Dates -->
-  <label type="date" for="field-submittedDate">*Submitted Date (Mandatory)</label>
-  <i class="fas fa-info-circle" title="The date the creator submits the resource to the publisher. "></i>
-  <br>
-  <input id="field-submittedDate" name="submittedDate" class="control-medium" placeholder="DD-MM-YYYY"
-    value="{{ data.submittedDate }}"><br><br>
-
-  <!-- Available Dates -->
-  <label for="field-availableDate">Available Date (Optional)</label>
-  <i class="fas fa-info-circle" title="The date the resource is made publicly available"></i>
-  <br>
-  <input type="date" id="field-availableDate" name="availableDate" class="control-medium" placeholder="DD-MM-YYYY"
-    value="{{ data.availableDate }}"><br><br>
-  <!-- Withdrawn Dates -->
-  <label for="field-withdrawnDate">Withdrawn Date (Optional)</label>
-  <i class="fas fa-info-circle" title="The date the resource is removed"></i>
-  <br>
-  <input type="date" id="field-withdrawnDate" name="withdrawnDate" class="control-medium" placeholder="DD-MM-YYYY"
-    value="{{ data.withdrawnDate }}"><br><br>
-
-
-  <script>
-    // Script to set submitted date to today's date 
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = today.getFullYear();
-
-    today = yyyy + '-' + mm + '-' + dd;
-
-    document.getElementById('field-submittedDate').value = today;
-  </script>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-  <!-- Funder Information -->
-  <!--                    -->
-  <!--                    -->
-  <label><strong> Funder Information (Mandatory)</strong></label>
-  <i class="fas fa-info-circle" title="Information about financial support (funding) for the resource being registered. "></i>
-  <br><br>
-
-  <label for="field-funderNameField">*Funder Name </label>
-  <i class="fas fa-info-circle" title="Name of the funding provider."></i><br>
-  <input id="field-funderNameField" name="funderNameField" class="control-medium" style="width: 500px;"><br><br>
-
-  <label for="field-funderIdField">*Funder Identifier</label>
-  <i class="fas fa-info-circle" title="Uniquely identifies a funding entity, according to various types."></i><br>
-  <input id="field-funderIdField" name="funderIdField" class="control-medium" style="width: 500px;"><br><br>
-
-  <label for="field-funderIdTypeField">*Funder ID Type</label>
-  <i class="fas fa-info-circle" title="The type of the funder Identifier."></i><br>
-  <select id="field-funderIdTypeField" name="funderIdTypeField" class="control-medium">
-    <option value="Crossref Funder ID">Crossref Funder ID </option>
-    <option value="GRID">GRID </option>
-    <option value="ISNI">ISNI</option>
-    <option value="ROR">ROR</option>
-    <option value="Other">Other</option>
-  </select><br><br>
-
-  <label for="field-awardNumberField">Award number</label>
-  <i class="fas fa-info-circle" title="The code assigned by the funder to a sponsored award (grant)."></i><br>
-  <input id="field-awardNumberField" name="awardNumberField" class="control-medium" style="width: 500px;"><br><br>
-
-  <label for="field-awardTitleField">*Award Title</label>
-  <i class="fas fa-info-circle" title="The human readable title or name of the award (grant)."></i><br>
-  <input id="field-awardTitleField" name="awardTitleField" class="control-medium" style="width: 500px;"><br><br>
-
-  <label for="field-awardURIField">Award URI</label>
-  <i class="fas fa-info-circle" title="The URI leading to a page provided by the funder for more information about the award (grant)."></i><br>
-  <input id="field-awardURIField" name="awardURIField" class="control-medium" style="width: 500px;"><br><br>
-
-
-  <script>
-    let awardData = [];
-
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/awardInformation.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        awardData = Papa.parse(csvString, { header: true }).data;
-        $j("#field-awardNumberField").autocomplete({
-          source: awardData.map(row => row.awardNumber),
-          select: function (event, ui) {
-            let selectedData = awardData.find(row => row.awardNumber === ui.item.value);
-            $j('#field-awardNumberField').val(ui.item.value);
-            $j('#field-awardTitleField').val(selectedData.awardTitle);
-            $j('#field-awardURIField').val(selectedData.awardURI);
-            return false;
-          }
-        });
-      });
-  </script>
-  <script>
-    let funData = [];
-
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/funderInformation.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        funData = Papa.parse(csvString, { header: true }).data;
-        let funders = funData.map(item => ({ label: item.funderName + ' (' + item.funderAbbreviation + ')', value: item.funderName, item }));
-
-        $j("#field-funderNameField").autocomplete({
-          source: funders,
-
-          select: function (event, ui) {
-            let selectedData = funData.find(row => row.funderName === ui.item.value);
-            $j('#field-funderNameField').val(selectedData.funderName);
-            $j('#field-funderIdField').val(selectedData.funderIdentifer);
-            document.getElementById('field-funderIdTypeField').value = selectedData.funderIDType;
-            return false;
-          }
-        });
-      });
-  </script>
-
-
-  <button type="button" onclick="addFunders()"> Add </button>
-
-
-  <pre id=funderInfo></pre>
-  <div id="funderDiv"></div>
-
-  <!-- Metadata fields are hidden -->
-  <!--                            -->
-  <input id="field-funderName" name="funderName" class="control-medium" style="display:None;"
-    value="{{ data.funderName }}">
-
-  <input id="field-funderId" name="funderId" class="control-medium" style="display:None;" value="{{ data.funderId }}">
-
-  <input id="field-funderIdType" name="funderIdType" class="control-medium" style="display:None;"
-    value="{{ data.funderIdType }}">
-
-  <input id="field-awardNumber" name="awardNumber" class="control-medium" style="display:None;"
-    value="{{ data.awardNumber }}">
-
-  <input id="field-awardURI" name="awardURI" class="control-medium" style="display:None;" value="{{ data.awardURI }}">
-
-  <input id="field-awardTitle" name="awardTitle" class="control-medium" style="display:None;"
-    value="{{ data.awardTitle }}">
-
-  <style>
-    #funderDiv {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .funder-item {
-      background-color: #f0f0f0;
-      padding: 5px;
-      margin: 5px;
-      border-radius: 5px;
-      display: inline;
-    }
-
-    .funder-item .close-btn {
-      cursor: pointer;
-      margin-left: 5px;
-    }
-  </style>
-  <script>
-    var fname = [];
-    var fid = [];
-    var fidType = [];
-    var faNum = [];
-    var fUri = [];
-    var aTitle = [];
-    if ("{{data.funderName}}") {
-      fname = "{{data.funderName}}".split(",");
-      fid = "{{data.funderId}}".split(",");
-      fidType = "{{data.funderIdType}}".split(",");
-      faNum = "{{data.awardNumber}}".split(",");
-      fUri = "{{data.awardURI}}".split(",");
-      aTitle = "{{data.awardTitle}}".split(",");
-    }
-    const funderList = document.getElementById('funderDiv');
-    if (aTitle[0] != '') {
-      for (let i = 0; i < aTitle.length; i++) {
-        displayFunders(aTitle[i]);
-      }
-    }
-    function displayFunderPre() {
-
-      let p = document.getElementById("funderInfo");
-      p.innerHTML = "Funders:";
-      for (let i = 0; i < fname.length; i++) {
-        let c = document.createTextNode(`Funder ${i + 1}: ${fname[i]}, ID: ${fid[i]}, ID Type: ${fidType[i]}, Award Number: ${faNum[i]}, Award Title: ${aTitle[i]}, Award URI: ${fUri[i]} `);
-        p.append("\n");
-        p.append(c);
-      }
-    }
-
-    function addFunders() {
-      let fn = document.getElementById("field-funderNameField").value;
-      let id = document.getElementById("field-funderIdField").value;
-      let idt = document.getElementById("field-funderIdTypeField").value;
-      let an = document.getElementById("field-awardNumberField").value;
-      let uri = document.getElementById("field-awardURIField").value;
-      let at = document.getElementById("field-awardTitleField").value;
-
-      if (!fn || !id || !idt || !at) {
-        document.getElementById('funderInfo').innerHTML = "* Fields Should Not Be Empty";
-        return;
-      }
-      //  Clear Fields
-      document.getElementById("field-funderNameField").value = '';
-      document.getElementById("field-funderIdField").value = '';
-      document.getElementById("field-funderIdTypeField").value = '';
-      document.getElementById("field-awardNumberField").value = '';
-      document.getElementById("field-awardURIField").value = '';
-      document.getElementById("field-awardTitleField").value = '';
-
-      // Pushing data to metadata fields
-      fname.push(fn);
-      fid.push(id);
-      fidType.push(idt);
-      if (an) {
-        faNum.push(an);
-      }
-      else {
-        faNum.push("NONE");
-      }
-      if (uri) {
-        fUri.push(uri);
-      }
-      else {
-        fUri.push("NONE");
-      }
-      aTitle.push(at);
-      document.getElementById("field-funderName").value = fname;
-      document.getElementById("field-funderId").value = fid;
-      document.getElementById("field-funderIdType").value = fidType;
-      document.getElementById("field-awardNumber").value = faNum;
-      document.getElementById("field-awardURI").value = fUri;
-      document.getElementById("field-awardTitle").value = aTitle;
-      displayFunders(at);
-    }
-
-    function displayFunders(title) {
-      let index = aTitle.indexOf(title);
-      const funderItem = document.createElement("div");
-      funderItem.classList.add('funder-item');
-      funderItem.innerHTML = `
-            ${title} <span class="close-btn" onclick="removeFunder(this)">X</span>
-        `;
-      funderList.appendChild(funderItem);
-      displayFunderPre();
-    }
-
-    function removeFunder(closeBtn) {
-      const funderItem = closeBtn.parentNode;
-      funderList.removeChild(funderItem);
-      let funId = funderItem.textContent.trim();
-      funId = funId.slice(0, -1);
-      funId = funId.trim()
-      let index = fid.indexOf(funId);
-      fname.splice(index, 1);
-      fid.splice(index, 1);
-      fidType.splice(index, 1);
-      faNum.splice(index, 1);
-      fUri.splice(index, 1);
-      aTitle.splice(index, 1);
-      document.getElementById("field-funderName").value = fname;
-      document.getElementById("field-funderId").value = fid;
-      document.getElementById("field-funderIdType").value = fidType;
-      document.getElementById("field-awardNumber").value = faNum;
-      document.getElementById("field-awardURI").value = fUri;
-      document.getElementById("field-awardTitle").value = aTitle;
-      displayFunderPre();
-
-    }
-    // </script>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <!-- Contributor Details -->
   <!--                     -->
   <!--                     -->
   <label><strong> Contributors Details (Optional) </strong></label>
-  <i class="fas fa-info-circle" title="The institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource."></i>
-  <br><br>
+  <i class="fas fa-info-circle"
+    title="The institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource."></i>
+    <p style="color: grey; font-style: italic; font-size: small;"> Identify all the people who have been involved in the development of the dataset
+    </p>
   <label for="field-contributorTypeField">*Contributor Type</label><br>
   <select id="field-contributorTypeField" name="contributorTypeField" class="control-medium">
     <option value="None"></option>
@@ -876,7 +327,7 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
     const contributorList = document.getElementById('contributorDiv');
     if (contriName[0] != '') {
       for (let i = 0; i < contriName.length; i++) {
-        displayContributors(contriName[i]);
+        displayContributors(contriType[i], contriName[i], contriId[i], contriAffiliation[i]);
       }
     }
     function addContributor() {
@@ -909,7 +360,8 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
         contriId.push(id);
       }
       else {
-        contriId.push("NONE");
+        id = "NONE";
+        contriId.push(id);
       }
       contriType.push(ct);
       contriAffiliation.push(af);
@@ -918,29 +370,21 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       document.getElementById('field-contributorType').value = contriType;
       document.getElementById('field-contributorAffiliation').value = contriAffiliation;
       // document.getElementById('contributorMessage').innerHTML = "Contributors added :" + contriName;
-      displayContributors(fullname);
+      displayContributors(ct, fullname, id, af);
     }
 
 
-    function displayContributorPre() {
-      let p = document.getElementById('contributorMessage');
-      p.innerHTML = "Contributors Added";
-      for (let i = 0; i < contriName.length; i++) {
-        let c = document.createTextNode(`Contributor ${i + 1}: Type ${contriType[i]}, Name: ${contriName[i]}, Organization: ${contriAffiliation[i]} ID: ${contriId[i]}`);
-        p.append("\n");
-        p.append(c);
-      }
-    }
-
-    function displayContributors(name) {
+    function displayContributors(ct, name, id, aff) {
       let index = contriName.indexOf(name);
       const contributorItem = document.createElement("div");
       contributorItem.classList.add('contributor-item');
       contributorItem.innerHTML = `
-            ${name} <span class="close-btn" onclick="removeContributor(this)">X</span>
+    ${ct}:  ${name}, ${id}, ${aff}    <span class="close-btn" onclick="removeContributor(this)">
+      <i class="fas fa-trash"></i>
+      </span>
         `;
       contributorList.appendChild(contributorItem);
-      displayContributorPre();
+      //displayContributorPre();
     }
     function removeContributor(closeBtn) {
       const contributorItem = closeBtn.parentNode;
@@ -957,10 +401,468 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       document.getElementById('field-contributorId').value = contriId;
       document.getElementById('field-contributorType').value = contriType;
       document.getElementById('field-contributorAffiliation').value = contriAffiliation;
-      displayContributorPre();
+      //displayContributorPre();
 
     }
   </script>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <!-- PUBLISHER and Publication Year -->
+  <!--                                -->
+  <!--                                -->
+  <label for="field-publisher">*Publisher (Mandatory) </label>
+  <i class="fas fa-info-circle" title="The name of the entity that holds, archives, publishes, prints, distributes, releases, issues, or produces the resource. 
+For software, use Publisher for the code repository."></i>
+  <br>
+  <input type="text" id="field-publisher" name="publisher" value="Rothamsted Research" class="control-medium">
+  <!-- Default Publisher value is set to Rothamsted-->
+  <script>
+    // Set the default value for the input field
+    document.getElementById("field-publisher").value = "Rothamsted Research";
+  </script><br><br>
+  <label for="field-publicationYear">*Publication Year (Mandatory)</label>
+  <i class="fas fa-info-circle" title="The year when the data was or will be made publicly available."></i><br>
+  <input type="text" id="field-publicationYear" name="publicationYear" placeholder="YYYY"
+    value="{{ data.publicationYear }}" class="control-medium"> <br><br>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+
+  <label><strong> Description </strong></label>
+
+  <br><br>
+
+  <!-- Abstract Field -->
+  <style>
+    textarea {
+      width: 500px;
+      /* Adjust as needed */
+    }
+  </style>
+  <label for="field-abstract">*Abstract (Mandatory) </label>
+  <i class="fas fa-info-circle"
+    title="A brief description of the resource and the context in which the resource was created."></i><br>
+  <textarea id="field-abstract" name="abstract" placeholder="Enter Abstract" error="errors.abstract"
+    class="control-medium" rows="5">{{ data.abstract }}
+  </textarea><br>
+
+  <!-- Methods Field -->
+
+  <label for="field-methods">*Methods (Mandatory) </label>
+  <i class="fas fa-info-circle" title="The methodology employed for the study or research."></i><br>
+  <textarea id="field-methods" name="methods" placeholder="Enter Methods" error="errors.methods" class="control-medium"
+    rows="5">{{ data.methods }}
+  </textarea><br>
+
+  <!-- TechnicalInfo Field -->
+
+
+  <label for="field-technicalInfo">Technical Information (Optional) </label>
+  <i class="fas fa-info-circle" title="Detailed information that may be associated with design, implementation, operation, use, system, or instrument.
+This might be a “readme.txt"></i><br>
+  <textarea id="field-technicalInfo" name="technicalInfo" error="errors.technicalInfo"
+    placeholder="Enter TEchnical Information" class="control-medium" rows="5">{{ data.technicalInfo }}
+  </textarea><br>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <!-- Resource Type  -->
+  <!--                -->
+  <!--                -->
+  <label for="field-resourceTypeGeneral">*Resource Type (Mandatory) </label>
+  <i class="fas fa-info-circle" title="Dataset
+    Data encoded in a defined structure.
+Instrument
+    A device, tool or apparatus used to obtain, measure and/or analyze data.
+Model
+    An abstract, conceptual, graphical, mathematical or visualization model that represents empirical objects, phenomena, or physical processes.
+Software
+    A computer program other than a computational notebook, in either source code (text) or compiled form.
+    Use this type for general software components supporting scholarly research. Use the “ComputationalNotebook” value for virtual notebooks.
+Image
+    A visual representation other than text
+Audio Visual
+    A series of visual representations imparting an impression of motion when shown in succession. 
+    May or may not include sound. May be used for films, video, etc. 
+Computational Notebook  
+    A virtual notebook environment used for literate programming"></i>
+  <br><br>
+  <input id="field-resourceTypeGeneral" name="resourceTypeGeneral" class="control-medium"
+    value="{{ data.resourceTypeGeneral }}" style="display: none;">
+
+  <div id="resourceTypeSelect">
+    <input type="radio" id="rt1" name="resourceSelect" value="Dataset"> Dataset
+    <br>
+    <input type="radio" id="rt2" name="resourceSelect" value="Instrument"> Instrument
+    <br>
+    <input type="radio" id="rt3" name="resourceSelect" value="Model"> Model
+    <br>
+    <input type="radio" id="rt4" name="resourceSelect" value="Software"> Software
+    <br>
+    <input type="radio" id="rt5" name="resourceSelect" value="Image"> Image
+    <br>
+    <input type="radio" id="rt6" name="resourceSelect" value="AudioVisual"> Audio Visual
+    <br>
+    <input type="radio" id="rt7" name="resourceSelect" value="ComputationalNotebook"> Computational Notebook
+  </div>
+  <br>
+  <script>
+    let resourceTypeContainer = document.getElementById("resourceTypeSelect");
+    let selectedResource;
+    resourceTypeContainer.addEventListener('change', function () {
+      if (document.getElementById("rt1").checked) {
+        selectedResource = document.getElementById("rt1").value;
+      }
+      else if (document.getElementById("rt2").checked) {
+        selectedResource = document.getElementById("rt2").value;
+      }
+      else if (document.getElementById("rt3").checked) {
+        selectedResource = document.getElementById("rt3").value;
+      }
+      else if (document.getElementById("rt4").checked) {
+        selectedResource = document.getElementById("rt4").value;
+      }
+      else if (document.getElementById("rt5").checked) {
+        selectedResource = document.getElementById("rt5").value;
+      }
+      else if (document.getElementById("rt6").checked) {
+        selectedResource = document.getElementById("rt6").value;
+      }
+      else if (document.getElementById("rt7").checked) {
+        selectedResource = document.getElementById("rt7").value;
+      }
+      document.getElementById("field-resourceTypeGeneral").value = selectedResource;
+    });
+    //retain value
+    let resid = "N/A";
+    if ("{{data.resourceTypeGeneral}}" == "Dataset") {
+      resid = "rt1"
+    }
+    else if ("{{data.resourceTypeGeneral}}" == "Instrument") {
+      resid = "rt2"
+    }
+    else if ("{{data.resourceTypeGeneral}}" == "Model") {
+      resid = "rt3"
+    }
+    else if ("{{data.resourceTypeGeneral}}" == "Software") {
+      resid = "rt4"
+    }
+    else if ("{{data.resourceTypeGeneral}}" == "Image") {
+      resid = "rt5"
+    }
+    else if ("{{data.resourceTypeGeneral}}" == "AudioVisual") {
+      resid = "rt6"
+    }
+    else if ("{{data.resourceTypeGeneral}}" == "ComputationalNotebook") {
+      resid = "rt7"
+    }
+    // initialize
+    if (!"{{data.resourceTypeGeneral}}") {
+      document.getElementById("rt1").checked = true;
+    }
+    else {
+      document.getElementById(resid).checked = true
+    }
+
+  </script>
+  <label for="field-resourceType">*Resource Description (Mandatory)</label>
+  <i class="fas fa-info-circle"
+    title="A brief definition of the type of resource. 
+For example: a Dataset resource might be a survey dataset, a plant phenotyping dataset, or an Image resource might be UAV drone images."></i><br>
+  <input type="text" name="resourceType" id="field-resourceType" errors="errors.resourceType" style="width: 500px;"
+    value="{{data.resourceType}}"><br><br>
+  <!-- {{ form.input('resourceType', label=_('*ResourceType (Mandatory) '), id='field-resourceType', placeholder=_('More
+  Info'), value=data.resourceType, error=errors.resourceType, classes=['control-medium']) }} -->
+
+
+  <!-- Language -->
+  <!--          -->
+  <!--          -->
+  <label for="field-language">*Language (Mandatory) </label><br>
+  <select id="field-language" name="language" class="control-medium">
+    <option value="en">English</option>
+    <option value="es">Spanish</option>
+    <option value="de">German</option>
+    <option value="fr">French</option>
+    <option value="el">Greek</option>
+    <option value="hi">Hindi</option>
+    <option value="ru">Russian</option>
+    <option value="zh">Chinese</option>
+    <option value="ja">Japanese</option>
+    <option value="Other">Other</option>
+  </select><br><br>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <!-- Dates Fields  -->
+  <label><strong> Dates </strong></label>
+  <br><br>
+  <!-- Created Dates -->
+  <label for="field-createdDate">Created Date (Optional)</label>
+  <i class="fas fa-info-circle" title="The date the resource itself was put together"></i>
+  <br>
+  <input type="date" id="field-createdDate" name="createdDate" class="control-medium" placeholder="DD-MM-YYYY"
+    value="{{ data.createdDate }}"><br><br>
+  <!-- Submitted Dates -->
+  <label type="date" for="field-submittedDate">*Submitted Date (Mandatory)</label>
+  <i class="fas fa-info-circle" title="The date the creator submits the resource to the publisher. "></i>
+  <br>
+  <input id="field-submittedDate" name="submittedDate" class="control-medium" placeholder="DD-MM-YYYY"
+    value="{{ data.submittedDate }}"><br><br>
+
+  <!-- Available Dates -->
+  <label for="field-availableDate">Available Date (Optional)</label>
+  <i class="fas fa-info-circle" title="The date the resource is made publicly available"></i>
+  <br>
+  <input type="date" id="field-availableDate" name="availableDate" class="control-medium" placeholder="DD-MM-YYYY"
+    value="{{ data.availableDate }}"><br><br>
+  <!-- Withdrawn Dates -->
+  <label for="field-withdrawnDate">Withdrawn Date (Optional)</label>
+  <i class="fas fa-info-circle" title="The date the resource is removed"></i>
+  <br>
+  <input type="date" id="field-withdrawnDate" name="withdrawnDate" class="control-medium" placeholder="DD-MM-YYYY"
+    value="{{ data.withdrawnDate }}"><br><br>
+
+
+  <script>
+    // Script to set submitted date to today's date 
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+
+    document.getElementById('field-submittedDate').value = today;
+  </script>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <!-- Funder Information -->
+  <!--                    -->
+  <!--                    -->
+  <label><strong> Funder Information (Mandatory)</strong></label>
+  <i class="fas fa-info-circle"
+    title="Information about financial support (funding) for the resource being registered. "></i>
+  <br><br>
+  <label for="field-awardNumberField">Award number</label>
+  <i class="fas fa-info-circle" title="The code assigned by the funder to a sponsored award (grant)."></i><br>
+  <input id="field-awardNumberField" name="awardNumberField" class="control-medium" style="width: 500px;"><br><br>
+
+  <label for="field-awardTitleField">*Award Title</label>
+  <i class="fas fa-info-circle" title="The human readable title or name of the award (grant)."></i><br>
+  <input id="field-awardTitleField" name="awardTitleField" class="control-medium" style="width: 500px;"><br><br>
+
+  <label for="field-awardURIField">Award URI</label>
+  <i class="fas fa-info-circle"
+    title="The URI leading to a page provided by the funder for more information about the award (grant)."></i><br>
+  <input id="field-awardURIField" name="awardURIField" class="control-medium" style="width: 500px;"><br><br>
+
+  <label for="field-funderNameField">*Funder Name </label>
+  <i class="fas fa-info-circle" title="Name of the funding provider."></i><br>
+  <input id="field-funderNameField" name="funderNameField" class="control-medium" style="width: 500px;"><br><br>
+
+  <label for="field-funderIdField">*Funder Identifier</label>
+  <i class="fas fa-info-circle" title="Uniquely identifies a funding entity, according to various types."></i><br>
+  <input id="field-funderIdField" name="funderIdField" class="control-medium" style="width: 500px;"><br><br>
+
+  <label for="field-funderIdTypeField">*Funder ID Type</label>
+  <i class="fas fa-info-circle" title="The type of the funder Identifier."></i><br>
+  <select id="field-funderIdTypeField" name="funderIdTypeField" class="control-medium">
+    <option value="Crossref Funder ID">Crossref Funder ID </option>
+    <option value="GRID">GRID </option>
+    <option value="ISNI">ISNI</option>
+    <option value="ROR">ROR</option>
+    <option value="Other">Other</option>
+  </select><br><br>
+
+
+  <script>
+    let awardData = [];
+
+    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/awardInformation.csv')
+      .then(response => response.text())
+      .then(csvString => {
+        awardData = Papa.parse(csvString, { header: true }).data;
+        $j("#field-awardNumberField").autocomplete({
+          source: awardData.map(row => row.awardNumber),
+          select: function (event, ui) {
+            let selectedData = awardData.find(row => row.awardNumber === ui.item.value);
+            $j('#field-awardNumberField').val(ui.item.value);
+            $j('#field-awardTitleField').val(selectedData.awardTitle);
+            $j('#field-awardURIField').val(selectedData.awardURI);
+            return false;
+          }
+        });
+      });
+  </script>
+  <script>
+    let funData = [];
+
+    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/funderInformation.csv')
+      .then(response => response.text())
+      .then(csvString => {
+        funData = Papa.parse(csvString, { header: true }).data;
+        let funders = funData.map(item => ({ label: item.funderName + ' (' + item.funderAbbreviation + ')', value: item.funderName, item }));
+
+        $j("#field-funderNameField").autocomplete({
+          source: funders,
+
+          select: function (event, ui) {
+            let selectedData = funData.find(row => row.funderName === ui.item.value);
+            $j('#field-funderNameField').val(selectedData.funderName);
+            $j('#field-funderIdField').val(selectedData.funderIdentifer);
+            document.getElementById('field-funderIdTypeField').value = selectedData.funderIDType;
+            return false;
+          }
+        });
+      });
+  </script>
+
+
+  <button type="button" onclick="addFunders()"> Add </button>
+
+
+  <pre id=funderInfo></pre>
+  <div id="funderDiv"></div>
+
+  <!-- Metadata fields are hidden -->
+  <!--                            -->
+  <input id="field-funderName" name="funderName" class="control-medium" style="display:None;"
+    value="{{ data.funderName }}">
+
+  <input id="field-funderId" name="funderId" class="control-medium" style="display:None;" value="{{ data.funderId }}">
+
+  <input id="field-funderIdType" name="funderIdType" class="control-medium" style="display:None;"
+    value="{{ data.funderIdType }}">
+
+  <input id="field-awardNumber" name="awardNumber" class="control-medium" style="display:None;"
+    value="{{ data.awardNumber }}">
+
+  <input id="field-awardURI" name="awardURI" class="control-medium" style="display:None;" value="{{ data.awardURI }}">
+
+  <input id="field-awardTitle" name="awardTitle" class="control-medium" style="display:None;"
+    value="{{ data.awardTitle }}">
+
+  <style>
+    #funderDiv {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .funder-item {
+      background-color: #f0f0f0;
+      padding: 5px;
+      margin: 5px;
+      border-radius: 5px;
+      display: inline;
+    }
+
+    .funder-item .close-btn {
+      cursor: pointer;
+      margin-left: 5px;
+    }
+  </style>
+  <script>
+    var fname = [];
+    var fid = [];
+    var fidType = [];
+    var faNum = [];
+    var fUri = [];
+    var aTitle = [];
+    if ("{{data.funderName}}") {
+      fname = "{{data.funderName}}".split(",");
+      fid = "{{data.funderId}}".split(",");
+      fidType = "{{data.funderIdType}}".split(",");
+      faNum = "{{data.awardNumber}}".split(",");
+      fUri = "{{data.awardURI}}".split(",");
+      aTitle = "{{data.awardTitle}}".split(",");
+    }
+    const funderList = document.getElementById('funderDiv');
+    if (aTitle[0] != '') {
+      for (let i = 0; i < aTitle.length; i++) {
+        displayFunders(aTitle[i]);
+      }
+    }
+
+
+    function addFunders() {
+      let fn = document.getElementById("field-funderNameField").value;
+      let id = document.getElementById("field-funderIdField").value;
+      let idt = document.getElementById("field-funderIdTypeField").value;
+      let an = document.getElementById("field-awardNumberField").value;
+      let uri = document.getElementById("field-awardURIField").value;
+      let at = document.getElementById("field-awardTitleField").value;
+
+      if (!fn || !id || !idt || !at) {
+        document.getElementById('funderInfo').innerHTML = "* Fields Should Not Be Empty";
+        return;
+      }
+      //  Clear Fields
+      document.getElementById("field-funderNameField").value = '';
+      document.getElementById("field-funderIdField").value = '';
+      document.getElementById("field-funderIdTypeField").value = '';
+      document.getElementById("field-awardNumberField").value = '';
+      document.getElementById("field-awardURIField").value = '';
+      document.getElementById("field-awardTitleField").value = '';
+
+      // Pushing data to metadata fields
+      fname.push(fn);
+      fid.push(id);
+      fidType.push(idt);
+      if (an) {
+        faNum.push(an);
+      }
+      else {
+        faNum.push("NONE");
+      }
+      if (uri) {
+        fUri.push(uri);
+      }
+      else {
+        fUri.push("NONE");
+      }
+      aTitle.push(at);
+      document.getElementById("field-funderName").value = fname;
+      document.getElementById("field-funderId").value = fid;
+      document.getElementById("field-funderIdType").value = fidType;
+      document.getElementById("field-awardNumber").value = faNum;
+      document.getElementById("field-awardURI").value = fUri;
+      document.getElementById("field-awardTitle").value = aTitle;
+      displayFunders(at);
+    }
+
+    function displayFunders(title) {
+      let index = aTitle.indexOf(title);
+      const funderItem = document.createElement("div");
+      funderItem.classList.add('funder-item');
+      funderItem.innerHTML = `
+            ${title} <span class="close-btn" onclick="removeFunder(this)"><i class="fas fa-trash"></i></span>
+        `;
+      funderList.appendChild(funderItem);
+      //displayFunderPre();
+    }
+
+    function removeFunder(closeBtn) {
+      const funderItem = closeBtn.parentNode;
+      funderList.removeChild(funderItem);
+      let funId = funderItem.textContent.trim();
+      funId = funId.slice(0, -1);
+      funId = funId.trim()
+      let index = fid.indexOf(funId);
+      fname.splice(index, 1);
+      fid.splice(index, 1);
+      fidType.splice(index, 1);
+      faNum.splice(index, 1);
+      fUri.splice(index, 1);
+      aTitle.splice(index, 1);
+      document.getElementById("field-funderName").value = fname;
+      document.getElementById("field-funderId").value = fid;
+      document.getElementById("field-funderIdType").value = fidType;
+      document.getElementById("field-awardNumber").value = faNum;
+      document.getElementById("field-awardURI").value = fUri;
+      document.getElementById("field-awardTitle").value = aTitle;
+      //displayFunderPre();
+
+    }
+  </script>
+
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
 
@@ -1155,160 +1057,29 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
     }
   </script>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
-
-  <!-- Associated Research Notebooks Field -->
-  <!--                                     -->
-  <!--                                     -->
-  <label for="field-associatedNotesField">Associated Research Notebooks (Optional) </label>
-  <i class="fas fa-info-circle" title="The URI of the Electronic Research Notebook where the information about that resource is recorded."></i>
+  <label><strong> Temporal Coverage (Optional)</strong></label>
+  <!-- Collected Dates --><br><br>
+  <label for="field-collectionStartDate">Collection Start Date (Optional)</label>
+  <i class="fas fa-info-circle" title="The Date in which resource content collection was started"></i>
   <br>
-  <input type="text" id="field-associatedNoteField" name="associatedNoteField" style="width: 500px;"> <br>
-  <button type="button" onclick="addNoteBooks()"> Add </button>
-  <button type="button" onclick="clearNoteBooks()">Clear</button>
-  <pre id="notebookAdded"> Associated Notes: {{ data.associatedNote }} </pre>
-  <input type="text" id="field-associatedNote" name="associatedNote" style="display:none;"
-    value="{{ data.associatedNote }}">
-  <script>
-    var notes = [];
+  <input type="date" id="field-collectionStartDate" name="collectionStartDate" class="control-medium"
+    placeholder="DD-MM-YYYY" value="{{ data.collectionStartDate }}"><br><br>
 
-    function addNoteBooks() {
-      let notebook = document.getElementById("field-associatedNoteField").value;
-      notes.push(notebook);
-      document.getElementById("field-associatedNote").value = notes;
-      document.getElementById('notebookAdded').innerHTML = "Associated Notebooks: " + notes;
-      document.getElementById("field-associatedNoteField").value = "";
-    }
-
-    function clearNoteBooks() {
-
-      notes = [];
-      document.getElementById("field-associatedNote").value = notes;
-      document.getElementById('notebookAdded').innerHTML = "Cleared !!!";
-      document.getElementById("field-associatedNoteField").value = "";
-    }
-
-  </script>
-
-
-  <!-- Data Location Field -->
-  <!--                     -->
-  <!--                     -->
-
-  <label for="field-dataLocationField"> *Data Locations (Mandatory)</label>
-  <i class="fas fa-info-circle" title="Full path describing the location of the resource. 
-This could be a network shared drive, Sharepoint, Teams or electronic research notebook URI. E.g. \\salt\Data1"></i>
+  <label for="field-collectionEndDate">Collection End Date (Optional)</label>
+  <i class="fas fa-info-circle" title="The Date in which resource content collection was ended"></i>
   <br>
-  <input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
-  <button type="button" onclick="addDataLocation()"> Add </button>
-  <button type="button" onclick="clearDataLocation()">Clear</button>
-  <pre id="dataLocationAdded"> Data Locations: {{ data.dataLocation }} </pre>
-  <input type="text" id="field-dataLocation" name="dataLocation" style="display:none;" value="{{ data.dataLocation }}">
-
-  <script>
-    var dataLoc = [];
-
-    function addDataLocation() {
-      let loc = document.getElementById('field-dataLocationField').value;
-      dataLoc.push(loc);
-      document.getElementById('field-dataLocation').value = dataLoc;
-      document.getElementById('dataLocationAdded').innerHTML = "Data Locations Added:" + dataLoc
-      document.getElementById('field-dataLocationField').value = "";
-    }
-
-    function clearDataLocation() {
-
-      dataLoc = [];
-      document.getElementById('field-dataLocation').value = dataLoc;
-      document.getElementById('field-dataLocationField').value = "";
-      document.getElementById('dataLocationAdded').innerHTML = "Cleared !!!";
-
-
-    }
-
-  </script>
-
-
-  <!-- Responsible Person Field -->
-  <!--                          -->
-  <!--                          -->
-  <label for="field-responsiblePerson">*Responsible Person (Mandatory)</label>
-  <i class="fas fa-info-circle" title="Names of researcher responsible for that resource. These are the main contacts when it comes to requesting the resource."></i>
-  <br>
-  <input id="field-responsiblePerson" name="responsiblePerson" style="width: 500px;"
-    value="{{ data.responsiblePerson }}"><br><br>
-
-
-  <!-- Research Infrastructure Used -->
-  <!--                              -->
-  <!--                              -->
-  <label for="field-infraUsedField"> Research Infrastructure Used (Select All)</label>
-  <i class="fas fa-info-circle" title="add info here"></i>
-  <br><br>
-  <div id="field-infraUsedField" name="infraUsedField">
-
-    <input type="checkbox" id="if1" value="LTEs" onchange="infraAdd('LTEs')">  LTEs
-    <br>
-    <input type="checkbox" id="if2" value="LSRE" onchange="infraAdd('LSRE')">  LSRE
-    <br>
-    <input type="checkbox" id="if3" value="NWFP" onchange="infraAdd('NWFP')">  NWFP
-    <br>
-    <input type="checkbox" id="if4" value="RIS" onchange="infraAdd('RIS')">  RIS
-    <br>
-    <input type="checkbox" id="if5" value="URTO" onchange="infraAdd('URTO')">  URTO
-    <br>
-    <input type="checkbox" id="if6" value="Rowden" onchange="infraAdd('Rowden')">Rowden
-  </div>
-  <input type="text" id="field-infraUsed" name="infraUsed" value="{{ data.infraUsed }}" style="display: none;">
-
-  <script>
-    var infra = "{{data.infraUsed}}".split(",");
-    if (infra[0] != '') {
-      for (let x = 0; x < infra.length; x++) {
-        checkInfra(infra[x]);
-      }
-    }
-    function infraAdd(val) {
-      let i = infra.indexOf(val);
-      if (i > -1) {
-        infra.splice(i, 1);
-      }
-      else {
-        infra.push(val);
-      }
-      document.getElementById('field-infraUsed').value = infra;
-    }
-    function checkInfra(val) {
-      if (val == "LTEs") {
-        document.getElementById("if1").checked = true;
-      }
-      else if (val == "LSRE") {
-        document.getElementById("if2").checked = true;
-      }
-      else if (val == "NWFP") {
-        document.getElementById("if3").checked = true;
-      }
-      else if (val == "RIS") {
-        document.getElementById("if4").checked = true;
-      }
-      else if (val == "URTO") {
-        document.getElementById("if5").checked = true;
-      }
-      else if (val == "Rowden") {
-        document.getElementById("if6").checked = true;
-      }
-    }
-  </script>
-  <br><br>
+  <input type="date" id="field-collectionEndDate" name="collectionEndDate" class="control-medium"
+    placeholder="DD-MM-YYYY" value="{{ data.collectionEndDate }}"><br><br>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
   <!-- Geo location fields -->
   <!--                     -->
   <!--                     -->
-  <label><strong> GeoLocation (Optional)</strong></label>
+  <label><strong> Spatial Coverage (Optional)</strong></label>
   <br><br>
 
   <label for="field-geoLocation"> Enter The location (Name of the place) </label>
-  <i class="fas fa-info-circle" title="Spatial region or named place where the data was gathered or about which the data is focused."></i><br>
+  <i class="fas fa-info-circle"
+    title="Spatial region or named place where the data was gathered or about which the data is focused."></i><br>
   <input type="text" id="field-geoLocation" name="geoLocation" style="width:auto" value="{{ data.geoLocation }}">
 
   <!--      World Map         -->
@@ -1405,10 +1176,10 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
   <!-- Subject Fields -->
   <!--                 -->
   <!--                 -->
-  <label><strong> Subject Details (Optional)</strong></label>
-  <i class="fas fa-info-circle" title="The name of the subject scheme or classification code or authority if one is used."></i>
-  <br><br>
-  <label for="field-subjectField">*Subject</label><br>
+  <label><strong> Keywords (Optional)</strong></label>
+  <i class="fas fa-info-circle"
+    title="The name of the subject scheme or classification code or authority if one is used."></i>
+  <br>
   <input type="text" id="field-subjectField" name="subjectField" style="width: 500px;"><br><br>
 
   <input type="text" id="field-subjectSchemeField" name="subjectSchemeField" style="width: 500px; display: none;">
@@ -1478,19 +1249,22 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
         return;
       }
       // Push to Array
-      if(ss){
-      subScheme.push(ss);}
-      else{
+      if (ss) {
+        subScheme.push(ss);
+      }
+      else {
         subScheme.push("None");
       }
-      if(su){
-      subUri.push(su);}
-      else{
+      if (su) {
+        subUri.push(su);
+      }
+      else {
         subUri.push("None");
       }
-      if(vu){
-      valUri.push(vu);}
-      else{
+      if (vu) {
+        valUri.push(vu);
+      }
+      else {
         valUri.push("None");
       }
       sub.push(s);
@@ -1544,8 +1318,8 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
 
     }
   </script>
-   <hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
- 
+  <hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
+
 
   <label for="field-license">Select the License (optional)</label>
   <i class="fas fa-info-circle" title="Provide a rights management statement for the resource or reference a service providing such information.
@@ -1562,14 +1336,15 @@ OGL:      This license allows you to copy, publish, distribute and transmit the 
                statement.             "></i><br>
   <input id="field-license" name="license" class="control-medium" style="display: none;" value="{{data.license}}">
   <div id="licenseButtons">
-    <input type="radio" id="lr1" name="licenseSelect" value="Creative Commons Attribution Licence (CC BY 4.0)">Creative
+    <input type="radio" id="lr1" name="licenseSelect" value="Creative Commons Attribution Licence (CC BY 4.0)"> Creative
     Commons Attribution Licence (CC BY 4.0)
     <br>
     <input type="radio" id="lr2" name="licenseSelect"
-      value="Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)">Creative Commons Attribution Non-Commercial (CC
+      value="Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)"> Creative Commons Attribution Non-Commercial
+    (CC
     BY-NC 4.0)
     <br>
-    <input type="radio" id="lr3" name="licenseSelect" value="Open Government Licence (OGL)">Open Government Licence
+    <input type="radio" id="lr3" name="licenseSelect" value="Open Government Licence (OGL)"> Open Government Licence
     (OGL)
   </div><br>
   <script>
@@ -1613,6 +1388,314 @@ OGL:      This license allows you to copy, publish, distribute and transmit the 
       document.getElementById("field-version").value = 1;
     }
   </script>
+
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <label><strong> Resource Data Management</strong></label><br><br>
+
+
+  <!--                                     -->
+  <!-- Experiment Code -->
+
+  <label for="field-experimentCode">Select Experiment Code (Optional)</label>
+  <i class="fas fa-info-circle"
+    title="Any experiment code that serves as an identifier other than the primary Identifier applied to the resource being registered."></i>
+  <br><br>
+  <input type="text" id="field-experimentCode" name="experimentCode" style="display: none;"
+    value="{{data.experimentCode}}">
+
+  <div>
+    <input type="radio" id="exp1" name="expCode" checked="true" onchange="assignCode('None')" value="None"> N/A
+    <br>
+    <input type="radio" id="exp2" name="expCode" value="RRES Farms Field Experiment Code"
+      onchange="assignCode('RRES Farms Field Experiment Code')"> RRES Farms Field Experiment Code
+    <br>
+    <input type="radio" id="exp3" name="expCode" value="NWFP Code" onchange="assignCode('NWFP Code')"> NWFP Code
+    <br>
+    <input type="radio" id="exp4" name="expCode" value="NW Experiment Code" onchange="assignCode('NW Experiment Code')">
+    NW Experiment Code
+    <br>
+    <input type="radio" id="exp5" name="expCode" value="Other" onchange="assignCode('Other')"> Other Codes
+    <br>
+  </div>
+  <br>
+  <div id="codesField" style="display: none;">
+    <label for="field-Codes">*Codes (Mandatory) </label><br>
+    <input type="text" id="field-Codes" name="Codes" value="{{ data.Codes }}" error="errors.Codes">
+  </div>
+
+  <script>
+    // Initializattion
+    // selectElement('field-experimentCode', "{{ data.experimentCode }}");
+    if ("{{data.Codes}}") {
+      let f = document.getElementById("field-experimentCode").value;
+      if (f == "RRES Farms Field Experiment Code") {
+        document.getElementById("exp2").checked = true;
+      }
+      else if (f == "NWFP Code") {
+        document.getElementById("exp3").checked = true;
+      }
+      else if (f == "NW Experiment Code") {
+        document.getElementById("exp4").checked = true;
+      }
+      else if (f == "Other") {
+        document.getElementById("exp5").checked = true;
+      }
+      displayCodesField();
+    }
+
+    function assignCode(val) {
+      document.getElementById("field-experimentCode").value = val;
+      displayCodesField();
+    }
+    function selectElement(id, valueToSelect) {
+      let element = document.getElementById(id);
+      element.value = valueToSelect;
+    }
+
+    function displayCodesField() {
+      var selectField = document.getElementById('field-experimentCode');
+      var codesField = document.getElementById('codesField');
+      if (selectField.value == 'None') {
+        codesField.style.display = 'none';
+        document.getElementById('field-Codes').value = "N/A";
+      } else {
+        codesField.style.display = 'block';
+        document.getElementById("field-Codes").value = "{{ data.Codes }}";
+      }
+    }
+
+  </script><br>
+  <!-- Associated Research Notebooks Field -->
+  <!--                                     -->
+
+  <label for="field-associatedNotesField">Associated Research Notebooks (Optional) </label>
+  <i class="fas fa-info-circle"
+    title="The URI of the Electronic Research Notebook where the information about that resource is recorded."></i>
+  <br>
+  <input type="text" id="field-associatedNoteField" name="associatedNoteField" style="width: 500px;"> <br>
+  <button type="button" onclick="addNoteBooks()"> Add </button>
+  <button type="button" onclick="clearNoteBooks()">Clear</button>
+  <pre id="notebookAdded"> Associated Notes: {{ data.associatedNote }} </pre>
+  <input type="text" id="field-associatedNote" name="associatedNote" style="display:none;"
+    value="{{ data.associatedNote }}">
+  <script>
+    var notes = [];
+
+    function addNoteBooks() {
+      let notebook = document.getElementById("field-associatedNoteField").value;
+      notes.push(notebook);
+      document.getElementById("field-associatedNote").value = notes;
+      document.getElementById('notebookAdded').innerHTML = "Associated Notebooks: " + notes;
+      document.getElementById("field-associatedNoteField").value = "";
+    }
+
+    function clearNoteBooks() {
+
+      notes = [];
+      document.getElementById("field-associatedNote").value = notes;
+      document.getElementById('notebookAdded').innerHTML = "Cleared !!!";
+      document.getElementById("field-associatedNoteField").value = "";
+    }
+
+  </script>
+
+
+  <!-- Data Location Field -->
+  <!--                     -->
+  <!--                     -->
+
+  <label for="field-dataLocationField"> *Data Locations (Mandatory)</label>
+  <i class="fas fa-info-circle" title="Full path describing the location of the resource. 
+This could be a network shared drive, Sharepoint, Teams or electronic research notebook URI. E.g. \\salt\Data1"></i>
+  <br>
+  <input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
+  <button type="button" onclick="addDataLocation()"> Add </button>
+  <button type="button" onclick="clearDataLocation()">Clear</button>
+  <pre id="dataLocationAdded"> Data Locations: {{ data.dataLocation }} </pre>
+  <input type="text" id="field-dataLocation" name="dataLocation" style="display:none;" value="{{ data.dataLocation }}">
+
+  <script>
+    var dataLoc = [];
+
+    function addDataLocation() {
+      let loc = document.getElementById('field-dataLocationField').value;
+      dataLoc.push(loc);
+      document.getElementById('field-dataLocation').value = dataLoc;
+      document.getElementById('dataLocationAdded').innerHTML = "Data Locations Added:" + dataLoc
+      document.getElementById('field-dataLocationField').value = "";
+    }
+
+    function clearDataLocation() {
+
+      dataLoc = [];
+      document.getElementById('field-dataLocation').value = dataLoc;
+      document.getElementById('field-dataLocationField').value = "";
+      document.getElementById('dataLocationAdded').innerHTML = "Cleared !!!";
+
+
+    }
+
+  </script>
+
+
+  <!-- Responsible Person Field -->
+  <!--                          -->
+  <!--                          -->
+  <label for="field-responsiblePerson">*Responsible Person (Mandatory)</label>
+  <i class="fas fa-info-circle"
+    title="Names of researcher responsible for that resource. These are the main contacts when it comes to requesting the resource."></i>
+  <br>
+  <input id="field-responsiblePerson" name="responsiblePerson" style="width: 500px;"
+    value="{{ data.responsiblePerson }}"><br><br>
+
+
+  <!-- Research Infrastructure Used -->
+  <!--                              -->
+  <!--                              -->
+  <label for="field-infraUsedField"> Research Infrastructure Used (Select All)</label>
+  <i class="fas fa-info-circle" title="add info here"></i>
+  <br>
+  <div id="field-infraUsedField" name="infraUsedField">
+
+    <input type="checkbox" id="if1" value="Long Term Experiments NBRI" onchange="infraAdd('Long Term Experiments NBRI')"> Long Term Experiments NBRI
+    <br>
+    <input type="checkbox" id="if2" value="North Wyke Farm Platform NBRI" onchange="infraAdd('North Wyke Farm Platform NBRI')"> North Wyke Farm Platform NBRI
+    <br>
+    <input type="checkbox" id="if3" value="Rothamsted Insect Survey NBRI" onchange="infraAdd('Rothamsted Insect Survey NBRI')"> Rothamsted Insect Survey NBRI
+    <br>
+    <input type="checkbox" id="if4" value="Large Scale Rotation Experiment" onchange="infraAdd('Large Scale Rotation Experiment')"> Large Scale Rotation Experiment
+    <br>
+    <input type="checkbox" id="if5" value="Rowden Plots" onchange="infraAdd('Rowden Plots')"> Rowden Plots
+    <br>
+    <input type="checkbox" id="if6" value="Upper River Taw Observatory" onchange="infraAdd('Upper River Taw Observatory')"> Upper River Taw Observatory
+    <br>
+    <input type="checkbox" id="if7" value="Analytical Chemistry (Harpenden)" onchange="infraAdd('Analytical Chemistry (Harpenden)')"> Analytical Chemistry (Harpenden)
+    <br>
+    <input type="checkbox" id="if8" value="Analytical Chemistry (North Wyke)" onchange="infraAdd('Analytical Chemistry (North Wyke)')"> Analytical Chemistry (North Wyke)
+    <br>
+    <input type="checkbox" id="if9" value="Bioimaging" onchange="infraAdd('Bioimaging')"> Bioimaging
+    <br>
+    <input type="checkbox" id="if10" value="Bioinformatics" onchange="infraAdd('Bioimaging')"> Bioinformatics
+    <br>
+    <input type="checkbox" id="if11" value="Chemical Ecology" onchange="infraAdd('Chemical Ecology')"> Chemical Ecology
+    <br>
+    <input type="checkbox" id="if12" value="Dry Spectral Lab" onchange="infraAdd('Dry Spectral Lab')"> Dry Spectral Lab
+    <br>
+    <input type="checkbox" id="if13" value="Genomics Facility" onchange="infraAdd('Genomics Facility')"> Genomics Facility
+    <br>
+    <input type="checkbox" id="if14" value="Harpenden & Brooms Barn Farms" onchange="infraAdd('Harpenden & Brooms Barn Farms')"> Harpenden & Brooms Barn Farms
+    <br>
+    <input type="checkbox" id="if15" value="HCE & Insectary" onchange="infraAdd('HCE & Insectary')"> HCE & Insectary
+    <br>
+    <input type="checkbox" id="if16" value="Lipidomics Facility" onchange="infraAdd('Lipidomics Facility')"> Lipidomics Facility
+    <br>
+    <input type="checkbox" id="if17" value="North Wyke Farm" onchange="infraAdd('North Wyke Farm')"> North Wyke Farm
+    <br>
+    <input type="checkbox" id="if18" value="Plant Transformation" onchange="infraAdd('Plant Transformation')"> Plant Transformation
+    <br>
+    <input type="checkbox" id="if19" value="Research Data and Systems" onchange="infraAdd('Research Data and Systems')"> Research Data and Systems
+    <br>
+    <input type="checkbox" id="if20" value="Statistics & Data Science" onchange="infraAdd('Statistics & Data Science')"> Statistics & Data Science
+    <br>
+  </div>
+  <input type="text" id="field-infraUsed" name="infraUsed" value="{{ data.infraUsed }}" style="display: none;">
+
+  <script>
+    if("{{data.infraUsed}}"){
+    var infra = "{{data.infraUsed}}".split(",");}
+    else{
+      var infra = [];
+    }
+    console.log(infra);
+    if (infra.length > 1) {
+      
+      for (let x = 0; x < infra.length; x++) {
+        checkInfra(infra[x]);
+      }
+    }
+    function infraAdd(val) {
+      let i = infra.indexOf(val);
+      if (i > -1) {
+        infra.splice(i, 1);
+      }
+      else {
+        infra.push(val);
+      }
+      document.getElementById('field-infraUsed').value = infra;
+    }
+    function checkInfra(val) {
+      if (val == "Long Term Experiments NBRI") {
+        
+        document.getElementById("if1").checked = true;
+      }
+      else if (val == "North Wyke Farm Platform NBRI") {
+        document.getElementById("if2").checked = true;
+      }
+      else if (val == "Rothamsted Insect Survey NBRI") {
+        document.getElementById("if3").checked = true;
+      }
+      else if (val == "Large Scale Rotation Experiment") {
+        document.getElementById("if4").checked = true;
+      }
+      else if (val == "Rowden Plots") {
+        document.getElementById("if5").checked = true;
+      }
+      else if (val == "Upper River Taw Observatory") {
+        document.getElementById("if6").checked = true;
+      }
+      else if (val == "Analytical Chemistry (Harpenden)") {
+        document.getElementById("if7").checked = true;
+      }
+      else if (val == "Analytical Chemistry (North Wyke)") {
+        document.getElementById("if8").checked = true;
+      }
+      else if (val == "Bioimaging") {
+        document.getElementById("if9").checked = true;
+      }
+      else if (val == "Bioinformatics") {
+        document.getElementById("if10").checked = true;
+      }
+      else if (val == "Chemical Ecology") {
+        document.getElementById("if11").checked = true;
+      }
+      else if (val == "Dry Spectral Lab") {
+        document.getElementById("if12").checked = true;
+      }
+      else if (val == "Genomics Facility") {
+        document.getElementById("if13").checked = true;
+      }
+      else if (val == "Harpenden & Brooms Barn Farms") {
+        document.getElementById("if14").checked = true;
+      }
+      else if (val == "HCE & Insectary") {
+        document.getElementById("if15").checked = true;
+      }
+      else if (val == "Lipidomics Facilit") {
+        document.getElementById("if16").checked = true;
+      }
+      else if (val == "North Wyke Farm") {
+        document.getElementById("if17").checked = true;
+      }
+      else if (val == "Plant Transformation") {
+        document.getElementById("if18").checked = true;
+      }
+      else if (val == "Research Data and Systems") {
+        document.getElementById("if19").checked = true;
+      }
+      else if (val == "Statistics & Data Science") {
+        document.getElementById("if20").checked = true;
+      }
+      else{
+        var index = infra.indexOf(val);
+        infra.splice(index,1);
+        console.log(infra);
+      }
+    }
+  </script>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+
+  <br><br>
 </body>
 
 </html>
