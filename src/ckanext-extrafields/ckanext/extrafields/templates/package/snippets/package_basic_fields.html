@@ -189,8 +189,10 @@
       const creatorItem = closeBtn.parentNode;
       creatorList.removeChild(creatorItem);
       let name = creatorItem.textContent.trim();
-      name = name.slice(0, -1);
-      name = name.trim()
+      name = name.split(",");
+      name = name[0];
+      // name = name.slice(0, -1);
+      name = name.trim();
       let index = creator.indexOf(name);
       creator.splice(index, 1);
       nameId.splice(index, 1);
@@ -210,8 +212,9 @@
   <label><strong> Contributors Details (Optional) </strong></label>
   <i class="fas fa-info-circle"
     title="The institution or person responsible for collecting, managing, distributing, or otherwise contributing to the development of the resource."></i>
-    <p style="color: grey; font-style: italic; font-size: small;"> Identify all the people who have been involved in the development of the dataset
-    </p>
+  <p style="color: grey; font-style: italic; font-size: small;"> Identify all the people who have been involved in the
+    development of the dataset
+  </p>
   <label for="field-contributorTypeField">*Contributor Type</label><br>
   <select id="field-contributorTypeField" name="contributorTypeField" class="control-medium">
     <option value="None"></option>
@@ -379,7 +382,7 @@
       const contributorItem = document.createElement("div");
       contributorItem.classList.add('contributor-item');
       contributorItem.innerHTML = `
-    ${ct}:  ${name}, ${id}, ${aff}    <span class="close-btn" onclick="removeContributor(this)">
+    ${ct}, ${name}, ${id}, ${aff}    <span class="close-btn" onclick="removeContributor(this)">
       <i class="fas fa-trash"></i>
       </span>
         `;
@@ -390,7 +393,9 @@
       const contributorItem = closeBtn.parentNode;
       contributorList.removeChild(contributorItem);
       let name = contributorItem.textContent.trim();
-      name = name.slice(0, -1);
+      name = name.split(",");
+      name = name[1];
+      //name = name.slice(0, -1);
       name = name.trim()
       let index = contriName.indexOf(name);
       contriName.splice(index, 1);
@@ -639,8 +644,11 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
   <!--                    -->
   <label><strong> Funder Information (Mandatory)</strong></label>
   <i class="fas fa-info-circle"
-    title="Information about financial support (funding) for the resource being registered. "></i>
-  <br><br>
+    title="Information about financial support (funding) for the resource being registered. "></i><br>
+  <p style="color: grey; font-style: italic; font-size: small;"> Provide details about the funders and awards that have
+    financially supported in creation of this resource
+  </p>
+  
   <label for="field-awardNumberField">Award number</label>
   <i class="fas fa-info-circle" title="The code assigned by the funder to a sponsored award (grant)."></i><br>
   <input id="field-awardNumberField" name="awardNumberField" class="control-medium" style="width: 500px;"><br><br>
@@ -760,6 +768,7 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
     }
   </style>
   <script>
+    const funderList = document.getElementById('funderDiv');
     var fname = [];
     var fid = [];
     var fidType = [];
@@ -773,13 +782,12 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       faNum = "{{data.awardNumber}}".split(",");
       fUri = "{{data.awardURI}}".split(",");
       aTitle = "{{data.awardTitle}}".split(",");
-    }
-    const funderList = document.getElementById('funderDiv');
-    if (aTitle[0] != '') {
       for (let i = 0; i < aTitle.length; i++) {
         displayFunders(aTitle[i]);
       }
     }
+
+
 
 
     function addFunders() {
@@ -843,7 +851,7 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       const funderItem = closeBtn.parentNode;
       funderList.removeChild(funderItem);
       let funId = funderItem.textContent.trim();
-      funId = funId.slice(0, -1);
+      //funId = funId.slice(0, -1);
       funId = funId.trim()
       let index = fid.indexOf(funId);
       fname.splice(index, 1);
@@ -977,10 +985,30 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
   <input id="field-relatedIdentifierField" name="relatedIdentifierField" class="control-medium"
     style="width: 500px;"><br>
   <button type="button" onclick="addRelated()">Add Resources</button>
-  <button type="button" onclick="clearRelated()">Clear All</button>
-  <button type="button" onclick="popRelated()">Clear Last Entry</button>
 
   <pre id="relatedMessage"></pre>
+  <br>
+  <div id="relatedDiv"></div>
+  <style>
+    #relatedDiv {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .related-item {
+      background-color: #f0f0f0;
+      padding: 5px;
+      margin: 5px;
+      border-radius: 5px;
+      display: inline;
+    }
+
+    .related-item .close-btn {
+      cursor: pointer;
+      margin-left: 5px;
+    }
+  </style>
+
   <!-- Metadata Fields for Related Resources -->
   <input id="field-relatedIdentifierType" name="relatedIdentifierType" class="control-medium" style="display:none"
     value="{{ data.relatedIdentifierType }}">
@@ -992,13 +1020,27 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
     value="{{ data.relatedIdentifier }}">
 
   <script>
-    var relationTypeList = "{{ data.relationType }}".split(",");
-    var idTypeList = "{{ data.relatedIdentifierType }}".split(",");
-    var RRTypeList = "{{ data.relatedResourceType }}".split(",");
-    var idList = "{{ data.relatedIdentifier }}".split(",");
-    if (relationTypeList[0] != '') {
-      displayRelatedResources();
+    const relatedList = document.getElementById('relatedDiv');
+    //console.log()
+    if ("{{data.relationType}}") {
+      var relationTypeList = "{{ data.relationType }}".split(",");
+      var idTypeList = "{{ data.relatedIdentifierType }}".split(",");
+      var RRTypeList = "{{ data.relatedResourceType }}".split(",");
+      var idList = "{{ data.relatedIdentifier }}".split(",");
+      for (let i = 0; i < relationTypeList.length; i++) {
+        displayRelatedResources(idTypeList[i], relationTypeList[i], RRTypeList[i], idList[i]);
+      }
     }
+    else {
+      //console.log("related false");
+      relationTypeList = [];
+      idTypeList = [];
+      RRTypeList = [];
+      idList = [];
+    }
+
+
+
     function addRelated() {
       let idt = document.getElementById('field-relatedIdField').value;
       let relt = document.getElementById('field-relationTypeField').value;
@@ -1017,44 +1059,44 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       document.getElementById('field-relationType').value = relationTypeList;
       document.getElementById('field-relatedResourceType').value = RRTypeList
       document.getElementById('field-relatedIdentifier').value = idList;
-      displayRelatedResources();
-    }
-    function displayRelatedResources() {
-      let p = document.getElementById("relatedMessage");
-      p.innerHTML = "Related Resources: "
-      for (let i = 0; i < idList.length; i++) {
-        c = document.createTextNode(`Resource ${i + 1}:: ID Type: ${idTypeList[i]}, Relation Type: ${relationTypeList[i]}, Resource Type: ${RRTypeList[i]}, ID: ${idList[i]}`);
-        p.append("\n");
-        p.append(c);
-
-      }
+      displayRelatedResources(idt, relt, rest, rid);
     }
 
-    function popRelated() {
-      idTypeList.pop();
-      relationTypeList.pop();
-      RRTypeList.pop();
-      idList.pop();
+
+    function displayRelatedResources(idt, relt, rest, rid) {
+      let index = idList.indexOf(rid);
+      const relatedItem = document.createElement("div");
+      relatedItem.classList.add('related-item');
+      relatedItem.innerHTML = `
+    ${idt}, ${relt}, ${rest},  ${rid} <span class="close-btn" onclick="removeRelatedResources(this)"><i class="fas fa-trash"></i></span>
+           `;
+      relatedList.appendChild(relatedItem);
+
+    }
+    function removeRelatedResources(closeBtn) {
+      const relatedItem = closeBtn.parentNode;
+      relatedList.removeChild(relatedItem);
+      let id = relatedItem.textContent.trim();
+      id = id.split(",");
+      id = id[3];
+      //id = id.slice(0, -1);
+      id = id.trim();
+      //console.log(id);
+      let index = idList.indexOf(id);
+
+      idList.splice(index, 1);
+      RRTypeList.splice(index, 1);
+      relationTypeList.splice(index, 1);
+      idTypeList.splice(index, 1);
       document.getElementById('field-relatedIdentifierType').value = idTypeList;
       document.getElementById('field-relationType').value = relationTypeList;
-      document.getElementById('field-relatedResourceType').value = RRTypeList
+      document.getElementById('field-relatedResourceType').value = RRTypeList;
       document.getElementById('field-relatedIdentifier').value = idList;
-      displayRelatedResources();
+
     }
 
 
-    function clearRelated() {
-      relationTypeList = [];
-      idTypeList = [];
-      RRTypeList = [];
-      idList = [];
-      document.getElementById('field-relatedIdentifierType').value = idTypeList;
-      document.getElementById('field-relationType').value = relationTypeList;
-      document.getElementById('field-relatedResourceType').value = RRTypeList
-      document.getElementById('field-relatedIdentifier').value = idList;
-      document.getElementById('relatedMessage').innerHTML = "Cleared";
 
-    }
   </script>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
   <label><strong> Temporal Coverage (Optional)</strong></label>
@@ -1279,8 +1321,17 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       document.getElementById('field-valueUri').value = valUri;
       document.getElementById('field-subject').value = sub;
       // Print Message
+      //keyword->tag
+      // var tag = "{{ data.tag_string }}" ;
+      // console.log(tag);
+      // tag = tag.split(",");
+      // tag.push(sub);
+      // tag = tag.join(", ");
+      // document.getElementById("field-tags").value = tag;
+
       displaySubject();
     }
+
     function displaySubject() {
       let p = document.getElementById("subjectMessage");
       p.innerHTML = "Subjects:"
@@ -1558,21 +1609,28 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
   <br>
   <div id="field-infraUsedField" name="infraUsedField">
 
-    <input type="checkbox" id="if1" value="Long Term Experiments NBRI" onchange="infraAdd('Long Term Experiments NBRI')"> Long Term Experiments NBRI
+    <input type="checkbox" id="if1" value="Long Term Experiments NBRI"
+      onchange="infraAdd('Long Term Experiments NBRI')"> Long Term Experiments NBRI
     <br>
-    <input type="checkbox" id="if2" value="North Wyke Farm Platform NBRI" onchange="infraAdd('North Wyke Farm Platform NBRI')"> North Wyke Farm Platform NBRI
+    <input type="checkbox" id="if2" value="North Wyke Farm Platform NBRI"
+      onchange="infraAdd('North Wyke Farm Platform NBRI')"> North Wyke Farm Platform NBRI
     <br>
-    <input type="checkbox" id="if3" value="Rothamsted Insect Survey NBRI" onchange="infraAdd('Rothamsted Insect Survey NBRI')"> Rothamsted Insect Survey NBRI
+    <input type="checkbox" id="if3" value="Rothamsted Insect Survey NBRI"
+      onchange="infraAdd('Rothamsted Insect Survey NBRI')"> Rothamsted Insect Survey NBRI
     <br>
-    <input type="checkbox" id="if4" value="Large Scale Rotation Experiment" onchange="infraAdd('Large Scale Rotation Experiment')"> Large Scale Rotation Experiment
+    <input type="checkbox" id="if4" value="Large Scale Rotation Experiment"
+      onchange="infraAdd('Large Scale Rotation Experiment')"> Large Scale Rotation Experiment
     <br>
     <input type="checkbox" id="if5" value="Rowden Plots" onchange="infraAdd('Rowden Plots')"> Rowden Plots
     <br>
-    <input type="checkbox" id="if6" value="Upper River Taw Observatory" onchange="infraAdd('Upper River Taw Observatory')"> Upper River Taw Observatory
+    <input type="checkbox" id="if6" value="Upper River Taw Observatory"
+      onchange="infraAdd('Upper River Taw Observatory')"> Upper River Taw Observatory
     <br>
-    <input type="checkbox" id="if7" value="Analytical Chemistry (Harpenden)" onchange="infraAdd('Analytical Chemistry (Harpenden)')"> Analytical Chemistry (Harpenden)
+    <input type="checkbox" id="if7" value="Analytical Chemistry (Harpenden)"
+      onchange="infraAdd('Analytical Chemistry (Harpenden)')"> Analytical Chemistry (Harpenden)
     <br>
-    <input type="checkbox" id="if8" value="Analytical Chemistry (North Wyke)" onchange="infraAdd('Analytical Chemistry (North Wyke)')"> Analytical Chemistry (North Wyke)
+    <input type="checkbox" id="if8" value="Analytical Chemistry (North Wyke)"
+      onchange="infraAdd('Analytical Chemistry (North Wyke)')"> Analytical Chemistry (North Wyke)
     <br>
     <input type="checkbox" id="if9" value="Bioimaging" onchange="infraAdd('Bioimaging')"> Bioimaging
     <br>
@@ -1582,34 +1640,40 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
     <br>
     <input type="checkbox" id="if12" value="Dry Spectral Lab" onchange="infraAdd('Dry Spectral Lab')"> Dry Spectral Lab
     <br>
-    <input type="checkbox" id="if13" value="Genomics Facility" onchange="infraAdd('Genomics Facility')"> Genomics Facility
+    <input type="checkbox" id="if13" value="Genomics Facility" onchange="infraAdd('Genomics Facility')"> Genomics
+    Facility
     <br>
-    <input type="checkbox" id="if14" value="Harpenden & Brooms Barn Farms" onchange="infraAdd('Harpenden & Brooms Barn Farms')"> Harpenden & Brooms Barn Farms
+    <input type="checkbox" id="if14" value="Harpenden & Brooms Barn Farms"
+      onchange="infraAdd('Harpenden & Brooms Barn Farms')"> Harpenden & Brooms Barn Farms
     <br>
     <input type="checkbox" id="if15" value="HCE & Insectary" onchange="infraAdd('HCE & Insectary')"> HCE & Insectary
     <br>
-    <input type="checkbox" id="if16" value="Lipidomics Facility" onchange="infraAdd('Lipidomics Facility')"> Lipidomics Facility
+    <input type="checkbox" id="if16" value="Lipidomics Facility" onchange="infraAdd('Lipidomics Facility')"> Lipidomics
+    Facility
     <br>
     <input type="checkbox" id="if17" value="North Wyke Farm" onchange="infraAdd('North Wyke Farm')"> North Wyke Farm
     <br>
-    <input type="checkbox" id="if18" value="Plant Transformation" onchange="infraAdd('Plant Transformation')"> Plant Transformation
+    <input type="checkbox" id="if18" value="Plant Transformation" onchange="infraAdd('Plant Transformation')"> Plant
+    Transformation
     <br>
-    <input type="checkbox" id="if19" value="Research Data and Systems" onchange="infraAdd('Research Data and Systems')"> Research Data and Systems
+    <input type="checkbox" id="if19" value="Research Data and Systems" onchange="infraAdd('Research Data and Systems')">
+    Research Data and Systems
     <br>
-    <input type="checkbox" id="if20" value="Statistics & Data Science" onchange="infraAdd('Statistics & Data Science')"> Statistics & Data Science
+    <input type="checkbox" id="if20" value="Statistics & Data Science" onchange="infraAdd('Statistics & Data Science')">
+    Statistics & Data Science
     <br>
   </div>
   <input type="text" id="field-infraUsed" name="infraUsed" value="{{ data.infraUsed }}" style="display: none;">
 
   <script>
-    if("{{data.infraUsed}}"){
-    var infra = "{{data.infraUsed}}".split(",");}
-    else{
+    if ("{{data.infraUsed}}") {
+      var infra = "{{data.infraUsed}}".split(",");
+    }
+    else {
       var infra = [];
     }
-    //console.log(infra);
     if (infra.length > 1) {
-      
+
       for (let x = 0; x < infra.length; x++) {
         checkInfra(infra[x]);
       }
@@ -1617,16 +1681,18 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
     function infraAdd(val) {
       let i = infra.indexOf(val);
       if (i > -1) {
+
         infra.splice(i, 1);
       }
       else {
+
         infra.push(val);
       }
       document.getElementById('field-infraUsed').value = infra;
     }
     function checkInfra(val) {
       if (val == "Long Term Experiments NBRI") {
-        
+
         document.getElementById("if1").checked = true;
       }
       else if (val == "North Wyke Farm Platform NBRI") {
@@ -1686,10 +1752,9 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
       else if (val == "Statistics & Data Science") {
         document.getElementById("if20").checked = true;
       }
-      else{
+      else {
         var index = infra.indexOf(val);
-        infra.splice(index,1);
-       // console.log(infra);
+        infra.splice(index, 1);
       }
     }
   </script>
