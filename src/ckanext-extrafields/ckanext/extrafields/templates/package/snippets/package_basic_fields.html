@@ -419,7 +419,8 @@
   <i class="fas fa-info-circle" title="The name of the entity that holds, archives, publishes, prints, distributes, releases, issues, or produces the resource. 
 For software, use Publisher for the code repository."></i>
   <br>
-  <input type="text" id="field-publisher" name="publisher" value="Rothamsted Research" class="control-medium">
+  <input type="text" id="field-publisher" name="publisher" value="Rothamsted Research" class="control-medium"
+    error="errors.publisher">
   <!-- Default Publisher value is set to Rothamsted-->
   <script>
     // Set the default value for the input field
@@ -428,7 +429,7 @@ For software, use Publisher for the code repository."></i>
   <label for="field-publicationYear">*Publication Year (Mandatory)</label>
   <i class="fas fa-info-circle" title="The year when the data was or will be made publicly available."></i><br>
   <input type="text" id="field-publicationYear" name="publicationYear" placeholder="YYYY"
-    value="{{ data.publicationYear }}" class="control-medium"> <br><br>
+    value="{{ data.publicationYear }}" class="control-medium" error="errors.publicationYear"> <br><br>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
 
@@ -648,7 +649,7 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
   <p style="color: grey; font-style: italic; font-size: small;"> Provide details about the funders and awards that have
     financially supported in creation of this resource
   </p>
-  
+
   <label for="field-awardNumberField">Award number</label>
   <i class="fas fa-info-circle" title="The code assigned by the funder to a sponsored award (grant)."></i><br>
   <input id="field-awardNumberField" name="awardNumberField" class="control-medium" style="width: 500px;"><br><br>
@@ -987,7 +988,6 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
   <button type="button" onclick="addRelated()">Add Resources</button>
 
   <pre id="relatedMessage"></pre>
-  <br>
   <div id="relatedDiv"></div>
   <style>
     #relatedDiv {
@@ -1050,11 +1050,15 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
         document.getElementById('relatedMessage').innerHTML = "Fill all the fields";
         return;
       }
+      document.getElementById('relatedMessage').innerHTML = "";
       relationTypeList.push(relt);
       idTypeList.push(idt);
       RRTypeList.push(rest);
       idList.push(rid);
       document.getElementById('field-relatedIdentifierField').value = '';
+      document.getElementById('field-relatedIdField').value = 'N/A';
+      document.getElementById('field-relationTypeField').value = 'N/A';
+      document.getElementById('field-relatedResourceTypeField').value = 'N/A';
       document.getElementById('field-relatedIdentifierType').value = idTypeList;
       document.getElementById('field-relationType').value = relationTypeList;
       document.getElementById('field-relatedResourceType').value = RRTypeList
@@ -1231,10 +1235,29 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
   <input type="text" id="field-valueUriField" name="valueUriField" style="width: 500px;  display: none;">
 
   <button type="button" onclick="addSubject()">Add</button>
-  <button type="button" onclick="clearSubject()">Clear All</button>
-  <button type="button" onclick="popSubject()">Clear Last Entry</button>
+
 
   <pre id="subjectMessage"></pre>
+  <div id="subjectDiv"></div>
+  <style>
+    #subjectDiv {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .subject-item {
+      background-color: #f0f0f0;
+      padding: 5px;
+      margin: 5px;
+      border-radius: 5px;
+      display: inline;
+    }
+
+    .subject-item .close-btn {
+      cursor: pointer;
+      margin-left: 5px;
+    }
+  </style>
   <script>
     let subData = [];
 
@@ -1269,6 +1292,8 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
   <!--                   -->
 
   <script>
+    const subjectList = document.getElementById('subjectDiv');
+
     var subScheme = [];
     var subUri = [];
     var valUri = [];
@@ -1278,7 +1303,9 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       subUri = "{{ data.subjectUri }}".split(",");
       valUri = "{{ data.valueUri }}".split(",");
       sub = "{{ data.subject }}".split(",");
-      displaySubject();
+      for(let i=0; i <sub.length;i++){
+      displaySubject(sub[i]);
+      }
     }
 
     function addSubject() {
@@ -1322,51 +1349,54 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       document.getElementById('field-subject').value = sub;
       // Print Message
       //keyword->tag
-      // var tag = "{{ data.tag_string }}" ;
+      // var tag = "{{ data.tag_string }}";
       // console.log(tag);
       // tag = tag.split(",");
       // tag.push(sub);
       // tag = tag.join(", ");
       // document.getElementById("field-tags").value = tag;
 
-      displaySubject();
+      displaySubject(s);
     }
 
-    function displaySubject() {
-      let p = document.getElementById("subjectMessage");
-      p.innerHTML = "Subjects:"
-      for (let i = 0; i < sub.length; i++) {
-        c = document.createTextNode(`${i + 1}: ${sub[i]}`);
-        p.append("\n");
-        p.append(c);
-      }
+    function displaySubject(s) {
+      let index = sub.indexOf(s);
+      const subjectItem = document.createElement("div");
+      subjectItem.classList.add('subject-item');
+      subjectItem.innerHTML = `
+               ${s} <span class="close-btn" onclick="removeSubjects(this)"><i class="fas fa-trash"></i></span>
+           `;
+      subjectList.appendChild(subjectItem);
+
     }
-    function popSubject() {
-      subScheme.pop();
-      subUri.pop();
-      valUri.pop();
-      sub.pop();
+
+    function removeSubjects(closeBtn) {
+      let tag = document.getElementById("field-tags").value;
+      //console.log(tag);
+      const subjectItem = closeBtn.parentNode;
+      subjectList.removeChild(subjectItem);
+      let s = subjectItem.textContent.trim();
+      console.log(s);
+      //s = s.slice(0, -1);
+      s = s.trim();
+      //console.log(id);
+      let index = sub.indexOf(s);
+      //console.log(index);
+      sub.splice(index, 1);
+      subScheme.splice(index, 1);
+      valUri.splice(index, 1);
+      subUri.splice(index, 1);
       document.getElementById('field-subjectScheme').value = subScheme;
       document.getElementById('field-subjectUri').value = subUri;
       document.getElementById('field-valueUri').value = valUri;
       document.getElementById('field-subject').value = sub;
-      displaySubject();
-    }
-    function clearSubject() {
-      subScheme = [];
-      subUri = [];
-      valUri = [];
-      sub = [];
-      document.getElementById('field-subjectScheme').value = subScheme;
-      document.getElementById('field-subjectUri').value = subUri;
-      document.getElementById('field-valueUri').value = valUri;
-      document.getElementById('field-subject').value = sub;
-      document.getElementById('field-subjectSchemeField').value = '';
-      document.getElementById('field-subjectUriField').value = '';
-      document.getElementById('field-valueUriField').value = '';
-      document.getElementById('field-subjectField').value = '';
-      document.getElementById('subjectMessage').innerHTML = "Cleared !!!";
-
+      
+      // let tagList = tag.split(",");
+      // let i = tagList.indexOf(s);
+      // console.log(i);
+      // tagList.splice(i, 1);
+      // let tagS = tagList.join(', ');
+      // document.getElementById("field-tags").value = tagS;
     }
   </script>
   <hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
