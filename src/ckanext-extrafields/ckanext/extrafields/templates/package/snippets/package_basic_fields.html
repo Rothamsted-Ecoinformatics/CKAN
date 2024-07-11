@@ -95,6 +95,7 @@
           }
         });
       });
+
   </script>
 
 
@@ -1303,8 +1304,8 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       subUri = "{{ data.subjectUri }}".split(",");
       valUri = "{{ data.valueUri }}".split(",");
       sub = "{{ data.subject }}".split(",");
-      for(let i=0; i <sub.length;i++){
-      displaySubject(sub[i]);
+      for (let i = 0; i < sub.length; i++) {
+        displaySubject(sub[i]);
       }
     }
 
@@ -1349,11 +1350,17 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       document.getElementById('field-subject').value = sub;
       // Print Message
       //keyword->tag
-      // var tag = "{{ data.tag_string }}";
-      // console.log(tag);
+      // var tag = [];
+      // if("data.tag_string"){
+      // tag =  document.getElementById("field-tags").value;
       // tag = tag.split(",");
+      // }
+      // console.log(tag);
+
       // tag.push(sub);
-      // tag = tag.join(", ");
+      // if(tag.length>1){
+      // tag = tag.join(",");
+      // }
       // document.getElementById("field-tags").value = tag;
 
       displaySubject(s);
@@ -1376,7 +1383,7 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       const subjectItem = closeBtn.parentNode;
       subjectList.removeChild(subjectItem);
       let s = subjectItem.textContent.trim();
-      console.log(s);
+     // console.log(s);
       //s = s.slice(0, -1);
       s = s.trim();
       //console.log(id);
@@ -1390,12 +1397,12 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       document.getElementById('field-subjectUri').value = subUri;
       document.getElementById('field-valueUri').value = valUri;
       document.getElementById('field-subject').value = sub;
-      
+
       // let tagList = tag.split(",");
       // let i = tagList.indexOf(s);
       // console.log(i);
       // tagList.splice(i, 1);
-      // let tagS = tagList.join(', ');
+      // let tagS = tagList.join(',');
       // document.getElementById("field-tags").value = tagS;
     }
   </script>
@@ -1556,69 +1563,156 @@ OGL:      This license allows you to copy, publish, distribute and transmit the 
   <br>
   <input type="text" id="field-associatedNoteField" name="associatedNoteField" style="width: 500px;"> <br>
   <button type="button" onclick="addNoteBooks()"> Add </button>
-  <button type="button" onclick="clearNoteBooks()">Clear</button>
-  <pre id="notebookAdded"> Associated Notes: {{ data.associatedNote }} </pre>
+  <p id="notebookError"></p>
+  <div id="notebookDiv"></div>
+  <style>
+    #notebookDiv {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .notebook-item {
+      background-color: #f0f0f0;
+      padding: 5px;
+      margin: 5px;
+      border-radius: 5px;
+      display: inline;
+    }
+
+    .notebook-item .close-btn {
+      cursor: pointer;
+      margin-left: 5px;
+    }
+  </style>
   <input type="text" id="field-associatedNote" name="associatedNote" style="display:none;"
     value="{{ data.associatedNote }}">
   <script>
     var notes = [];
+    const notebookList = document.getElementById('notebookDiv');
 
-    function addNoteBooks() {
-      let notebook = document.getElementById("field-associatedNoteField").value;
-      notes.push(notebook);
-      document.getElementById("field-associatedNote").value = notes;
-      document.getElementById('notebookAdded').innerHTML = "Associated Notebooks: " + notes;
-      document.getElementById("field-associatedNoteField").value = "";
+    if ("{{data.associatedNote}}") {
+      notes = "{{data.associatedNote}}".split(",");
+      for (let i = 0; i < notes.length; i++) {
+        displayNotebook(notes[i]);
+      }
+
     }
+    function addNoteBooks() {
 
-    function clearNoteBooks() {
-
-      notes = [];
+      let nb = document.getElementById("field-associatedNoteField").value;
+      if (nb) {
+        notes.push(nb);
+      }
       document.getElementById("field-associatedNote").value = notes;
-      document.getElementById('notebookAdded').innerHTML = "Cleared !!!";
+      //document.getElementById('notebookAdded').innerHTML = "Associated Notebooks: " + notes;
       document.getElementById("field-associatedNoteField").value = "";
+      displayNotebook(nb);
+    }
+    function displayNotebook(nb) {
+      let index = notes.indexOf(nb);
+      const notebookItem = document.createElement("div");
+      notebookItem.classList.add('notebook-item');
+      notebookItem.innerHTML = `
+               ${nb} <span class="close-btn" onclick="removeNotebook(this)"><i class="fas fa-trash"></i></span>
+           `;
+      notebookList.appendChild(notebookItem);
+    }
+    function removeNotebook(closeBtn) {
+      const notebookItem = closeBtn.parentNode;
+      notebookList.removeChild(notebookItem);
+      let s = notebookItem.textContent.trim();
+      //s = s.slice(0, -1);
+      s = s.trim();
+      //console.log(id);
+      let index = notes.indexOf(s);
+      //console.log(index);
+      notes.splice(index, 1);
+      document.getElementById("field-associatedNote").value = notes;
     }
 
   </script>
 
+<br>
+<!-- Data Location Field -->
+<!--                     -->
+<!--                     -->
 
-  <!-- Data Location Field -->
-  <!--                     -->
-  <!--                     -->
-
-  <label for="field-dataLocationField"> *Data Locations (Mandatory)</label>
-  <i class="fas fa-info-circle" title="Full path describing the location of the resource. 
+<label for="field-dataLocationField"> *Data Locations (Mandatory)</label>
+<i class="fas fa-info-circle" title="Full path describing the location of the resource. 
 This could be a network shared drive, Sharepoint, Teams or electronic research notebook URI. E.g. \\salt\Data1"></i>
-  <br>
-  <input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
-  <button type="button" onclick="addDataLocation()"> Add </button>
-  <button type="button" onclick="clearDataLocation()">Clear</button>
-  <pre id="dataLocationAdded"> Data Locations: {{ data.dataLocation }} </pre>
-  <input type="text" id="field-dataLocation" name="dataLocation" style="display:none;" value="{{ data.dataLocation }}">
+<br>
+<input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
+<button type="button" onclick="addDataLocation()"> Add </button>
+<br><br>
+<div id="dataLocDiv"></div>
+<input type="text" id="field-dataLocation" name="dataLocation" style="display:none;" value="{{ data.dataLocation }}">
+<style>
+    #dataLoctDiv {
+        display: flex;
+        flex-wrap: wrap;
+    }
 
-  <script>
+    .dataLoc-item {
+        background-color: #f0f0f0;
+        padding: 5px;
+        margin: 5px;
+        border-radius: 5px;
+        display: inline;
+    }
+
+    .dataLoc-item .close-btn {
+        cursor: pointer;
+        margin-left: 5px;
+    }
+</style>
+<script>
     var dataLoc = [];
 
+    const dataLocList = document.getElementById('dataLocDiv');
+
+    if ("{{data.dataLocation}}") {
+        dataLoc = "{{data.dataLocation}}".split(",");
+        for (let i = 0; i < dataLoc.length; i++) {
+            displayDataLoc(dataLoc[i]);
+        }
+    }
+
     function addDataLocation() {
-      let loc = document.getElementById('field-dataLocationField').value;
-      dataLoc.push(loc);
-      document.getElementById('field-dataLocation').value = dataLoc;
-      document.getElementById('dataLocationAdded').innerHTML = "Data Locations Added:" + dataLoc
-      document.getElementById('field-dataLocationField').value = "";
+        let loc = document.getElementById('field-dataLocationField').value;
+        dataLoc.push(loc);
+        document.getElementById('field-dataLocation').value = dataLoc;
+        document.getElementById('field-dataLocationField').value = "";
+        displayDataLoc(loc);
     }
 
-    function clearDataLocation() {
+    function displayDataLoc(loc){
+        let index = dataLoc.indexOf(loc);
+        const dataLocItem = document.createElement("div");
+        dataLocItem.classList.add('dataLoc-item');
+        dataLocItem.innerHTML = `
+               ${loc} <span class="close-btn" onclick="removeDataLoc(this)"><i class="fas fa-trash"></i></span>
+           `;
+        dataLocList.appendChild(dataLocItem);
+    }
 
-      dataLoc = [];
-      document.getElementById('field-dataLocation').value = dataLoc;
-      document.getElementById('field-dataLocationField').value = "";
-      document.getElementById('dataLocationAdded').innerHTML = "Cleared !!!";
+    function removeDataLoc(closeBtn) {
+
+        const dataLocItem = closeBtn.parentNode;
+        dataLocList.removeChild(dataLocItem);
+        let s = dataLocItem.textContent.trim();
+       
+        s = s.trim();
+        //console.log(id);
+        let index = dataLoc.indexOf(s);
+        //console.log(index);
+        dataLoc.splice(index, 1);
+        document.getElementById("field-dataLocation").value = dataLoc;
 
 
     }
 
-  </script>
-
+</script>
+<br>
 
   <!-- Responsible Person Field -->
   <!--                          -->
