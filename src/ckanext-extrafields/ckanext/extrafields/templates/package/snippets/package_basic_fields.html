@@ -626,9 +626,36 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
   <br>
   <input type="date" id="field-withdrawnDate" name="withdrawnDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.withdrawnDate }}"><br><br>
-
+ 
+  <div id="withdrawalReasonDiv" style="display: none;">
+    <label for="field-withdrawalReason">Reason for Withdrawal</label><br>
+    <input name="withdrawalReason" id="field-withdrawalReason" class="control-medium"
+      style="width:500px; height:40px;" value="{{data.withdrawalReason}}">
+  </div>
 
   <script>
+
+    if("{{data.withdrawalReason}}"){
+      //document.getElementById("clearWithdrawal").style.display = "block";
+      document.getElementById('withdrawalReasonDiv').style.display = 'block';
+    }
+
+    // Show/hide div based on date selection
+    document.getElementById('field-withdrawnDate').addEventListener('change', () => {
+      const selectedDate = document.getElementById('field-withdrawnDate').value;
+      if (selectedDate) {
+        document.getElementById('withdrawalReasonDiv').style.display = 'block';
+       // document.getElementById("clearWithdrawal").style.display = "block";
+      } else {
+        document.getElementById('withdrawalReasonDiv').style.display = 'none';
+       // document.getElementById("clearWithdrawal").style.display = "none";
+       // document.getElementById('field-withdrawnDate').value = ''; // Clear the date
+        document.getElementById("field-withdrawalReason").value = "";
+      }
+    });
+
+
+
     // Script to set submitted date to today's date 
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
@@ -1131,8 +1158,6 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
 
   <!--      World Map         -->
   <!-- Load Leaflet -->
-
-
   <br><br>
   <label for="'mapid">Select the location in the map to fill Latitude and Longitude Automatically</label><br>
   <div id="mapid"></div>
@@ -1383,7 +1408,7 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       const subjectItem = closeBtn.parentNode;
       subjectList.removeChild(subjectItem);
       let s = subjectItem.textContent.trim();
-     // console.log(s);
+      // console.log(s);
       //s = s.slice(0, -1);
       s = s.trim();
       //console.log(id);
@@ -1632,87 +1657,87 @@ OGL:      This license allows you to copy, publish, distribute and transmit the 
 
   </script>
 
-<br>
-<!-- Data Location Field -->
-<!--                     -->
-<!--                     -->
+  <br>
+  <!-- Data Location Field -->
+  <!--                     -->
+  <!--                     -->
 
-<label for="field-dataLocationField"> *Data Locations (Mandatory)</label>
-<i class="fas fa-info-circle" title="Full path describing the location of the resource. 
+  <label for="field-dataLocationField"> *Data Locations (Mandatory)</label>
+  <i class="fas fa-info-circle" title="Full path describing the location of the resource. 
 This could be a network shared drive, Sharepoint, Teams or electronic research notebook URI. E.g. \\salt\Data1"></i>
-<br>
-<input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
-<button type="button" onclick="addDataLocation()"> Add </button>
-<br><br>
-<div id="dataLocDiv"></div>
-<input type="text" id="field-dataLocation" name="dataLocation" style="display:none;" value="{{ data.dataLocation }}">
-<style>
+  <br>
+  <input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
+  <button type="button" onclick="addDataLocation()"> Add </button>
+  <br><br>
+  <div id="dataLocDiv"></div>
+  <input type="text" id="field-dataLocation" name="dataLocation" style="display:none;" value="{{ data.dataLocation }}">
+  <style>
     #dataLoctDiv {
-        display: flex;
-        flex-wrap: wrap;
+      display: flex;
+      flex-wrap: wrap;
     }
 
     .dataLoc-item {
-        background-color: #f0f0f0;
-        padding: 5px;
-        margin: 5px;
-        border-radius: 5px;
-        display: inline;
+      background-color: #f0f0f0;
+      padding: 5px;
+      margin: 5px;
+      border-radius: 5px;
+      display: inline;
     }
 
     .dataLoc-item .close-btn {
-        cursor: pointer;
-        margin-left: 5px;
+      cursor: pointer;
+      margin-left: 5px;
     }
-</style>
-<script>
+  </style>
+  <script>
     var dataLoc = [];
 
     const dataLocList = document.getElementById('dataLocDiv');
 
     if ("{{data.dataLocation}}") {
-        dataLoc = "{{data.dataLocation}}".split(",");
-        for (let i = 0; i < dataLoc.length; i++) {
-            displayDataLoc(dataLoc[i]);
-        }
+      dataLoc = "{{data.dataLocation}}".split(",");
+      for (let i = 0; i < dataLoc.length; i++) {
+        displayDataLoc(dataLoc[i]);
+      }
     }
 
     function addDataLocation() {
-        let loc = document.getElementById('field-dataLocationField').value;
-        dataLoc.push(loc);
-        document.getElementById('field-dataLocation').value = dataLoc;
-        document.getElementById('field-dataLocationField').value = "";
-        displayDataLoc(loc);
+      let loc = document.getElementById('field-dataLocationField').value;
+      dataLoc.push(loc);
+      document.getElementById('field-dataLocation').value = dataLoc;
+      document.getElementById('field-dataLocationField').value = "";
+      displayDataLoc(loc);
     }
 
-    function displayDataLoc(loc){
-        let index = dataLoc.indexOf(loc);
-        const dataLocItem = document.createElement("div");
-        dataLocItem.classList.add('dataLoc-item');
-        dataLocItem.innerHTML = `
+    function displayDataLoc(loc) {
+      let index = dataLoc.indexOf(loc);
+      const dataLocItem = document.createElement("div");
+      dataLocItem.classList.add('dataLoc-item');
+      dataLocItem.innerHTML = `
                ${loc} <span class="close-btn" onclick="removeDataLoc(this)"><i class="fas fa-trash"></i></span>
            `;
-        dataLocList.appendChild(dataLocItem);
+      dataLocList.appendChild(dataLocItem);
     }
 
     function removeDataLoc(closeBtn) {
 
-        const dataLocItem = closeBtn.parentNode;
-        dataLocList.removeChild(dataLocItem);
-        let s = dataLocItem.textContent.trim();
-       
-        s = s.trim();
-        //console.log(id);
-        let index = dataLoc.indexOf(s);
-        //console.log(index);
-        dataLoc.splice(index, 1);
-        document.getElementById("field-dataLocation").value = dataLoc;
+      const dataLocItem = closeBtn.parentNode;
+      dataLocList.removeChild(dataLocItem);
+      let s = dataLocItem.textContent.trim();
+
+      s = s.trim();
+      //console.log(id);
+      let index = dataLoc.indexOf(s);
+      //console.log(index);
+      dataLoc.splice(index, 1);
+      document.getElementById("field-dataLocation").value = dataLoc;
 
 
     }
 
-</script>
-<br>
+  </script>
+  <br>
 
   <!-- Responsible Person Field -->
   <!--                          -->

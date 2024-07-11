@@ -63,6 +63,16 @@
       cell3.innerHTML = affils[i];
     }
   </script>
+  <div id="withdrawalMessage" style="display: none;"></div>
+  <script>
+    let msg = "{{pkg_dict.withdrawalReason}}".trim();
+    if(msg !=""){
+      
+      document.getElementById("withdrawalMessage").style.display = "block";
+      console.log("{{pkg_dict.withdrawalReason}}");
+      document.getElementById("withdrawalMessage").innerHTML = "This Dataset is withdrawn by the author. The reason given is: " +msg + ". Contact the author for more details";
+    }
+  </script><br>
   <!-- Abstract, Methods and Technical Information  -->
   <div><strong> Abstract </strong></div>
   <p style="background-color: #f3f1f1;" id="p-abstract">{{ pkg_dict.abstract }}</p>
@@ -242,6 +252,12 @@
       <th>Funder ID </th>
       <td>
         <pre id="funderField"></pre>
+      </td>
+    </tr>
+      <tr>
+      <th> Withdrawal Reason</th>
+      <td>
+        {{pkg_dict.withdrawalReason}}
       </td>
     </tr>
 
