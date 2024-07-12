@@ -1840,6 +1840,9 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
     <input type="checkbox" id="if16" value="Lipidomics Facility" onchange="infraAdd('Lipidomics Facility')"> Lipidomics
     Facility
     <br>
+    <input type="checkbox" id="if21" value="Metabolomics Facility" onchange="infraAdd('Metabolomics Facility')"> Metabolomics
+    Facility
+    <br>
     <input type="checkbox" id="if17" value="North Wyke Farm" onchange="infraAdd('North Wyke Farm')"> North Wyke Farm
     <br>
     <input type="checkbox" id="if18" value="Plant Transformation" onchange="infraAdd('Plant Transformation')"> Plant
@@ -1926,7 +1929,7 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
       else if (val == "HCE & Insectary") {
         document.getElementById("if15").checked = true;
       }
-      else if (val == "Lipidomics Facilit") {
+      else if (val == "Lipidomics Facility") {
         document.getElementById("if16").checked = true;
       }
       else if (val == "North Wyke Farm") {
@@ -1940,6 +1943,9 @@ This could be a network shared drive, Sharepoint, Teams or electronic research n
       }
       else if (val == "Statistics & Data Science") {
         document.getElementById("if20").checked = true;
+      }
+      else if (val == "Metabolomics Facility") {
+        document.getElementById("if21").checked = true;
       }
       else {
         var index = infra.indexOf(val);
