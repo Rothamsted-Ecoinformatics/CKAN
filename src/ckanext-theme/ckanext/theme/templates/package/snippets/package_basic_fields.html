@@ -3,7 +3,7 @@
 {% set default_group_type = h.default_group_type('organization') %}
 
 {% block package_basic_fields_title %}
-  {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large'], attrs={'data-module': 'slug-preview-target', 'class': 'form-control'}) }}
+  {{ form.input('title', id='field-title', label=_('Dataset Title'), placeholder=_('eg. A descriptive titleeee'), value=data.title, error=errors.title, classes=['control-full', 'control-large'], attrs={'data-module': 'slug-preview-target', 'class': 'form-control'}) }}
 {% endblock %}
 
 {% block package_basic_fields_url %}
@@ -21,10 +21,17 @@
   {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes) }}
 {% endblock %} -->
 
+<div id="tagdiv">
 {% block package_basic_fields_tags %}
   {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
-  {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
+  {{ form.input('tag_string', id='field-tags', label=_(' tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
 {% endblock %}
+</div>
+<script>
+      //console.log(document.getElementById("field-tags").value);
+
+     document.getElementById("tagdiv").style.display = "none";
+</script>
 
 <!-- {% block package_basic_fields_license %}
   <div class="form-group control-full">

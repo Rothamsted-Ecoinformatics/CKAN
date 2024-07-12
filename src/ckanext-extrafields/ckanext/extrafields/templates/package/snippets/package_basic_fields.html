@@ -626,16 +626,16 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
   <br>
   <input type="date" id="field-withdrawnDate" name="withdrawnDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.withdrawnDate }}"><br><br>
- 
+
   <div id="withdrawalReasonDiv" style="display: none;">
     <label for="field-withdrawalReason">Reason for Withdrawal</label><br>
-    <input name="withdrawalReason" id="field-withdrawalReason" class="control-medium"
-      style="width:500px; height:40px;" value="{{data.withdrawalReason}}">
+    <input name="withdrawalReason" id="field-withdrawalReason" class="control-medium" style="width:500px; height:40px;"
+      value="{{data.withdrawalReason}}">
   </div>
 
   <script>
 
-    if("{{data.withdrawalReason}}"){
+    if ("{{data.withdrawalReason}}") {
       //document.getElementById("clearWithdrawal").style.display = "block";
       document.getElementById('withdrawalReasonDiv').style.display = 'block';
     }
@@ -645,11 +645,11 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       const selectedDate = document.getElementById('field-withdrawnDate').value;
       if (selectedDate) {
         document.getElementById('withdrawalReasonDiv').style.display = 'block';
-       // document.getElementById("clearWithdrawal").style.display = "block";
+        // document.getElementById("clearWithdrawal").style.display = "block";
       } else {
         document.getElementById('withdrawalReasonDiv').style.display = 'none';
-       // document.getElementById("clearWithdrawal").style.display = "none";
-       // document.getElementById('field-withdrawnDate').value = ''; // Clear the date
+        // document.getElementById("clearWithdrawal").style.display = "none";
+        // document.getElementById('field-withdrawnDate').value = ''; // Clear the date
         document.getElementById("field-withdrawalReason").value = "";
       }
     });
@@ -1166,12 +1166,39 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
   <input type="text" id="field-geoLatitude" name="geoLatitude" value="{{ data.geoLatitude }}"><br><br>
   <label for="field-geoLongitude"> Longitude </label><br>
   <input type="text" id="field-geoLongitude" name="geoLongitude" value="{{ data.geoLongitude }}"><br><br>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+</head>
   <style>
     #mapid {
       height: 400px;
     }
   </style>
 
+  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+  <!-- Geo Location Box -->
+  <!--                  -->
+  <label><strong> Geolocation Box (Optional)</strong></label>
+  <i class="fas fa-info-circle" title="The spatial limits of a box.
+ A box is defined by two geographic points, its lower left corner and the top right corner"></i>
+  <br><br>
+
+  <label for="field-geoLowLeftLatitude"> Geo Latitude Lower Left Corner </label><br>
+  <input type="text" id="field-geoLowLeftLatitude" name="geoLowLeftLatitude"
+    value="{{ data.geoLowLeftLatitude }}"><br><br>
+
+  <label for="field-geoLowLeftLongitude"> Geo Longitude Lower Left Corner </label><br>
+  <input type="text" id="field-geoLowLeftLongitude" name="geoLowLeftLongitude"
+    value="{{ data.geoLowLeftLongitude }}"><br><br>
+
+  <label for="field-geoTopRightLatitude"> Geo Latitude Top Right Corner </label><br>
+  <input type="text" id="field-geoTopRightLatitude" name="geoTopRightLatitude"
+    value="{{ data.geoTopRightLatitude }}"><br><br>
+
+  <label for="field-geoTopRightLongitude"> Geo Longitude Top Right Corner </label><br>
+  <input type="text" id="field-geoTopRightLongitude" name="geoTopRightLongitude"
+    value="{{ data.geoTopRightLongitude }}"><br><br>
+  <hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
   <script>
     var latitude;
     var logitude;
@@ -1189,6 +1216,41 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       document.getElementById('field-geoLatitude').value = latitude.toFixed(4);
       document.getElementById('field-geoLongitude').value = longitude.toFixed(4);
     });
+    // Initialize the draw control and add it to the map
+    // var drawControl = new L.Control.Draw({
+    //   draw: {
+    //     polygon: false,
+    //     polyline: false,
+    //     circle: false,
+    //     marker: false,
+    //     circlemarker: false,
+    //     rectangle: true
+    //   }
+    // });
+    // mymap.addControl(drawControl);  
+    //     // Handle the rectangle drawing event
+    //     mymap.on(L.Draw.Event.CREATED, function (e) {
+    //     var type = e.layerType,
+    //         layer = e.layer;
+
+    //     if (type == 'rectangle') {
+    //         var bounds = layer.getBounds();
+    //         var lowerLeft = bounds.getSouthWest();
+    //         var upperRight = bounds.getNorthEast();
+
+    //         document.getElementById('field-geoLowLeftLatitude').value = lowerLeft.lat.toFixed(6);
+    //         document.getElementById('field-geoLowLeftLongitude').value = lowerLeft.lng.toFixed(6);
+
+    //         document.getElementById('field-geoTopRightLatitude').value = upperRight.lat.toFixed(6);
+    //         document.getElementById('field-geoTopRightLongitude').value = upperRight.lng.toFixed(6);
+
+    //         document.getElementById('field-geoLatitude').value = "";
+    //         document.getElementById('field-geoLongitude').value = "";
+
+    //     }
+
+    //     mymap.addLayer(layer);
+    // });
   </script>
 
   <!-- Add 2 buttons to this map such that when clicked, the map will zoom to Harpenden UK and North Wyke UK -->
@@ -1221,30 +1283,7 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
   </script>
 
 
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
-  <!-- Geo Location Box -->
-  <!--                  -->
-  <label><strong> Geolocation Box (Optional)</strong></label>
-  <i class="fas fa-info-circle" title="The spatial limits of a box.
- A box is defined by two geographic points, its lower left corner and the top right corner"></i>
-  <br><br>
-
-  <label for="field-geoLowLeftLatitude"> Geo Latitude Lower Left Corner </label><br>
-  <input type="text" id="field-geoLowLeftLatitude" name="geoLowLeftLatitude"
-    value="{{ data.geoLowLeftLatitude }}"><br><br>
-
-  <label for="field-geoLowLeftLongitude"> Geo Longitude Lower Left Corner </label><br>
-  <input type="text" id="field-geoLowLeftLongitude" name="geoLowLeftLongitude"
-    value="{{ data.geoLowLeftLongitude }}"><br><br>
-
-  <label for="field-geoTopRightLatitude"> Geo Latitude Top Right Corner </label><br>
-  <input type="text" id="field-geoTopRightLatitude" name="geoTopRightLatitude"
-    value="{{ data.geoTopRightLatitude }}"><br><br>
-
-  <label for="field-geoTopRightLongitude"> Geo Longitude Top Right Corner </label><br>
-  <input type="text" id="field-geoTopRightLongitude" name="geoTopRightLongitude"
-    value="{{ data.geoTopRightLongitude }}"><br><br>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
+  
   <!-- Subject Fields -->
   <!--                 -->
   <!--                 -->
@@ -1375,18 +1414,18 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       document.getElementById('field-subject').value = sub;
       // Print Message
       //keyword->tag
-      // var tag = [];
-      // if("data.tag_string"){
-      // tag =  document.getElementById("field-tags").value;
-      // tag = tag.split(",");
-      // }
-      // console.log(tag);
+      var tag = [];
+      if("data.tag_string"){
+      tag =  document.getElementById("field-tags").value;
+      tag = tag.split(",");
+      }
+      console.log(tag);
 
-      // tag.push(sub);
-      // if(tag.length>1){
-      // tag = tag.join(",");
-      // }
-      // document.getElementById("field-tags").value = tag;
+      tag.push(sub);
+      if(tag.length>1){
+      tag = tag.join(",");
+      }
+      document.getElementById("field-tags").value = tag;
 
       displaySubject(s);
     }
@@ -1423,12 +1462,12 @@ For example: a Dataset resource might be a survey dataset, a plant phenotyping d
       document.getElementById('field-valueUri').value = valUri;
       document.getElementById('field-subject').value = sub;
 
-      // let tagList = tag.split(",");
-      // let i = tagList.indexOf(s);
-      // console.log(i);
-      // tagList.splice(i, 1);
-      // let tagS = tagList.join(',');
-      // document.getElementById("field-tags").value = tagS;
+      let tagList = tag.split(",");
+      let i = tagList.indexOf(s);
+      console.log(i);
+      tagList.splice(i, 1);
+      let tagS = tagList.join(',');
+      document.getElementById("field-tags").value = tagS;
     }
   </script>
   <hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
@@ -1581,6 +1620,7 @@ OGL:      This license allows you to copy, publish, distribute and transmit the 
   </script><br>
   <!-- Associated Research Notebooks Field -->
   <!--                                     -->
+
 
   <label for="field-associatedNotesField">Associated Research Notebooks (Optional) </label>
   <i class="fas fa-info-circle"
