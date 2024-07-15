@@ -21,9 +21,7 @@
       padding: 8px;
     }
 
-    tr:nth-child(even) {
-      background-color: #dddddd;
-    }
+
 
     pre {
       color: rgb(0, 0, 0);
@@ -37,7 +35,7 @@
   </style>
   <div><strong>Authors</strong></div>
   <table id="authorTable" style="display: table;">
-    <tr>
+    <tr style="color: #0e6633; font-family: Arial;">
       <th>Name</th>
       <th>ORCID</th>
       <th>Affiliation</th>
@@ -53,15 +51,21 @@
 
     let table = document.getElementById("authorTable");
     for (let i = 0; i < name.length; i++) {
-      row = table.insertRow();
-      cell1 = row.insertCell();
-      cell2 = row.insertCell();
-      cell3 = row.insertCell();
+    let row = table.insertRow();
+    let cell1 = row.insertCell();
+    let cell2 = row.insertCell();
+    let cell3 = row.insertCell();
 
-      cell1.innerHTML = name[i];
-      cell2.innerHTML = orcid[i];
-      cell3.innerHTML = affils[i];
+    cell1.innerHTML = name[i];
+    // Update the ORCID value to include the URL and make it a clickable link
+    if(orcid[i] != "NONE"){
+    cell2.innerHTML = '<a href="https://orcid.org/' + orcid[i] + '" target="_blank">https://orcid.org/' + orcid[i] + '</a>';
     }
+    else{
+      cell2.innerHTML = "NONE";
+    }
+    cell3.innerHTML = affils[i];
+  }
   </script>
   <div id="withdrawalMessage" style="display: none;"></div>
   <script>
@@ -75,25 +79,23 @@
   </script><br>
   <!-- Abstract, Methods and Technical Information  -->
   <div><strong> Abstract </strong></div>
-  <p style="background-color: #f3f1f1;" id="p-abstract">{{ pkg_dict.abstract }}</p>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+  <p  id="p-abstract">{{ pkg_dict.abstract }}</p>
 
   <div><strong> Methods </strong></div>
-  <p style="background-color: #f3f1f1;">{{ pkg_dict.methods }}</p>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+  <p>{{ pkg_dict.methods }}</p>
 
 
   <div><strong> Technical Information </strong></div>
-  <p style="background-color: #f3f1f1;">{{ pkg_dict.technicalInfo }}</p>
+  <p>{{ pkg_dict.technicalInfo }}</p>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <!-- Spatial Information -->
   <div><strong> Spatial Information </strong></div>
-  <pre style="background-color: #f3f1f1;">
+  <pre >
   <strong>Geolocation Point</strong> 
     (Latitude, Longitude) : ( {{ pkg_dict.geoLatitude }}, {{ pkg_dict.geoLongitude }} ) 
   </pre>
-  <pre id="geoBox" style="display: none; background-color: #f3f1f1;">
+  <pre id="geoBox" style="display: none;">
   <strong>Geolocation Box:</strong>
      Lower Left Corner (Latitude,Longitude): ( {{ pkg_dict.geoLowLeftLatitude }}, {{ pkg_dict.geoLowLeftLongitude }} ) 
      Top Right Corner (Latitude,Longitude): ( {{ pkg_dict.geoTopRightLatitude }}, {{ pkg_dict.geoTopRightLongitude }} ) 
@@ -141,15 +143,15 @@
   <!-- Collection Dates -->
   <div><strong> Collection Date </strong></div>
   {% if pkg_dict.collectionEndDate %}
-  <p style="background-color: #f3f1f1;">{{ pkg_dict.collectionStartDate }} to {{ pkg_dict.collectionEndDate }} </p>
+  <p >{{ pkg_dict.collectionStartDate }} to {{ pkg_dict.collectionEndDate }} </p>
   {%else%}
-  <p style="background-color: #f3f1f1;"> {{ pkg_dict.collectionStartDate }} </p>
+  <p > {{ pkg_dict.collectionStartDate }} </p>
   {%endif%}
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <!-- Related Resource Fields -->
   <div><strong> Related Resources</strong> </div>
-  <pre id="relatedResourceField" style="background-color: #f3f1f1;"></pre>
+  <pre id="relatedResourceField"></pre>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <script>
@@ -170,7 +172,7 @@
   </script>
   <!-- Funder Information -->
   <div><strong> Funder Information</strong></div>
-  <pre id="funderInfo" style="background-color: #f3f1f1;"></pre>
+  <pre id="funderInfo" ></pre>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <script>
@@ -192,7 +194,7 @@
 
   <!-- Contributor Information -->
   <div><strong> Contributors</strong></div>
-  <pre id="contributorDetails" style="background-color: #f3f1f1;"></pre>
+  <pre id="contributorDetails" ></pre>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <script>
@@ -217,7 +219,7 @@
     <tr>
       <th>
 
-        <strong style="color: green; font-family: Arial;"> Private Information </strong>
+        <strong style="color: #0e6633; font-family: Arial;"> Private Information </strong>
 
       </th>
       <td></td>
@@ -295,7 +297,10 @@
       let author_org = "{{ pkg_dict.creatorAffiliation }}".split(",");
       let author_id = "{{ pkg_dict.nameIdentifier }}".split(",");
       let subs = "{{pkg_dict.subject}}".split(",");
-      let abss = document.getElementById("p-abstract").innerHTML;
+      let abss = document.getElementById("p-abstract").innerHTML.trim();
+      console.log(abss);
+      abss = abss.trim();
+      console.log(abss);
       let licenseText = "{{ pkg_dict.license }}";
       let licenseLink = "";
       if (licenseText == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)") {
@@ -329,8 +334,9 @@
         "subjects": subs,
         "version": "{{pkg_dict.version}}",
         "license": licenseLink,
+        "description": abss,
         "datePublished": "{{pkg_dict.submittedDate}}",
-        "description": abss.trim()
+        
       }
       // Convert the JSON-LD structure to a string
       const jsonldScript = JSON.stringify(jsonld, null, 2);
