@@ -73,7 +73,6 @@
     if(msg !=""){
       
       document.getElementById("withdrawalMessage").style.display = "block";
-      console.log("{{pkg_dict.withdrawalReason}}");
       document.getElementById("withdrawalMessage").innerHTML = "This Dataset is withdrawn by the author. The reason given is: " +msg + ". Contact the author for more details";
     }
   </script><br>
@@ -298,22 +297,17 @@
       let author_id = "{{ pkg_dict.nameIdentifier }}".split(",");
       let subs = "{{pkg_dict.subject}}".split(",");
       let abss = document.getElementById("p-abstract").innerHTML.trim();
-      console.log(abss);
       abss = abss.trim();
-      console.log(abss);
       let licenseText = "{{ pkg_dict.license }}";
       let licenseLink = "";
       if (licenseText == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)") {
         licenseLink = "https://creativecommons.org/licenses/by-nc/4.0/";
-        console.log("1");
       }
       else if (licenseText == "Creative Commons Attribution Licence (CC BY 4.0)") {
         licenseLink = "https://creativecommons.org/licenses/by/4.0/";
-        console.log("2");
       }
       else if (licenseText == "Open Government Licence (OGL)") {
         licenseLink = "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/";
-        console.log("3");
       }
 
       //Create JSON-LD Structure
