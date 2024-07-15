@@ -23,7 +23,7 @@
     {% block package_notes %}
       {% if pkg.notes %}
         <div class="notes embedded-content">
-          {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
+          {{ h.render_markdown(h.get_translated(pkg, 'abstract')) }}
         </div>
       {% endif %}
     {% endblock %}
@@ -31,16 +31,18 @@
     <span class="insert-comment-thread"></span>
   {% endblock %}
 
+
   {% block package_resources %}
-    {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
+      {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
   {% endblock %}
 
-  {% block package_tags %}
+  <!-- {% block package_tags %}
     {% snippet "package/snippets/tags.html", tags=pkg.tags %}
-  {% endblock %}
+  {% endblock %} -->
 
   {% block package_additional_info %}
     {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
   {% endblock %}
 
 {% endblock %}
+
