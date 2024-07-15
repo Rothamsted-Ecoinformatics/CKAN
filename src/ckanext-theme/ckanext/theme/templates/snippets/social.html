@@ -2,13 +2,17 @@
 {% block social %}
   <section class="module module-narrow social">
     {% block social_title %}
-      <h2 class="module-heading"><i class="fa fa-share-square"></i> {{ _('Social') }}</h2>
+      <h2 class="module-heading"><i class="fa fa-share-square-o"></i> {{ _('Social') }}</h2>
     {% endblock %}
     {% block social_nav %}
       <ul class="nav nav-simple">
-        <li class="nav-item"><a href="https://twitter.com/share?url={{ current_url }}" target="_blank"><i class="fa-brands fa-twitter-square"></i> Twitter</a></li>
+        <li class="nav-item"><a href="https://twitter.com/share?url={{ current_url }}" target="_blank">
+          <img src="https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/xLogo.png"  style="width: 15px; height: 15px;">   X </a></li>
         <li class="nav-item"><a href="https://www.facebook.com/sharer.php?u={{ current_url }}" target="_blank"><i class="fa-brands fa-facebook-square"></i> Facebook</a></li>
+        <li class="nav-item"><a href="https://www.linkedin.com/sharing/share-offsite/?url={{ current_url }}" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a></li>
+
       </ul>
     {% endblock %}
   </section>
 {% endblock %}
+
