@@ -34,7 +34,7 @@
     }
   </style>
   <div><strong>Authors</strong></div>
-  <table id="authorTable" style="display: table;">
+  <table id="authorTable" style="display: table; word-wrap: break-word; overflow: hidden;">
     <tr style="color: #0e6633; font-family: Arial;">
       <th>Name</th>
       <th>ORCID</th>
@@ -51,34 +51,34 @@
 
     let table = document.getElementById("authorTable");
     for (let i = 0; i < name.length; i++) {
-    let row = table.insertRow();
-    let cell1 = row.insertCell();
-    let cell2 = row.insertCell();
-    let cell3 = row.insertCell();
+      let row = table.insertRow();
+      let cell1 = row.insertCell();
+      let cell2 = row.insertCell();
+      let cell3 = row.insertCell();
 
-    cell1.innerHTML = name[i];
-    // Update the ORCID value to include the URL and make it a clickable link
-    if(orcid[i] != "NONE"){
-    cell2.innerHTML = '<a href="https://orcid.org/' + orcid[i] + '" target="_blank">https://orcid.org/' + orcid[i] + '</a>';
+      cell1.innerHTML = name[i];
+      // Update the ORCID value to include the URL and make it a clickable link
+      if (orcid[i] != "NONE") {
+        cell2.innerHTML = '<a href="https://orcid.org/' + orcid[i] + '" target="_blank">https://orcid.org/' + orcid[i] + '</a>';
+      }
+      else {
+        cell2.innerHTML = "NONE";
+      }
+      cell3.innerHTML = affils[i];
     }
-    else{
-      cell2.innerHTML = "NONE";
-    }
-    cell3.innerHTML = affils[i];
-  }
   </script>
   <div id="withdrawalMessage" style="display: none;"></div>
   <script>
     let msg = "{{pkg_dict.withdrawalReason}}".trim();
-    if(msg !=""){
-      
+    if (msg != "") {
+
       document.getElementById("withdrawalMessage").style.display = "block";
-      document.getElementById("withdrawalMessage").innerHTML = "This Dataset is withdrawn by the author. The reason given is: " +msg + ". Contact the author for more details";
+      document.getElementById("withdrawalMessage").innerHTML = "This Dataset is withdrawn by the author. The reason given is: " + msg + ". Contact the author for more details";
     }
   </script><br>
   <!-- Abstract, Methods and Technical Information  -->
   <div><strong> Abstract </strong></div>
-  <p  id="p-abstract">{{ pkg_dict.abstract }}</p>
+  <p id="p-abstract">{{ pkg_dict.abstract }}</p>
 
   <div><strong> Methods </strong></div>
   <p>{{ pkg_dict.methods }}</p>
@@ -90,7 +90,7 @@
 
   <!-- Spatial Information -->
   <div><strong> Spatial Information </strong></div>
-  <pre >
+  <pre>
   <strong>Geolocation Point</strong> 
     (Latitude, Longitude) : ( {{ pkg_dict.geoLatitude }}, {{ pkg_dict.geoLongitude }} ) 
   </pre>
@@ -142,9 +142,9 @@
   <!-- Collection Dates -->
   <div><strong> Collection Date </strong></div>
   {% if pkg_dict.collectionEndDate %}
-  <p >{{ pkg_dict.collectionStartDate }} to {{ pkg_dict.collectionEndDate }} </p>
+  <p>{{ pkg_dict.collectionStartDate }} to {{ pkg_dict.collectionEndDate }} </p>
   {%else%}
-  <p > {{ pkg_dict.collectionStartDate }} </p>
+  <p> {{ pkg_dict.collectionStartDate }} </p>
   {%endif%}
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
 
@@ -171,46 +171,99 @@
   </script>
   <!-- Funder Information -->
   <div><strong> Funder Information</strong></div>
-  <pre id="funderInfo" ></pre>
+  <table id="funderTable" style="display: table; word-wrap: break-word; overflow: hidden;">
+    <tr style="color: #0e6633">
+      <th>
+        Award Number
+      </th>
+      <th>
+        Award Title
+      </th>
+      <th>
+        Award URI
+      </th>
+      <th>
+        Funder Name
+      </th>
+      <th>
+        Funder Identifier
+      </th>
+      <th>
+        Funder ID Type
+      </th>
+    </tr>
+  </table>
   <hr style="height:2px;border-width:0;color:black;background-color:gray">
-
+<br>
   <script>
     let aNum = "{{pkg_dict.awardNumber}}".split(",");
     let aTitle = "{{pkg_dict.awardTitle}}".split(",");
     let aURI = "{{pkg_dict.awardURI}}".split(",");
     let funder = "{{pkg_dict.funderName}}".split(",");
-    p = document.getElementById("funderInfo");
+    let idType = "{{ pkg_dict.funderIdType }}".split(",");
+    let fId = "{{ pkg_dict.funderId }}".split(",");
+
+    funTable = document.getElementById("funderTable");
     for (let i = 0; i < aNum.length; i++) {
-      let link = document.createElement("a");
-      link.href = aURI[i];
-      link.textContent = aURI[i];
-      val = document.createTextNode(` ${i + 1}. Award Number: ${aNum[i]}, Award Title: ${aTitle[i]}, Funder Name: ${funder[i]}, Award URI: `);
-      p.append(val);
-      p.append(link);
-      p.append("\n");
+      let row = funTable.insertRow();
+      let cell1 = row.insertCell();
+      let cell2 = row.insertCell();
+      let cell3 = row.insertCell();
+      let cell4 = row.insertCell();
+      let cell5 = row.insertCell();
+      let cell6 = row.insertCell();
+
+      cell1.innerHTML = aNum[i];
+      cell2.innerHTML = aTitle[i];
+      cell3.innerHTML = aURI[i];
+      cell4.innerHTML = funder[i];
+      cell5.innerHTML = fId[i];
+      cell6.innerHTML = idType[i];
+
     }
   </script>
 
   <!-- Contributor Information -->
-  <div><strong> Contributors</strong></div>
-  <pre id="contributorDetails" ></pre>
-  <hr style="height:2px;border-width:0;color:black;background-color:gray">
+  <div>
+    <strong>Contributors Information</strong>
+  </div>
+  <table id="contributorTable" style="display: table; word-wrap: break-word; overflow: hidden;">
+    <tr style="color: #0e6633; font-family: Arial;">
+      <th>Contributor Type</th>
+      <th>Name</th>
+      <th>ORCID</th>
+      <th>Affiliation</th>
+    </tr>
+  </table>
 
   <script>
     let conType = "{{pkg_dict.contributorType}}".split(",");
     let conName = "{{pkg_dict.contributorDetails}}".split(",");
     let conID = "{{pkg_dict.contributorId}}".split(",");
     let conAff = "{{pkg_dict.contributorAffiliation}}".split(",");
-    para = document.getElementById("contributorDetails");
+    let contriTable = document.getElementById("contributorTable");
 
-    for (let i = 0; i < conName.length; i++) {
-      val = document.createTextNode(` ${i + 1}. Type: ${conType[i]}, Name: ${conName[i]}, ID: ${conID[i]}, Affiliation: ${conAff[i]}  `);
-      para.append(val);
-      para.append("\n");
+    for (let i = 0; i < conType.length; i++) {
+      let row = contriTable.insertRow();
+      let cell1 = row.insertCell();
+      let cell2 = row.insertCell();
+      let cell3 = row.insertCell();
+      let cell4 = row.insertCell();
+
+      cell1.innerHTML = conType[i];
+      cell2.innerHTML = conName[i];
+      // Update the ORCID value to include the URL and make it a clickable link
+      if (conID[i] != "NONE") {
+        cell3.innerHTML = '<a href="https://orcid.org/' + conID[i] + '" target="_blank">https://orcid.org/' + conID[i] + '</a>';
+      }
+      else {
+        cell3.innerHTML = "NONE";
+      }
+      cell4.innerHTML = conAff[i];
     }
 
   </script>
-
+<hr style="height:2px;border-width:0;color:black;background-color:gray">
 
   <!-- Private Information -->
 
@@ -250,12 +303,6 @@
       <td>{{pkg_dict.Codes}}</td>
     </tr>
     <tr>
-      <th>Funder ID </th>
-      <td>
-        <pre id="funderField"></pre>
-      </td>
-    </tr>
-      <tr>
       <th> Withdrawal Reason</th>
       <td>
         {{pkg_dict.withdrawalReason}}
@@ -280,14 +327,7 @@
       document.getElementById("notebookField").append("\n");
     }
 
-    var funderPrivateInfo = document.getElementById("funderField");
-    var idType = "{{ pkg_dict.funderIdType }}".split(",");
-    var fId = "{{ pkg_dict.funderId }}".split(",");
-    for (let i = 0; i < fId.length; i++) {
-      let val = document.createTextNode(`ID Type: ${idType[i]} , ID: ${fId[i]}`);
-      funderPrivateInfo.append(val);
-      funderPrivateInfo.append("\n")
-    }
+
   </script>
 
   <body>
@@ -330,7 +370,7 @@
         "license": licenseLink,
         "description": abss,
         "datePublished": "{{pkg_dict.submittedDate}}",
-        
+
       }
       // Convert the JSON-LD structure to a string
       const jsonldScript = JSON.stringify(jsonld, null, 2);
