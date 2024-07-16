@@ -140,12 +140,24 @@
 
 
   <!-- Collection Dates -->
-  <div><strong> Collection Date </strong></div>
-  {% if pkg_dict.collectionEndDate %}
-  <p>{{ pkg_dict.collectionStartDate }} to {{ pkg_dict.collectionEndDate }} </p>
-  {%else%}
-  <p> {{ pkg_dict.collectionStartDate }} </p>
-  {%endif%}
+   <br>
+   <div id="collectionStartDateDiv" style="display: none;">
+    <div><strong> Collection Start Date </strong></div>
+    <p>{{ pkg_dict.collectionStartDate }}</p>
+   </div>
+   <div id="collectionEndDateDiv" style="display: none;">
+    <div><strong> Collection End Date </strong></div>
+    <p>{{ pkg_dict.collectionEndDate }}</p>
+   </div>
+  
+   <script>
+    if("{{pkg_dict.collectionStartDate}}"){
+      document.getElementById("collectionStartDateDiv").style.display = "block";
+    }
+    if("{{ pkg_dict.collectionEndDate }}"){
+      document.getElementById("collectionEndDateDiv").style.display = "block";
+    }
+   </script>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Related Resource Fields -->
