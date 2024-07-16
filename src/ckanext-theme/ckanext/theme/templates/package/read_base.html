@@ -45,22 +45,48 @@
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
 
-  <div style="text-align: left; padding-left: 10px; "><strong>  Resource Type Information</strong></div>
-  <pre style="text-align: left; padding-left: 10px;" >General Type: {{ pkg_dict.resourceTypeGeneral }}
-Resource Type: {{pkg_dict.resourceType}}</pre>
+  <div style="text-align: left; padding-left: 10px; "><strong>  Resource Type General</strong></div>
+  <pre style="text-align: left; padding-left: 10px;" >{{ pkg_dict.resourceTypeGeneral }}</pre>
+
+  <div style="text-align: left; padding-left: 10px; "><strong>Resource Type </strong></div>
+  <pre style="text-align: left; padding-left: 10px;" >{{pkg_dict.resourceType}}</pre>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
-  <div style="text-align: left; padding-left: 10px;"><strong>  Publisher Information</strong></div>
-  <pre style="text-align: left; padding-left: 10px;" >Publisher: {{ pkg_dict.publisher }}
-Publication Year: {{pkg_dict.publicationYear}}</pre>
+  <div style="text-align: left; padding-left: 10px;"><strong>  Publisher </strong></div>
+  <pre style="text-align: left; padding-left: 10px;" >Publisher: {{ pkg_dict.publisher }}</pre>
+  <div style="text-align: left; padding-left: 10px;"><strong>Publication Year </strong></div>
+  <pre style="text-align: left; padding-left: 10px;" >{{pkg_dict.publicationYear}}</pre>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
-
-  <div style="text-align: left; padding-left: 10px;"><strong>Other Dates</strong></div>
-  <pre style="text-align: left; padding-left: 10px;" >Created Date: {{ pkg_dict.createdDate }}
-Submitted Date: {{ pkg_dict.submittedDate }}
-Available Date: {{ pkg_dict.availableDate }}
-Withdrawn Date: {{ pkg_dict.withdrawnDate }}
-  </pre>
+  <div id="createdDateDiv" style="display: none;">
+    <div style="text-align: left; padding-left: 10px; "><strong>Created Date</strong></div>
+    <pre style="text-align: left; padding-left: 10px;" >{{pkg_dict.createdDate}}</pre>
+  </div>
+  <div id="submittedDateDiv" style="display: none;">
+    <div style="text-align: left; padding-left: 10px; "><strong>Submitted Date</strong></div>
+    <pre style="text-align: left; padding-left: 10px;" >{{pkg_dict.submittedDate}}</pre>
+  </div>
+  <div id="availableDateDiv" style="display: none;">
+    <div style="text-align: left; padding-left: 10px; "><strong>Available Date</strong></div>
+    <pre style="text-align: left; padding-left: 10px;" >{{pkg_dict.availableDate}}</pre>
+  </div>
+  <div id="withdrawnDateDiv" style="display: none;">
+    <div style="text-align: left; padding-left: 10px; "><strong>Withdrawn Date</strong></div>
+    <pre style="text-align: left; padding-left: 10px;" >{{pkg_dict.withdrawnDate}}</pre>
+  </div>
+<script>
+  if("{{pkg_dict.createdDate}}"){
+    document.getElementById("createdDateDiv").style.display = "block";
+  }
+  if("{{pkg_dict.submittedDate}}"){
+    document.getElementById("submittedDateDiv").style.display = "block";
+  }
+  if("{{pkg_dict.availableDate}}"){
+    document.getElementById("availableDateDiv").style.display = "block";
+  }
+  if("{{pkg_dict.withdrawnDate}}"){
+    document.getElementById("withdrawnDateDiv").style.display = "block";
+  }
+</script>
 <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
 {% block package_license %}
