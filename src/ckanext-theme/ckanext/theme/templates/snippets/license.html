@@ -3,7 +3,7 @@
 <a href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg_dict.license_title }}</a>
 {% else %}
 {% if pkg_dict.license %}
-<div style="text-align: left; padding-left: 10px;" id="licensepara"></div>
+<div style="text-align: left; " id="licensepara"></div>
 <script>
   // Assuming you have the license value and URL
   let licenseVal = "{{pkg_dict.license}}";
