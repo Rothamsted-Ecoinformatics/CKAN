@@ -236,10 +236,10 @@
   </script>
 
   <!-- Contributor Information -->
-  <div>
+  <div id="contriDiv" style="display: none;">
     <strong>Contributors Information</strong>
   </div>
-  <table id="contributorTable" style="display: table; word-wrap: break-word; overflow: hidden;">
+  <table id="contributorTable" style="display: none; word-wrap: break-word; overflow: hidden;">
     <tr style="color: #0e6633; font-family: Arial;">
       <th>Contributor Type</th>
       <th>Name</th>
@@ -254,6 +254,10 @@
     let conID = "{{pkg_dict.contributorId}}".split(",");
     let conAff = "{{pkg_dict.contributorAffiliation}}".split(",");
     let contriTable = document.getElementById("contributorTable");
+    if("{{pkg_dict.contributorDetails}}"){
+      contriTable.style.display = "table";
+      document.getElementById("contriDiv").style.display = "block";
+    }
 
     for (let i = 0; i < conType.length; i++) {
       let row = contriTable.insertRow();

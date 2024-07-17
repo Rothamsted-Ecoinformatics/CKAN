@@ -1,39 +1,74 @@
 {% macro license_string(pkg_dict) %}
-  {% if 'license_url' in pkg_dict %}
-    <a href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg_dict.license_title }}</a>
-  {% else %}
-    {% if pkg_dict.license %}
-      <span property="dc:rights" style="background-color: white;">{{ pkg_dict.license }}</span>
-    {% else %}
-      <span>{{ _('No License Provided') }}</span>
-    {% endif %}
-  {% endif %}
+{% if 'license_url' in pkg_dict %}
+<a href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg_dict.license_title }}</a>
+{% else %}
+{% if pkg_dict.license %}
+<div style="text-align: left; padding-left: 10px;" id="licensepara"></div>
+<script>
+  // Assuming you have the license value and URL
+  let licenseVal = "{{pkg_dict.license}}";
+  let licenseUrl = "";
+  let imageSource = "";
+  if (licenseVal == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)") {
+    licenseUrl = "https://creativecommons.org/licenses/by-nc/4.0/legalcode.en";
+    imageSource = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/ccby.png";
+  }
+  else if (licenseVal == "Creative Commons Attribution Licence (CC BY 4.0)") {
+    licenseUrl = "https://creativecommons.org/licenses/by/4.0/legalcode.en";
+    imageSource = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/ccbync.png";
+  }
+  else if (licenseVal == "Open Government Licence (OGL)") {
+    licenseUrl = "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/";
+    imageSource = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/ogl.png";
+  }
+
+  // Get the <p> element
+  const licensePara = document.getElementById("licensepara");
+  // Create an anchor tag
+  var anchorTag = document.createElement("a");
+  anchorTag.href = licenseUrl;
+  anchorTag.textContent = "This work is licensed under " +licenseVal;
+  anchorTag.style.color = "black";
+  var licenseLogo = document.createElement("img");
+  licenseLogo.src = imageSource;
+  licenseLogo.style.width = "60px";
+  licenseLogo.style.height = "30px";
+  var brElement = document.createElement("br");
+  // Append the anchor tag to the <p> element
+  licensePara.appendChild(anchorTag);
+  licensePara.appendChild(brElement);
+  licensePara.appendChild(licenseLogo);
+
+</script>
+{% else %}
+<span>{{ _('No License Provided') }}</span>
+{% endif %}
+{% endif %}
 {% endmacro %}
 
 {% block license %}
-  {% if text_only %}
-    {{ license_string(pkg_dict) }}
-  {% else %}
-      {% block license_wrapper %}<div style="background-color: white;">
-        <section class="module module-narrow module-shallow license" >
-          {% block license_title %}
-            <h2 class="module-heading" style="background-color: white;"><i class="fa fa-lock"></i> {{ _('License') }}</h2>
-          {% endblock %}
-          {% block license_content %}
-            <p class="module-content">
-              {% block license_content_inner %}
-                {{ license_string(pkg_dict) }}
-                {% if pkg_dict.isopen %}
-                  <a href="http://opendefinition.org/okd/" title="{{ _('This dataset satisfies the Open Definition.') }}">
-                      <img class="open-data" src="{{ h.url_for_static('/base/images/od_80x15_blue.png') }}" alt="[Open Data]" />
-                  </a>
-                {% endif %}
-              {% endblock %}
-            </p>
-          {% endblock %}
-        </section>
-      </div>
+{% if text_only %}
+{{ license_string(pkg_dict) }}
+{% else %}
+{% block license_wrapper %}<div style="background-color: white;">
+  <section class="module module-narrow module-shallow license">
+    {% block license_title %}
+    <h2 class="module-heading" style="background-color: white;"><i class="fa fa-lock"></i> {{ _('License') }}</h2>
+    {% endblock %}
+    {% block license_content %}
+    <div class="module-content">
+      {% block license_content_inner %}
+      {{ license_string(pkg_dict) }}
+      {% if pkg_dict.isopen %}
+      <a href="http://opendefinition.org/okd/" title="{{ _('This dataset satisfies the Open Definition.') }}">
+        <img class="open-data" src="{{ h.url_for_static('/base/images/od_80x15_blue.png') }}" alt="[Open Data]" />
+      </a>
+      {% endif %}
       {% endblock %}
-  {% endif %}
+    </div>
+    {% endblock %}
+  </section>
+</div>
 {% endblock %}
-
+{% endif %}
+{% endblock %}
