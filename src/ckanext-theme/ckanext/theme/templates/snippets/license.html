@@ -4,41 +4,80 @@
 {% else %}
 {% if pkg_dict.license %}
 <div style="text-align: left; padding-left: 10px;" id="licensepara"></div>
+<br>
 <script>
   // Assuming you have the license value and URL
   let licenseVal = "{{pkg_dict.license}}";
-  let licenseUrl = "";
-  let imageSource = "";
+  var anchorTag = document.createElement("a");
+  const licensePara = document.getElementById("licensepara");
+
   if (licenseVal == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)") {
-    licenseUrl = "https://creativecommons.org/licenses/by-nc/4.0/legalcode.en";
-    imageSource = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/ccbync.png";
+    anchorTag.href = "https://creativecommons.org/licenses/by-nc/4.0/legalcode.en";
+    anchorTag.textContent = "This work is licensed under " + licenseVal;
+    anchorTag.style.color = "black";
+
+    let ccLogo = document.createElement("img");
+    ccLogo.src = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/cc.png";
+    ccLogo.style.width = "22px";
+    ccLogo.style.height = "22px";
+    ccLogo.style.margin = "2px";
+
+    let byLogo = document.createElement("img");
+    byLogo.src = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/by.png";
+    byLogo.style.width = "22px";
+    byLogo.style.height = "22px";
+    byLogo.style.margin = "2px";
+
+
+    let ncLogo = document.createElement("img");
+    ncLogo.src = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/nc.png";
+    ncLogo.style.width = "22px";
+    ncLogo.style.height = "22px";
+    ncLogo.style.margin = "2px";
+    licensePara.appendChild(anchorTag);
+    licensePara.appendChild(ccLogo);
+    licensePara.appendChild(byLogo);
+    licensePara.appendChild(ncLogo);
+
+
   }
   else if (licenseVal == "Creative Commons Attribution Licence (CC BY 4.0)") {
-    licenseUrl = "https://creativecommons.org/licenses/by/4.0/legalcode.en";
-    imageSource = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/ccby.png";
+    anchorTag.href = "https://creativecommons.org/licenses/by/4.0/legalcode.en";
+    anchorTag.textContent = "This work is licensed under " + licenseVal;
+    anchorTag.style.color = "black";
+
+    let ccLogo = document.createElement("img");
+    ccLogo.src = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/cc.png";
+    ccLogo.style.width = "22px";
+    ccLogo.style.height = "22px";
+    ccLogo.style.margin = "2px";
+
+    let byLogo = document.createElement("img");
+    byLogo.src = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/by.png";
+    byLogo.style.width = "22px";
+    byLogo.style.height = "22px";
+    byLogo.style.margin = "2px";
+
+    licensePara.appendChild(anchorTag);
+    licensePara.appendChild(ccLogo);
+    licensePara.appendChild(byLogo);
   }
   else if (licenseVal == "Open Government Licence (OGL)") {
-    licenseUrl = "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/";
-    imageSource = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/ogl.png";
+    anchorTag.href = "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/";
+    anchorTag.textContent = "This work is licensed under " + licenseVal;
+    anchorTag.style.color = "black";
+
+    let oglLogo = document.createElement("img");
+    oglLogo.src = "https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/images/ogl.png";
+    oglLogo.style.width = "44px";
+    oglLogo.style.height = "22px";
+    oglLogo.style.margin = "2px";
+
+    licensePara.appendChild(anchorTag);
+    licensePara.appendChild(oglLogo);
   }
 
-  // Get the <p> element
-  const licensePara = document.getElementById("licensepara");
-  // Create an anchor tag
-  var anchorTag = document.createElement("a");
-  anchorTag.href = licenseUrl;
-  anchorTag.textContent = "This work is licensed under " + licenseVal;
-  anchorTag.style.color = "black";
-  anchorTag.style.flexWrap = "wrap";
-  var licenseLogo = document.createElement("img");
-  licenseLogo.src = imageSource;
-  licenseLogo.style.width = "60px";
-  licenseLogo.style.height = "30px";
-  var brElement = document.createElement("br");
-  // Append the anchor tag to the <p> element
-  licensePara.appendChild(anchorTag);
-  licensePara.appendChild(brElement);
-  licensePara.appendChild(licenseLogo);
+
 
 </script>
 {% else %}
@@ -52,12 +91,12 @@
 {{ license_string(pkg_dict) }}
 {% else %}
 {% block license_wrapper %}<div style="background-color: white;">
-  <section >
+  <section>
     {% block license_title %}
     {% endblock %}
     <!-- {% block license_content %} -->
 
-    <div >
+    <div>
 
       <!-- {% block license_content_inner %} -->
 
@@ -66,10 +105,11 @@
 
       {% if pkg_dict.isopen %}
       <div style="padding-left: 10px;">
-      <a style="padding-left: 10px;" href="http://opendefinition.org/okd/" title="{{ _('This dataset satisfies the Open Definition.') }}">
-        <img class="open-data" src="{{ h.url_for_static('/base/images/od_80x15_blue.png') }}" alt="[Open Data]" />
-      </a>
-       </div>
+        <a style="padding-left: 10px;" href="http://opendefinition.org/okd/"
+          title="{{ _('This dataset satisfies the Open Definition.') }}">
+          <img class="open-data" src="{{ h.url_for_static('/base/images/od_80x15_blue.png') }}" alt="[Open Data]" />
+        </a>
+      </div>
       {% endif %}
       <!-- {% endblock %} -->
     </div>
