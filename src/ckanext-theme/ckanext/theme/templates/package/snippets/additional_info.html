@@ -140,24 +140,24 @@
 
 
   <!-- Collection Dates -->
-   <br>
-   <div id="collectionStartDateDiv" style="display: none;">
+  <br>
+  <div id="collectionStartDateDiv" style="display: none;">
     <div><strong> Collection Start Date </strong></div>
     <p>{{ pkg_dict.collectionStartDate }}</p>
-   </div>
-   <div id="collectionEndDateDiv" style="display: none;">
+  </div>
+  <div id="collectionEndDateDiv" style="display: none;">
     <div><strong> Collection End Date </strong></div>
     <p>{{ pkg_dict.collectionEndDate }}</p>
-   </div>
-  
-   <script>
-    if("{{pkg_dict.collectionStartDate}}"){
+  </div>
+
+  <script>
+    if ("{{pkg_dict.collectionStartDate}}") {
       document.getElementById("collectionStartDateDiv").style.display = "block";
     }
-    if("{{ pkg_dict.collectionEndDate }}"){
+    if ("{{ pkg_dict.collectionEndDate }}") {
       document.getElementById("collectionEndDateDiv").style.display = "block";
     }
-   </script>
+  </script>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Related Resource Fields -->
@@ -206,7 +206,7 @@
     </tr>
   </table>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
-<br>
+  <br>
   <script>
     let aNum = "{{pkg_dict.awardNumber}}".split(",");
     let aTitle = "{{pkg_dict.awardTitle}}".split(",");
@@ -254,7 +254,7 @@
     let conID = "{{pkg_dict.contributorId}}".split(",");
     let conAff = "{{pkg_dict.contributorAffiliation}}".split(",");
     let contriTable = document.getElementById("contributorTable");
-    if("{{pkg_dict.contributorDetails}}"){
+    if ("{{pkg_dict.contributorDetails}}") {
       contriTable.style.display = "table";
       document.getElementById("contriDiv").style.display = "block";
     }
@@ -280,7 +280,7 @@
 
   </script>
   <br><br>
-<!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
+  <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Private Information -->
 
@@ -354,7 +354,11 @@
       let author_id = "{{ pkg_dict.nameIdentifier }}".split(",");
       let subs = "{{pkg_dict.subject}}".split(",");
       let abss = document.getElementById("p-abstract").innerHTML.trim();
+      let tempCoverage = "{{ pkg_dict.collectionStartDate }}" + "/" + "{{pkg_dict.collectionEndDate}}";
       abss = abss.trim();
+      let spatCoverage = "{{ pkg_dict.geoLowLeftLatitude}}" + " " + "{{ pkg_dict.geoLowLeftLongitude}}" + " " + "{{ pkg_dict.geoTopRightLatitude}}" + " " + "{{ pkg_dict.geoTopRightLongitude}}";
+      //console.log(spatCoverage);
+      let relatedType = "{{ pkg_dict.relatedResourceType }}".split(",");
       let licenseText = "{{ pkg_dict.license }}";
       let licenseLink = "";
       if (licenseText == "Creative Commons Attribution Non-Commercial (CC BY-NC 4.0)") {
@@ -382,11 +386,37 @@
 
         })),
         "publisher": { "@type": "Organization", "name": "Rothamsted Research" },
-        "subjects": subs,
+        "keywords": subs,
         "version": "{{pkg_dict.version}}",
         "license": licenseLink,
         "description": abss,
         "datePublished": "{{pkg_dict.submittedDate}}",
+        "funder": funder.map((name, index) => ({
+          "@type": "Organization",
+          "name": name,
+          "sameAs": fId[index],
+        })),
+        "temporalCoverage": tempCoverage,
+        "spatialCoverage": {
+          "@type": "Place",
+          "geo": {
+            "@type": "GeoShape",
+            "box": spatCoverage,
+          }
+        },
+
+        "hasPart": Rid.map((name, index) => ({
+          "@type": relatedType[index],
+          "name": name,
+          "@id": name,
+          "description": "This resource is of type " + relatedType[index] +  ". This is related to  " + "{{ pkg_dict.name }}" + " as " + type[index],
+          "creator": {
+            "@type": "Person",
+            "name": "N/A"
+          },
+          "license": "N/A",
+
+        })),
 
       }
       // Convert the JSON-LD structure to a string
