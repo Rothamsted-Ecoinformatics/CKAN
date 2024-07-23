@@ -41,8 +41,7 @@
   <!-- Creator Field -->
   <!--              -->
   <label id="creatorLabel"><strong>*Dataset Authors (Mandatory)</strong></label>
-  <i class="fas fa-info-circle"
-    title="The main researchers involved in producing the data, in priority order."></i>
+  <i class="fas fa-info-circle" title="The main researchers involved in producing the data, in priority order."></i>
   <br>
   <p style="color: grey; font-style: italic; font-size: small;"> Authors are the main people involved in producing the
     data, in priority order
@@ -417,7 +416,8 @@
   <!--                                -->
   <!--                                -->
   <label for="field-publisher">*Publisher (Mandatory) </label>
-  <i class="fas fa-info-circle" title="The name of the entity that holds, archives, publishes, prints, distributes, releases, issues, or produces the resource. 
+  <i class="fas fa-info-circle"
+    title="The name of the entity that holds, archives, publishes, prints, distributes, releases, issues, or produces the resource. 
 If the dataset you are adding is already published on an external repository, for example Zenodo, Figshare, ENA, you should enter that repository as the Publisher. "></i>
   <br>
   <input type="text" id="field-publisher" name="publisher" value="Rothamsted Research" class="control-medium"
@@ -455,7 +455,8 @@ If the dataset you are adding is already published on an external repository, fo
   <!-- Methods Field -->
 
   <label for="field-methods">*Methods (Mandatory) </label>
-  <i class="fas fa-info-circle" title="The methodology employed for the study or research. 
+  <i class="fas fa-info-circle"
+    title="The methodology employed for the study or research. 
 If you have published protocols, software or code associated with creation of the dataset you should reference these in the ‘Related Resources’ section below."></i><br>
   <textarea id="field-methods" name="methods" placeholder="Enter Methods" error="errors.methods" class="control-medium"
     rows="5">{{ data.methods }}
@@ -610,7 +611,8 @@ For example: a Dataset might be a survey dataset, a plant phenotyping dataset, o
     value="{{ data.createdDate }}"><br><br>
   <!-- Submitted Dates -->
   <label type="date" for="field-submittedDate">*Submitted Date (Mandatory)</label>
-  <i class="fas fa-info-circle" title="The date the creator submits the dataset to the Rothamsted CKAN Repository. "></i>
+  <i class="fas fa-info-circle"
+    title="The date the creator submits the dataset to the Rothamsted CKAN Repository. "></i>
   <br>
   <input id="field-submittedDate" name="submittedDate" class="control-medium" placeholder="DD-MM-YYYY"
     value="{{ data.submittedDate }}"><br><br>
@@ -908,7 +910,8 @@ For example: a Dataset might be a survey dataset, a plant phenotyping dataset, o
   <!--                          -->
   <!--                          -->
   <label><strong>Related Resources (Optional) </strong></label>
-  <i class="fas fa-info-circle" title="Information about other resources related to the one being registered.
+  <i class="fas fa-info-circle"
+    title="Information about other resources related to the one being registered.
 For example, a dataset resource may have links to other related datasets, code used to analyse the data and articles using the data."></i>
   <br><br>
   <label for="field-relatedIdField"> Select Related ID Type </label><br>
@@ -1165,14 +1168,15 @@ For example, a dataset resource may have links to other related datasets, code u
   <div id="mapid"></div>
   <br><br>
   <label><strong> Geolocation Point </strong></label>
-  <i class="fas fa-info-circle" title="A point location in space. It contains a single longitude-latitude pair."></i>
+  <i class="fas fa-info-circle"
+    title="A point location in space. It contains a single longitude-latitude pair."></i><br>
   <label for="field-geoLatitude"> Latitude </label><br>
   <input type="text" id="field-geoLatitude" name="geoLatitude" value="{{ data.geoLatitude }}"><br><br>
   <label for="field-geoLongitude"> Longitude </label><br>
   <input type="text" id="field-geoLongitude" name="geoLongitude" value="{{ data.geoLongitude }}"><br><br>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
-</head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+  </head>
   <style>
     #mapid {
       height: 400px;
@@ -1203,62 +1207,64 @@ For example, a dataset resource may have links to other related datasets, code u
   <input type="text" id="field-geoTopRightLongitude" name="geoTopRightLongitude"
     value="{{ data.geoTopRightLongitude }}"><br><br>
   <hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
+
   <script>
     var latitude;
-    var logitude;
-    var mymap = L
-      .map('mapid')
-      .setView([50, -0.1], 4);
+    var longitude;
+    var drawnItems = new L.FeatureGroup();
+    var mymap = L.map('mapid').setView([50, -0.1], 4);
+
     L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
       maxZoom: 100,
     }).addTo(mymap);
+
+    mymap.addLayer(drawnItems);
+
     mymap.on('click', function (e) {
       latitude = e.latlng.lat;
       longitude = e.latlng.lng;
       document.getElementById('field-geoLatitude').value = latitude.toFixed(4);
       document.getElementById('field-geoLongitude').value = longitude.toFixed(4);
     });
+
     // Initialize the draw control and add it to the map
-    // var drawControl = new L.Control.Draw({
-    //   draw: {
-    //     polygon: false,
-    //     polyline: false,
-    //     circle: false,
-    //     marker: false,
-    //     circlemarker: false,
-    //     rectangle: true
-    //   }
-    // });
-    // mymap.addControl(drawControl);  
-    //     // Handle the rectangle drawing event
-    //     mymap.on(L.Draw.Event.CREATED, function (e) {
-    //     var type = e.layerType,
-    //         layer = e.layer;
+    var drawControl = new L.Control.Draw({
+      draw: {
+        polygon: false,
+        polyline: false,
+        circle: false,
+        marker: false,
+        circlemarker: false,
+        rectangle: true
+      }
+    });
+    mymap.addControl(drawControl);
 
-    //     if (type == 'rectangle') {
-    //         var bounds = layer.getBounds();
-    //         var lowerLeft = bounds.getSouthWest();
-    //         var upperRight = bounds.getNorthEast();
+    // Handle the rectangle drawing event
+    mymap.on(L.Draw.Event.CREATED, function (e) {
+      var type = e.layerType,
+        layer = e.layer;
 
-    //         document.getElementById('field-geoLowLeftLatitude').value = lowerLeft.lat.toFixed(6);
-    //         document.getElementById('field-geoLowLeftLongitude').value = lowerLeft.lng.toFixed(6);
+      if (type == 'rectangle') {
+        var bounds = layer.getBounds();
+        var lowerLeft = bounds.getSouthWest();
+        var upperRight = bounds.getNorthEast();
 
-    //         document.getElementById('field-geoTopRightLatitude').value = upperRight.lat.toFixed(6);
-    //         document.getElementById('field-geoTopRightLongitude').value = upperRight.lng.toFixed(6);
+        document.getElementById('field-geoLowLeftLatitude').value = lowerLeft.lat.toFixed(6);
+        document.getElementById('field-geoLowLeftLongitude').value = lowerLeft.lng.toFixed(6);
+        document.getElementById('field-geoTopRightLatitude').value = upperRight.lat.toFixed(6);
+        document.getElementById('field-geoTopRightLongitude').value = upperRight.lng.toFixed(6);
 
-    //         document.getElementById('field-geoLatitude').value = "";
-    //         document.getElementById('field-geoLongitude').value = "";
+        document.getElementById('field-geoLatitude').value = "";
+        document.getElementById('field-geoLongitude').value = "";
 
-    //     }
+        drawnItems.clearLayers();
+        drawnItems.addLayer(layer);
+      }
+    });
 
-    //     mymap.addLayer(layer);
-    // });
-  </script>
-
-  <!-- Add 2 buttons to this map such that when clicked, the map will zoom to Harpenden UK and North Wyke UK -->
-  <script>
     // Add buttons to zoom to specific locations
     var harpendenButton = L.control({ position: 'topright' });
     harpendenButton.onAdd = function (map) {
@@ -1276,6 +1282,14 @@ For example, a dataset resource may have links to other related datasets, code u
     };
     northWykeButton.addTo(mymap);
 
+    var clearButton = L.control({ position: 'topright' });
+    clearButton.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+      div.innerHTML = '<button type="button" onclick="clearMap()">Clear Box</button>';
+      return div;
+    };
+    clearButton.addTo(mymap);
+
     // Functions to zoom to specific locations
     function zoomToHarpenden() {
       mymap.setView([51.8142, -0.3589], 14);
@@ -1284,16 +1298,26 @@ For example, a dataset resource may have links to other related datasets, code u
     function zoomToNorthWyke() {
       mymap.setView([50.7873, -3.9267], 16);
     }
+
+    // Function to clear the map and input fields
+    function clearMap() {
+      drawnItems.clearLayers();
+      document.getElementById('field-geoLowLeftLatitude').value = "";
+      document.getElementById('field-geoLowLeftLongitude').value = "";
+      document.getElementById('field-geoTopRightLatitude').value = "";
+      document.getElementById('field-geoTopRightLongitude').value = "";
+      document.getElementById('field-geoLatitude').value = "";
+      document.getElementById('field-geoLongitude').value = "";
+    }
   </script>
 
 
-  
+
   <!-- Subject Fields -->
   <!--                 -->
   <!--                 -->
   <label><strong> Keywords (Optional)</strong></label>
-  <i class="fas fa-info-circle"
-    title="General topic or key phrase describing the dataset."></i>
+  <i class="fas fa-info-circle" title="General topic or key phrase describing the dataset."></i>
   <br>
   <input type="text" id="field-subjectField" name="subjectField" style="width: 500px;"><br><br>
 
@@ -1419,15 +1443,15 @@ For example, a dataset resource may have links to other related datasets, code u
       // Print Message
       //keyword->tag
       var tag = [];
-      if("data.tag_string"){
-      tag =  document.getElementById("field-tags").value;
-      tag = tag.split(",");
+      if ("data.tag_string") {
+        tag = document.getElementById("field-tags").value;
+        tag = tag.split(",");
       }
       console.log(tag);
 
       tag.push(sub);
-      if(tag.length>1){
-      tag = tag.join(",");
+      if (tag.length > 1) {
+        tag = tag.join(",");
       }
       document.getElementById("field-tags").value = tag;
 
@@ -1556,8 +1580,7 @@ Sequential integer version numbers are recommended"></i><br>
   <!-- Experiment Code -->
 
   <label for="field-experimentCode">Select Experiment Code (Optional)</label>
-  <i class="fas fa-info-circle"
-    title="If there are any internal Rothamsted codes used to identify the experiment or dataset used to generate these, then they should be listed here. 
+  <i class="fas fa-info-circle" title="If there are any internal Rothamsted codes used to identify the experiment or dataset used to generate these, then they should be listed here. 
 This helps with internal data management and captures data provenance."></i>
   <br><br>
   <input type="text" id="field-experimentCode" name="experimentCode" style="display: none;"
@@ -1630,8 +1653,7 @@ This helps with internal data management and captures data provenance."></i>
 
 
   <label for="field-associatedNotesField">Associated Research Notebooks (Optional) </label>
-  <i class="fas fa-info-circle"
-    title="List all paper Laboratory Notebooks and LabArchives Electronic Research Notebook books where the information about that dataset is recorded.
+  <i class="fas fa-info-circle" title="List all paper Laboratory Notebooks and LabArchives Electronic Research Notebook books where the information about that dataset is recorded.
 Paper note books should be referenced by their note book number, and LabArchives notebooks by their URL.
 This could be a paper notebook (add the code number), or an electronic research notebook (add the URI). "></i>
   <br>
@@ -1712,7 +1734,8 @@ This could be a paper notebook (add the code number), or an electronic research 
   <!--                     -->
 
   <label for="field-dataLocationField"> *Data Locations (Mandatory)</label>
-  <i class="fas fa-info-circle" title="List all locations where the data is stored.
+  <i class="fas fa-info-circle"
+    title="List all locations where the data is stored.
 This could be a page in a paper notebook, an entry in LabArchive, a shared network drive, a Sharepoint URL or Github repository."></i>
   <br>
   <input type="text" id="field-dataLocationField" name="dataLocationField" style="width: 500px;"><br>
@@ -1792,8 +1815,7 @@ This could be a page in a paper notebook, an entry in LabArchive, a shared netwo
   <!--                          -->
   <!--                          -->
   <label for="field-responsiblePerson">*Responsible Person (Mandatory)</label>
-  <i class="fas fa-info-circle"
-    title="Names of researchers responsible maintaining the dataset. 
+  <i class="fas fa-info-circle" title="Names of researchers responsible maintaining the dataset. 
 These researchers are also the main contacts for responding to the queries about the dataset."></i>
   <br>
   <input id="field-responsiblePerson" name="responsiblePerson" style="width: 500px;"
@@ -1804,7 +1826,8 @@ These researchers are also the main contacts for responding to the queries about
   <!--                              -->
   <!--                              -->
   <label for="field-infraUsedField"> Research Infrastructure Used (Select All)</label>
-  <i class="fas fa-info-circle" title="Identify all Rothamsted Research infrastructures and facilities used for the creation and/or collection of the dataset."></i>
+  <i class="fas fa-info-circle"
+    title="Identify all Rothamsted Research infrastructures and facilities used for the creation and/or collection of the dataset."></i>
   <br>
   <div id="field-infraUsedField" name="infraUsedField">
 
@@ -1850,7 +1873,8 @@ These researchers are also the main contacts for responding to the queries about
     <input type="checkbox" id="if16" value="Lipidomics Facility" onchange="infraAdd('Lipidomics Facility')"> Lipidomics
     Facility
     <br>
-    <input type="checkbox" id="if21" value="Metabolomics Facility" onchange="infraAdd('Metabolomics Facility')"> Metabolomics
+    <input type="checkbox" id="if21" value="Metabolomics Facility" onchange="infraAdd('Metabolomics Facility')">
+    Metabolomics
     Facility
     <br>
     <input type="checkbox" id="if17" value="North Wyke Farm" onchange="infraAdd('North Wyke Farm')"> North Wyke Farm

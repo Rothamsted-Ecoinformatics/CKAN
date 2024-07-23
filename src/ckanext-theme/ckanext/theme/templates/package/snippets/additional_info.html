@@ -89,17 +89,7 @@
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Spatial Information -->
-  <div><strong> Spatial Information </strong></div>
-  <pre>
-  <strong>Geolocation Point</strong> 
-    (Latitude, Longitude) : ( {{ pkg_dict.geoLatitude }}, {{ pkg_dict.geoLongitude }} ) 
-  </pre>
-  <pre id="geoBox" style="display: none;">
-  <strong>Geolocation Box:</strong>
-     Lower Left Corner (Latitude,Longitude): ( {{ pkg_dict.geoLowLeftLatitude }}, {{ pkg_dict.geoLowLeftLongitude }} ) 
-     Top Right Corner (Latitude,Longitude): ( {{ pkg_dict.geoTopRightLatitude }}, {{ pkg_dict.geoTopRightLongitude }} ) 
-  </pre>
-
+   
   <head>
     <title>Simple Leaflet Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
@@ -115,11 +105,26 @@
       }
     </style>
   </head>
-  <div id="mapid"></div>
+  <div id="spatialInfo" style="display: none;">
+  <div><strong> Spatial Information </strong></div>
+  <pre>
+  <strong>Geolocation Point</strong> 
+    (Latitude, Longitude) : ( {{ pkg_dict.geoLatitude }}, {{ pkg_dict.geoLongitude }} ) 
+  </pre>
+  <pre id="geoBox" style="display: none;">
+  <strong>Geolocation Box:</strong>
+     Lower Left Corner (Latitude,Longitude): ( {{ pkg_dict.geoLowLeftLatitude }}, {{ pkg_dict.geoLowLeftLongitude }} ) 
+     Top Right Corner (Latitude,Longitude): ( {{ pkg_dict.geoTopRightLatitude }}, {{ pkg_dict.geoTopRightLongitude }} ) 
+  </pre>
 
+  <div id="mapid" ></div>
+</div>
   <script>
     let x = parseFloat("{{ pkg_dict.geoLatitude }}");
-    let y = parseFloat("{{ pkg_dict.geoLongitude }}")
+    let y = parseFloat("{{ pkg_dict.geoLongitude }}");
+    if(x || y || "{{ pkg_dict.geoLowLeftLatitude }}"){
+      document.getElementById("spatialInfo").style.display = "block";
+    }
     var mymap = L.map('mapid').setView([x, y], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
