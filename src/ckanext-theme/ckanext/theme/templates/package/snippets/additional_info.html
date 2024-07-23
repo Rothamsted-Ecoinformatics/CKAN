@@ -411,7 +411,7 @@
         },
 
         "hasPart": Rid.map((name, index) => ({
-          "@type": relatedType[index],
+          "@type": "Dataset",
           "name": name,
           "@id": name,
           "description": "This resource is of type " + relatedType[index] +  ". This is related to  " + "{{ pkg_dict.name }}" + " as " + type[index],
