@@ -716,7 +716,7 @@ For example: a Dataset might be a survey dataset, a plant phenotyping dataset, o
   <script>
     let awardData = [];
 
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/awardInformation.csv')
+    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/funderTotal_info.csv')
       .then(response => response.text())
       .then(csvString => {
         awardData = Papa.parse(csvString, { header: true }).data;
@@ -727,25 +727,6 @@ For example: a Dataset might be a survey dataset, a plant phenotyping dataset, o
             $j('#field-awardNumberField').val(ui.item.value);
             $j('#field-awardTitleField').val(selectedData.awardTitle);
             $j('#field-awardURIField').val(selectedData.awardURI);
-            return false;
-          }
-        });
-      });
-  </script>
-  <script>
-    let funData = [];
-
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/funderInformation.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        funData = Papa.parse(csvString, { header: true }).data;
-        let funders = funData.map(item => ({ label: item.funderName + ' (' + item.funderAbbreviation + ')', value: item.funderName, item }));
-
-        $j("#field-funderNameField").autocomplete({
-          source: funders,
-
-          select: function (event, ui) {
-            let selectedData = funData.find(row => row.funderName === ui.item.value);
             $j('#field-funderNameField').val(selectedData.funderName);
             $j('#field-funderIdField').val(selectedData.funderIdentifer);
             document.getElementById('field-funderIdTypeField').value = selectedData.funderIDType;
@@ -754,6 +735,7 @@ For example: a Dataset might be a survey dataset, a plant phenotyping dataset, o
         });
       });
   </script>
+
 
 
   <button type="button" onclick="addFunders()"> Add </button>
