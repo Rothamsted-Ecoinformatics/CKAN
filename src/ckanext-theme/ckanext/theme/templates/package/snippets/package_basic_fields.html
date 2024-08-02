@@ -69,28 +69,29 @@
       </div>
     </div>
     {% endif %}
-    
-    {% if h.check_access('organization_update', {'id': 'rothamsted'}) %}
+
     {% if show_visibility_selector %}
     {% block package_metadata_fields_visibility %}
-    <div class="form-group control-medium">
-      <label for="field-private" class="form-label">{{ _('Visibility') }}</label>
-      <div class="controls">
-        <select id="field-private" name="private" class="form-control">
-          {% for option in [('True', _('Private')), ('False', _('Public'))] %}
-          <option value="{{ option[0] }}" {% if option[0] == data.private|trim %}selected="selected"{% endif %}>{{ option[1] }}</option>
-          {% endfor %}
-        </select>
+      <div class="form-group control-medium" id="visibilityDiv">
+        <label for="field-private" class="form-label">{{ _('Visibility') }}</label>
+        <div class="controls">
+          {% set default_private = data.private|default('True')|trim %}
+          {% if h.check_access('organization_update', {'id': 'rothamsted'}) %}
+            <select id="field-private" name="private" class="form-control">
+              {% for option in [('True', _('Private')), ('False', _('Public'))] %}
+                <option value="{{ option[0] }}" {% if option[0] == default_private %}selected="selected"{% endif %}>{{ option[1] }}</option>
+              {% endfor %}
+            </select>
+          {% else %}
+            <select id="field-private" name="private" class="form-control" disabled>
+              <option value="True" selected="selected">{{ _('Private') }}</option>
+            </select>
+          {% endif %}
+        </div>
       </div>
-    </div>
     {% endblock %}
     {% endif %}
-    {% endif %}
-
-    {% if show_organizations_selector and show_visibility_selector %}
-  </div>
-  {% endif %}
-
+    
 
   {% if data.id and h.check_access('package_delete', {'id': data.id}) and data.state != 'active' %}
   <div class="form-group control-medium">
