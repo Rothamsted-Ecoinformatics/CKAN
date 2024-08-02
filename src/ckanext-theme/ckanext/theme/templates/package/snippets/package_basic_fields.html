@@ -17,9 +17,7 @@
 
 {% block package_basic_fields_custom %}{% endblock %}
 
-<!-- {% block package_basic_fields_description %}
-  {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes) }}
-{% endblock %} -->
+
 
 <div id="tagdiv">
 {% block package_basic_fields_tags %}
@@ -33,30 +31,7 @@
      document.getElementById("tagdiv").style.display = "none";
 </script>
 
-<!-- {% block package_basic_fields_license %}
-  <div class="form-group control-full">
-    {% set error = errors.license_id %}
-    <label class="form-label" for="field-license">{{ _("License") }}</label>
-    <div class="controls">
-      <select id="field-license" name="license_id" data-module="autocomplete">
-        {% set existing_license_id = data.get('license_id') %}
-        {% set empty_license = _('Please select the license') %}
-        <option value="">{{ empty_license }}</option>
-        {% for license_id, license_desc in h.license_options(existing_license_id) %}
-          <option value="{{ license_id }}" {% if existing_license_id == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
-        {% endfor %}
-      </select>
-      {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
-      <span class="info-block">
-        <i class="fa fa-info-circle"></i>
-        {% trans %}
-        License definitions and additional information can be found
-        at <a href="http://opendefinition.org/licenses/">opendefinition.org</a>
-        {% endtrans %}
-      </span>
-    </div>
-  </div>
-{% endblock %} -->
+
 
 {% block package_basic_fields_org %}
   {# if we have a default group then this wants remembering #}
@@ -78,7 +53,7 @@
 
   {% if show_organizations_selector %}
     {% set existing_org = data.owner_org or data.group_id %}
-    <div class="form-group control-medium">
+    <div class="form-group control-medium" style="display: none;">
       <label for="field-organizations" class="form-label">{{ h.humanize_entity_type('organization', default_group_type, 'default label') or _('Organization') }}</label>
       <div class="controls">
         <select id="field-organizations" name="owner_org" data-module="autocomplete">
@@ -94,7 +69,8 @@
       </div>
     </div>
     {% endif %}
-
+    
+    {% if h.check_access('organization_update', {'id': 'rothamsted'}) %}
     {% if show_visibility_selector %}
     {% block package_metadata_fields_visibility %}
     <div class="form-group control-medium">
@@ -108,6 +84,7 @@
       </div>
     </div>
     {% endblock %}
+    {% endif %}
     {% endif %}
 
     {% if show_organizations_selector and show_visibility_selector %}
@@ -128,4 +105,5 @@
   {% endif %}
 
   {% endblock %}
+
 

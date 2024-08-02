@@ -40,6 +40,20 @@
     {% snippet "package/snippets/tags.html", tags=pkg.tags %}
   {% endblock %} -->
 
+  <div id="messageToUser" style="color: rgb(231, 108, 77);">
+    This Dataset is currently private and won't be accessible to anyone outside the organization.
+    If you want to publish this dataset, please send an email to data.stewards@rothamsted.ac.uk
+  </div>
+<br>
+  {%if pkg.private%}
+    <script>
+      document.getElementById("messageToUser").style.display = "block";
+    </script>
+  {% else %}
+    <script>
+      document.getElementById("messageToUser").style.display = "none";
+    </script>
+  {% endif %}  
   {% block package_additional_info %}
     {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
   {% endblock %}
