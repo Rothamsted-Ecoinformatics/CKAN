@@ -4,6 +4,8 @@
 {% set errors = errors or {} %}
 {% set action = form_action or h.url_for(dataset_type ~ '_resource.new', id=pkg_name) %}
 
+{% set pkg_dict = h.get_package_dict(pkg_name) %}
+
 
 <form id="resource-edit" class="dataset-form dataset-resource-form" method="post" action="{{ action }}" data-module="basic-form resource-form" enctype="multipart/form-data">
   {{ h.csrf_input() }} 
@@ -48,7 +50,20 @@
           {{ _('This will be guessed automatically. Leave blank if you wish') }}
         </span>
       {% endcall %}
+
+      {% block existing_resources %}
+
+            {% block resources %}
+              <h4>Existing Resources</h4>
+               {% for resource in pkg_dict.resources %}
+                   <li>{{ resource.name }}</li>
+                {% endfor %}
+              {% endblock %}
+            
+      {%endblock%}
     {% endblock %}
+
+
   {% endblock basic_fields %}
 
   {% block metadata_fields %}
@@ -74,6 +89,7 @@
         {% endif %}
       {% endif %}
     {% endblock %}
+
     {% if stage %}
       {% block previous_button %}
         <button class="btn btn-default" name="save" value="go-dataset" type="submit">{{ _('Previous') }}</button>
@@ -92,4 +108,6 @@
       {% endblock %}
     {% endif %}
   </div>
+
 </form>
+ 

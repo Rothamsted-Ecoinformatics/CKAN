@@ -2819,3 +2819,9 @@ def make_login_url(
 def csrf_input():
     return snippet('snippets/csrf_input.html')
 
+
+@core_helper
+def get_package_dict(pkg_name):
+    context = {'model': model, 'session': model.Session, 'user': p.toolkit.c.user}
+    data_dict = {'id': pkg_name}
+    return p.toolkit.get_action('package_show')(context, data_dict)
