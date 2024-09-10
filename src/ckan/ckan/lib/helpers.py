@@ -2436,7 +2436,7 @@ def get_featured_organizations(count: int = 1) -> list[dict[str, Any]]:
 
 
 @core_helper
-def get_featured_groups(count: int = 1) -> list[dict[str, Any]]:
+def get_featured_groups(count: int = 3) -> list[dict[str, Any]]:
     '''Returns a list of favourite group the form
     of organization_list action function
     '''
