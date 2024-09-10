@@ -11203,7 +11203,7 @@ a.tag:hover {
 
 .box, .wrapper {
   background-color: #fff;
-  border: 5px solid #EEEEEE;
+  border: 0px solid #EEEEEE;
   border-radius: 4px;
   box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
 }
@@ -13366,7 +13366,7 @@ td.diff_header {
 .homepage .module-promotion {
   background: #fff;
   padding:  20px;
-  border: 5px solid #EEEEEE;
+  border: 0px solid #EEEEEE;
 
 }
 .homepage .module-search {
@@ -13417,7 +13417,7 @@ td.diff_header {
 .homepage .module-stats {
   margin-top: 1rem;
   color: #444;
-  border: 5px solid #EEEEEE;
+  border: 0px solid #EEEEEE;
 
 }
 .homepage .module-stats .card {
@@ -13428,7 +13428,7 @@ td.diff_header {
   margin: 0;
   list-style: none;
   padding: 10;
-  border: 5px solid #EEEEEE;
+  border: 0px solid #EEEEEE;
 
 
 }
@@ -13460,7 +13460,7 @@ td.diff_header {
 }
 .homepage .module-feeds .module-stats {
   margin-top: 0;
-  border: 5px solid #EEEEEE;
+  border: 0px solid #EEEEEE;
 
 }
 
@@ -13471,13 +13471,13 @@ td.diff_header {
   .homepage .module-stats {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-    border: 5px solid #EEEEEE;
+    border: 0px solid #EEEEEE;
 
   }
   .homepage .module-feeds .card {
     margin-top: 1rem;
     margin-bottom: 1rem;
-    border: 5px solid #EEEEEE;
+    border: 0px solid #EEEEEE;
 
   }
 }
