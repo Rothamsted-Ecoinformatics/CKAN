@@ -187,45 +187,43 @@
       p.append("\n");
     }
   </script>
-  <!-- Funder Information -->
-  <div><strong> Funder Information</strong></div>
-  <table id="funderTable" style="display: table; word-wrap: break-word; overflow: hidden;">
-    <tr style="color: #0e6633">
-      <th>
-        Award Number
-      </th>
-      <th>
-        Award Title
-      </th>
-      <th>
-        Funder Name
-      </th>
-    </tr>
-  </table>
-  <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
-  <br>
-  <script>
-    let aNum = "{{pkg_dict.awardNumber}}".split(",");
-    let aTitle = "{{pkg_dict.awardTitle}}".split(",");
-    let funder = "{{pkg_dict.funderName}}".split(",");
 
-    funTable = document.getElementById("funderTable");
-    for (let i = 0; i < aNum.length; i++) {
-      let row = funTable.insertRow();
-      let cell1 = row.insertCell();
-      let cell2 = row.insertCell();
-      let cell3 = row.insertCell();
+<!-- FUnder Information -->
+<div><strong> Funder Information</strong></div>
+<table id="funderTable" style="display: table; word-wrap: break-word; overflow: hidden; width: 100%;">
+  <tr style="color: #0e6633">
+    <th style="width: 20%;">
+      Award Number
+    </th>
+    <th style="width: 50%;">
+      Award Title
+    </th>
+    <th style="width: 30%;">
+      Funder Name
+    </th>
+  </tr>
+</table>
+<br>
+<script>
+  let aNum = "{{pkg_dict.awardNumber}}".split(",");
+  let aTitle = "{{pkg_dict.awardTitle}}".split(",");
+  let funder = "{{pkg_dict.funderName}}".split(",");
 
+  funTable = document.getElementById("funderTable");
+  for (let i = 0; i < aNum.length; i++) {
+    let row = funTable.insertRow();
+    let cell1 = row.insertCell();
+    let cell2 = row.insertCell();
+    let cell3 = row.insertCell();
 
-      let awardNum = aNum[i].replace(/\//g, "%2F");
-      let url = `https://gtr.ukri.org/projects?ref=${awardNum}`;
+    let awardNum = aNum[i].replace(/\//g, "%2F");
+    let url = `https://gtr.ukri.org/projects?ref=${awardNum}`;
 
-      cell1.innerHTML = aNum[i];
-      cell2.innerHTML = `<a href="${url}">${aTitle[i]}</a>`;
-      cell3.innerHTML = funder[i];
-
-    }
-  </script>
+    cell1.innerHTML = aNum[i];
+    cell2.innerHTML = `<a href="${url}">${aTitle[i]}</a>`;
+    cell3.innerHTML = funder[i];
+  }
+</script>
 
   <!-- Contributor Information -->
   <div id="contriDiv" style="display: none;">
