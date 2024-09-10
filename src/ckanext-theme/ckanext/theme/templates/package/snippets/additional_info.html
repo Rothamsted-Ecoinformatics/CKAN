@@ -45,6 +45,7 @@
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <script>
+    console.log("{{pkg_dict}}");
     let name = "{{pkg_dict.author}}".split(",");
     let orcid = "{{ pkg_dict.nameIdentifier }}".split(",");
     let affils = "{{ pkg_dict.creatorAffiliation }}".split(",");
@@ -89,7 +90,7 @@
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Spatial Information -->
-   
+
   <head>
     <title>Simple Leaflet Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
@@ -106,23 +107,23 @@
     </style>
   </head>
   <div id="spatialInfo" style="display: none;">
-  <div><strong> Spatial Information </strong></div>
-  <pre>
+    <div><strong> Spatial Information </strong></div>
+    <pre>
   <strong>Geolocation Point</strong> 
     (Latitude, Longitude) : ( {{ pkg_dict.geoLatitude }}, {{ pkg_dict.geoLongitude }} ) 
   </pre>
-  <pre id="geoBox" style="display: none;">
+    <pre id="geoBox" style="display: none;">
   <strong>Geolocation Box:</strong>
      Lower Left Corner (Latitude,Longitude): ( {{ pkg_dict.geoLowLeftLatitude }}, {{ pkg_dict.geoLowLeftLongitude }} ) 
      Top Right Corner (Latitude,Longitude): ( {{ pkg_dict.geoTopRightLatitude }}, {{ pkg_dict.geoTopRightLongitude }} ) 
   </pre>
 
-  <div id="mapid" ></div>
-</div>
+    <div id="mapid"></div>
+  </div>
   <script>
     let x = parseFloat("{{ pkg_dict.geoLatitude }}");
     let y = parseFloat("{{ pkg_dict.geoLongitude }}");
-    if(x || y || "{{ pkg_dict.geoLowLeftLatitude }}"){
+    if (x || y || "{{ pkg_dict.geoLowLeftLatitude }}") {
       document.getElementById("spatialInfo").style.display = "block";
     }
     var mymap = L.map('mapid').setView([x, y], 13);
@@ -197,16 +198,7 @@
         Award Title
       </th>
       <th>
-        Award URI
-      </th>
-      <th>
         Funder Name
-      </th>
-      <th>
-        Funder Identifier
-      </th>
-      <th>
-        Funder ID Type
       </th>
     </tr>
   </table>
@@ -215,10 +207,7 @@
   <script>
     let aNum = "{{pkg_dict.awardNumber}}".split(",");
     let aTitle = "{{pkg_dict.awardTitle}}".split(",");
-    let aURI = "{{pkg_dict.awardURI}}".split(",");
     let funder = "{{pkg_dict.funderName}}".split(",");
-    let idType = "{{ pkg_dict.funderIdType }}".split(",");
-    let fId = "{{ pkg_dict.funderId }}".split(",");
 
     funTable = document.getElementById("funderTable");
     for (let i = 0; i < aNum.length; i++) {
@@ -226,16 +215,14 @@
       let cell1 = row.insertCell();
       let cell2 = row.insertCell();
       let cell3 = row.insertCell();
-      let cell4 = row.insertCell();
-      let cell5 = row.insertCell();
-      let cell6 = row.insertCell();
+
+
+      let awardNum = aNum[i].replace(/\//g, "%2F");
+      let url = `https://gtr.ukri.org/projects?ref=${awardNum}`;
 
       cell1.innerHTML = aNum[i];
-      cell2.innerHTML = aTitle[i];
-      cell3.innerHTML = aURI[i];
-      cell4.innerHTML = funder[i];
-      cell5.innerHTML = fId[i];
-      cell6.innerHTML = idType[i];
+      cell2.innerHTML = `<a href="${url}">${aTitle[i]}</a>`;
+      cell3.innerHTML = funder[i];
 
     }
   </script>
@@ -348,8 +335,6 @@
       document.getElementById("notebookField").append(link);
       document.getElementById("notebookField").append("\n");
     }
-
-
   </script>
 
   <body>
@@ -414,7 +399,7 @@
           "@type": "Dataset",
           "name": name,
           "@id": name,
-          "description": "This resource is of type " + relatedType[index] +  ". This is related to  " + "{{ pkg_dict.name }}" + " as " + type[index],
+          "description": "This resource is of type " + relatedType[index] + ". This is related to  " + "{{ pkg_dict.name }}" + " as " + type[index],
           "creator": {
             "@type": "Person",
             "name": "N/A"
