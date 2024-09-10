@@ -1357,7 +1357,7 @@ For example, a dataset resource may have links to other related datasets, code u
   <!-- Metadata Fields -->
   <input type="text" id="field-subjectScheme" name="subjectScheme" style="display: none;"
     value="{{ data.subjectScheme }}">
-  <input type="text" id="field-subjectUri" name="subjectUri" style="display: none;" value="{{ data.subjectUri }}">
+  <input type="text" id="field-schemeURI" name="schemeURI" style="display: none;" value="{{ data.schemeURI }}">
   <input type="text" id="field-valueUri" name="valueUri" style="display: none;" value="{{ data.valueUri }}">
 
   <input type="text" id="field-subject" name="subject" style="display: none;" value="{{ data.subject }}">
@@ -1419,7 +1419,7 @@ For example, a dataset resource may have links to other related datasets, code u
       document.getElementById('field-subjectField').value = '';
       // Push to Metadatafields
       document.getElementById('field-subjectScheme').value = subScheme;
-      document.getElementById('field-subjectUri').value = subUri;
+      document.getElementById('field-schemeURI').value = subUri;
       document.getElementById('field-valueUri').value = valUri;
       document.getElementById('field-subject').value = sub;
       // Print Message
@@ -1468,7 +1468,7 @@ For example, a dataset resource may have links to other related datasets, code u
       valUri.splice(index, 1);
       subUri.splice(index, 1);
       document.getElementById('field-subjectScheme').value = subScheme;
-      document.getElementById('field-subjectUri').value = subUri;
+      document.getElementById('field-schemeURI').value = subUri;
       document.getElementById('field-valueUri').value = valUri;
       document.getElementById('field-subject').value = sub;
 
