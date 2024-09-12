@@ -716,7 +716,7 @@ For example: a Dataset might be a survey dataset, a plant phenotyping dataset, o
   <script>
     let awardData = [];
 
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/funderTotal_info.csv')
+    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/funderInfo.csv')
       .then(response => response.text())
       .then(csvString => {
         awardData = Papa.parse(csvString, { header: true }).data;
@@ -728,7 +728,7 @@ For example: a Dataset might be a survey dataset, a plant phenotyping dataset, o
             $j('#field-awardTitleField').val(selectedData.awardTitle);
             $j('#field-awardURIField').val(selectedData.awardURI);
             $j('#field-funderNameField').val(selectedData.funderName);
-            $j('#field-funderIdField').val(selectedData.funderIdentifer);
+            $j('#field-funderIdField').val(selectedData.funderIdentifier);
             document.getElementById('field-funderIdTypeField').value = selectedData.funderIDType;
             return false;
           }
