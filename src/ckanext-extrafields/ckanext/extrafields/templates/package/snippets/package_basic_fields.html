@@ -38,6 +38,14 @@
       margin-left: 5px;
     }
   </style>
+  <!-- DOI Field -->
+   <label id="doiLabel"><strong>DOI</strong></label>
+   <i class="fas fa-info-circle" title="If DOI already exists for this dataset, add it here. Else a new DOI will be minted"></i>
+   <br>
+   <input name="oldDoi" id="field-oldDoi" classes="control-medium" placeholder="ROTH/awo218y6" value="{{data.doi}}">
+   <!-- Add the Field Here -->
+  <br><br>  
+
   <!-- Creator Field -->
   <!--              -->
   <label id="creatorLabel"><strong>*Dataset Authors (Mandatory)</strong></label>
@@ -76,6 +84,7 @@
       crossorigin=""></script>
   </head>
   <script type="text/javascript">
+    console.log("{{data.doi}}")
     let data = [];
     var $j = jQuery.noConflict();
     fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/ckanStaffList.csv')
