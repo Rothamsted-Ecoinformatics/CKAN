@@ -1,4 +1,7 @@
 <div role="main" class="hero">
+  {% set user = current_user %}
+  {% if h.check_user_permission(user) %}
+  {% endif %}  
   <div class="container" style="align-items: center;">
 <h3>Welcome to RRES CKAN Data Repository</h3>
 </div>

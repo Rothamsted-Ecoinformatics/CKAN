@@ -19,7 +19,6 @@ import copy
 import uuid
 import functools
 import unicodedata
-
 from collections import defaultdict
 from typing import (
     Any, Callable, Match, NoReturn, cast, Dict,
@@ -660,7 +659,7 @@ def current_url() -> str:
 
 @core_helper
 def setFlag( dateAvailable ) -> str:
-    ''' Returns current url unquoted'''
+    ''' returns true or false based on available date and current date'''
     if not dateAvailable:
         return True
     currentDate = datetime.date.today()
@@ -2819,9 +2818,73 @@ def make_login_url(
 def csrf_input():
     return snippet('snippets/csrf_input.html')
 
-
 @core_helper
 def get_package_dict(pkg_name):
     context = {'model': model, 'session': model.Session, 'user': p.toolkit.c.user}
     data_dict = {'id': pkg_name}
     return p.toolkit.get_action('package_show')(context, data_dict)
+
+from ckan.model import User, Group, Member
+from ckan import model
+from ckan.logic import NotFound
+#from ckan.plugins.toolkit import _
+
+@core_helper
+def check_user_permission(user):
+    """Check if the user has 'editor' role in the organization with ID 'rothamsted'.
+    
+    If the user is not an editor, check if their email ends with 'rothamsted.ac.uk'. 
+    If so, add the user to the organization. Print the success or failure message accordingly.
+    
+    Args:
+        user (User): The CKAN user object to check. If no user is logged in, the function returns.
+    """
+    
+    # Check if no user is logged in
+    
+    if(user):
+        logging.warning(user)
+    else:
+        logging.warning("no user logged in")
+        return            
+
+    org_id = 'rothamsted'  # Organization ID
+    
+    # Retrieve the organization (Group) by ID
+    try:
+        org = model.Group.get(org_id)
+        if not org:
+            logging.warning(f"Organization with ID '{org_id}' not found.")
+            return
+    except NotFound:
+        logging.warning(f"Organization with ID '{org_id}' not found.")
+        return
+    
+    # Check if the user is already a member of the organization with 'editor' role
+   
+    try:
+        member_roles = model.Session.query(Member).filter_by(group_id=org.id, table_id=user.id, table_name='user').all()
+    except AttributeError:
+        log.warning("No one is logged in, unable to check member roles.")
+        return  # Return immediately if there is an error accessing user.id
+
+        
+    if any(member.capacity == 'editor' for member in member_roles):
+        logging.warning(f"Success: {user.name} already has 'editor' access in organization '{org_id}'.")
+        return
+
+    # If the user is not an editor, check if their email ends with 'rothamsted.ac.uk'
+    if user.email.endswith('@rothamsted.ac.uk'):
+        try:
+            # Add the user to the organization with the 'editor' role
+            member = Member(group=org, table_id=user.id, table_name='user', capacity='editor')
+            model.Session.add(member)
+            model.Session.commit()  # Commit the change to the database
+            logging.warning(f"Success: {user.name} added to organization '{org_id}' with 'editor' access.")
+        except Exception as e:
+            model.Session.rollback()
+            logging.warning(f"Failed to add {user.name} to organization '{org_id}'. Error: {str(e)}")
+    else:
+        logging.warning(f"Unsuccessful: {user.name}'s email does not belong to 'rothamsted.ac.uk' domain.")
+
+
