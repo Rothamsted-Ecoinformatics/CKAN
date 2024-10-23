@@ -38,13 +38,15 @@
       margin-left: 5px;
     }
   </style>
+
   <!-- DOI Field -->
-   <label id="doiLabel"><strong>DOI</strong></label>
-   <i class="fas fa-info-circle" title="If DOI already exists for this dataset, add it here. Else a new DOI will be minted"></i>
-   <br>
-   <input name="oldDoi" id="field-oldDoi" classes="control-medium" placeholder="ROTH/awo218y6" value="{{data.doi}}">
-   <!-- Add the Field Here -->
-  <br><br>  
+  <label id="doiLabel"><strong>DOI</strong></label>
+  <i class="fas fa-info-circle"
+    title="If DOI already exists for this dataset, add it here. Else a new DOI will be minted"></i>
+  <br>
+  <input name="oldDoi" id="field-oldDoi" classes="control-medium" placeholder="ROTH/awo218y6" value="{{data.doi}}">
+  <!-- Add the Field Here -->
+  <br><br>
 
   <!-- Creator Field -->
   <!--              -->
@@ -56,7 +58,8 @@
   </p>
   <!-- First Name -->
   <label for="field-family_name">*Family Name</label><br>
-  <input type="text" id="field-family_name" placeholder="Smith, Lee" name="family_name" class="control-medium">
+  <input type="text" id="field-family_name" placeholder="Smith, Lee" name="family_name" class="control-medium"
+    oninput="fetchAuthorsFromAPI()">
   <br><br>
 
   <label for="field-given_name">*Given Name</label><br>
@@ -70,7 +73,6 @@
     class="control-medium">
   <br><br>
 
-
   <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js" type="text/javascript"></script>
@@ -83,29 +85,72 @@
       integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
       crossorigin=""></script>
   </head>
-  <script type="text/javascript">
-    console.log("{{data.doi}}")
-    let data = [];
-    var $j = jQuery.noConflict();
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/ckanStaffList.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        data = Papa.parse(csvString, { header: true }).data;
-        const fullNames = data.map(item => ({ label: item.firstname + ' ' + item.lastname, value: item.lastname, item }));
-        $j("#field-family_name").autocomplete({
-          source: fullNames,
-          select: function (event, ui) {
-            $j('#field-given_name').val(ui.item.item.firstname);
-            $j('#field-family_name').val(ui.item.item.lastname);
-            $j('#field-nameIdField').val(ui.item.item.identifier);
-            $j('#field-creatorAffiliationField').val(ui.item.item.affiliation);
-            return false;
-          }
-        });
+
+  <!-- Start here -->
+  <script>
+    // let data = [];
+    async function authorAuto(data) {
+      let transformedData = data.map(item => ({
+        label: item[5], // Use the full name as the display label (6th element)
+        value: item[5], // Use the full name as the value (for consistency with label)
+        item: {
+          firstname: item[1],   // 2nd element is the first name
+          lastname: item[2],    // 3rd element is the last name
+          identifier: item[4],  // 5th element is the identifier (e.g., ORCID)
+          affiliation: item[3]  // 4th element is the affiliation
+        }
+      }));
+
+      // Initialize autocomplete with the transformed data
+      $j("#field-family_name").autocomplete({
+        source: transformedData,
+        select: function (event, ui) {
+          // Populate fields with selected values
+          $j('#field-given_name').val(ui.item.item.firstname);
+          $j('#field-family_name').val(ui.item.item.lastname);
+          $j('#field-nameIdField').val(ui.item.item.identifier || ''); // Handle empty identifier
+          $j('#field-creatorAffiliationField').val(ui.item.item.affiliation || ''); // Handle empty affiliation
+          return false;
+        }
       });
+    }
+    // Function to call the CKAN fetchUsers API
+    async function fetchAuthorsFromAPI() {
+      const apiUrl = 'http://pursuit.rothamsted.ac.uk/api/3/action/fetchUsers'; // Replace with your actual CKAN URL
+      input_val = document.getElementById('field-family_name').value;
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST', // CKAN action APIs use POST method
+          headers: {
+            'Content-Type': 'application/json',  // Set the content type to JSON
+          },
+          body: JSON.stringify({
+            input_val: input_val  // Send the dynamic value as a POST body
+          })
+        });
+
+        // Check if the response is ok (status in the range 200-299)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Parse the JSON response
+        const data1 = await response.json();
+
+        // Check if the API returned a success response
+        if (data1.success) {
+          authorAuto(data1.result.data);
+          return;  // The data contains the result of the SQL query
+        } else {
+        }
+      } catch (error) {
+      }
+    }
+
+
 
   </script>
-
+  <!-- End here -->
 
   <button type="button" onclick="addCreator()">Add Creator</button>
 
@@ -123,6 +168,8 @@
   <!-- CREATOR Function-->
 
   <script>
+
+    var $j = jQuery.noConflict();
     var nameId = [];
     var creator = [];
     var affiliations = [];
@@ -254,7 +301,7 @@
 
   <label for="field-contributorFamilyName">*Family Name</label><br>
   <input type="text" id="field-contributorFamilyName" placeholder="Smith, Lee" name="contributorFamilyName"
-    class="control-medium">
+    class="control-medium" oninput="fetchContriFromAPI()">
   <br><br>
 
   <label for="field-contributorFirstName">*Given Name</label><br>
@@ -273,24 +320,65 @@
   <br><br>
   <button type="button" onclick="addContributor()">Add Contributor</button>
   <script>
-    let contriData = [];
 
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/ckanStaffList.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        contriData = Papa.parse(csvString, { header: true }).data;
-        const fullNames = contriData.map(item => ({ label: item.firstname + ' ' + item.lastname, value: item.lastname, item }));
-        $j("#field-contributorFamilyName").autocomplete({
-          source: fullNames,
-          select: function (event, ui) {
-            $j('#field-contributorFirstName').val(ui.item.item.firstname);
-            $j('#field-contributorFamilyName').val(ui.item.item.lastname);
-            $j('#field-contributorNameId').val(ui.item.item.identifier);
-            $j('#field-contributorAffiliationField').val(ui.item.item.affiliation);
-            return false;
-          }
-        });
+    async function contriAuto(data) {
+
+      let transformedData = data.map(item => ({
+        label: item[5], // Use the full name as the display label (6th element)
+        value: item[5], // Use the full name as the value (for consistency with label)
+        item: {
+          firstname: item[1],   // 2nd element is the first name
+          lastname: item[2],    // 3rd element is the last name
+          identifier: item[4],  // 5th element is the identifier (e.g., ORCID)
+          affiliation: item[3]  // 4th element is the affiliation
+        }
+      }));
+
+      // Initialize autocomplete with the transformed data
+      $j("#field-contributorFamilyName").autocomplete({
+        source: transformedData,
+        select: function (event, ui) {
+          // Populate fields with selected values
+          $j('#field-contributorFirstName').val(ui.item.item.firstname);
+          $j('#field-contributorFamilyName').val(ui.item.item.lastname);
+          $j('#field-contributorNameId').val(ui.item.item.identifier || ''); // Handle empty identifier
+          $j('#field-contributorAffiliationField').val(ui.item.item.affiliation || ''); // Handle empty affiliation
+          return false;
+        }
       });
+    }
+
+    async function fetchContriFromAPI() {
+      const apiUrl = 'http://pursuit.rothamsted.ac.uk/api/3/action/fetchUsers'; // Replace with your actual CKAN URL
+      input_val = document.getElementById('field-contributorFamilyName').value;
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST', // CKAN action APIs use POST method
+          headers: {
+            'Content-Type': 'application/json',  // Set the content type to JSON
+          },
+          body: JSON.stringify({
+            input_val: input_val  // Send the dynamic value as a POST body
+          })
+        });
+
+        // Check if the response is ok (status in the range 200-299)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Parse the JSON response
+        const data1 = await response.json();
+
+        // Check if the API returned a success response
+        if (data1.success) {
+          contriAuto(data1.result.data);
+          return;  // The data contains the result of the SQL query
+        } else {
+        }
+      } catch (error) {
+      }
+    }
   </script>
   <pre id='contributorMessage'></pre>
   <div id="contributorDiv"></div>
@@ -692,7 +780,8 @@ For example: a Dataset might be a survey dataset, a plant phenotyping dataset, o
 
   <label for="field-awardNumberField">Award number</label>
   <i class="fas fa-info-circle" title="The code assigned by the funder to a sponsored award (grant)."></i><br>
-  <input id="field-awardNumberField" name="awardNumberField" class="control-medium" style="width: 500px;"><br><br>
+  <input id="field-awardNumberField" name="awardNumberField" class="control-medium" style="width: 500px;"
+    oninput="fetchFunderFromAPI()"><br><br>
 
   <label for="field-awardTitleField">*Award Title</label>
   <i class="fas fa-info-circle" title="The human readable title or name of the award (grant)."></i><br>
@@ -723,26 +812,69 @@ For example: a Dataset might be a survey dataset, a plant phenotyping dataset, o
 
 
   <script>
-    let awardData = [];
 
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/funderInfo.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        awardData = Papa.parse(csvString, { header: true }).data;
-        $j("#field-awardNumberField").autocomplete({
-          source: awardData.map(row => row.awardNumber),
-          select: function (event, ui) {
-            let selectedData = awardData.find(row => row.awardNumber === ui.item.value);
-            $j('#field-awardNumberField').val(ui.item.value);
-            $j('#field-awardTitleField').val(selectedData.awardTitle);
-            $j('#field-awardURIField').val(selectedData.awardURI);
-            $j('#field-funderNameField').val(selectedData.funderName);
-            $j('#field-funderIdField').val(selectedData.funderIdentifier);
-            document.getElementById('field-funderIdTypeField').value = selectedData.funderIDType;
-            return false;
-          }
-        });
+    async function FunderAuto(data) {
+
+      let funderData = data.map(item => ({
+        label: item[1], // Use the full name as the display label (6th element)
+        value: item[1], // Use the full name as the value (for consistency with label)
+        item: {
+          awardnumber: item[1],   // 2nd element is the first name
+          awardtitle: item[2],    // 3rd element is the last name
+          awarduri: item[3],  // 5th element is the identifier (e.g., ORCID)
+          fundername: item[4],  // 4th element is the affiliation
+          funderAbb: item[5],
+          funderid: item[6],
+          funderidtype: item[7]
+        }
+      }));
+
+      // Initialize autocomplete with the transformed data
+      $j("#field-awardNumberField").autocomplete({
+        source: funderData,
+        select: function (event, ui) {
+          // Populate fields with selected values
+          $j('#field-awardNumberField').val(ui.item.item.awardnumber || '');
+          $j('#field-awardTitleField').val(ui.item.item.awardtitle);
+          $j('#field-awardURIField').val(ui.item.item.awarduri || ''); // Handle empty identifier
+          $j('#field-funderNameField').val(ui.item.item.fundername || ''); // Handle empty affiliation
+          $j('#field-funderIdField').val(ui.item.item.funderid || '');
+          document.getElementById('field-funderIdTypeField').value = ui.item.item.funderidtype;
+          return false;
+        }
       });
+    }
+    async function fetchFunderFromAPI() {
+      const apiUrl = 'http://pursuit.rothamsted.ac.uk/api/3/action/fetchFunders'; // Replace with your actual CKAN URL
+      input_val = document.getElementById('field-awardNumberField').value;
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST', // CKAN action APIs use POST method
+          headers: {
+            'Content-Type': 'application/json',  // Set the content type to JSON
+          },
+          body: JSON.stringify({
+            input_val: input_val  // Send the dynamic value as a POST body
+          })
+        });
+
+        // Check if the response is ok (status in the range 200-299)
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Parse the JSON response
+        const data1 = await response.json();
+
+        // Check if the API returned a success response
+        if (data1.success) {
+          FunderAuto(data1.result.data);
+          return;  // The data contains the result of the SQL query
+        } else {
+        }
+      } catch (error) {
+      }
+    }
   </script>
 
 
@@ -1310,7 +1442,7 @@ For example, a dataset resource may have links to other related datasets, code u
   <label><strong> Keywords (Optional)</strong></label>
   <i class="fas fa-info-circle" title="General topic or key phrase describing the dataset."></i>
   <br>
-  <input type="text" id="field-subjectField" name="subjectField" style="width: 500px;"><br><br>
+  <input type="text" id="field-subjectField" name="subjectField" style="width: 500px;" oninput="fetchSubjectFromAPI()"><br><br>
 
   <input type="text" id="field-subjectSchemeField" name="subjectSchemeField" style="width: 500px; display: none;">
 
@@ -1343,25 +1475,66 @@ For example, a dataset resource may have links to other related datasets, code u
     }
   </style>
   <script>
-    let subData = [];
+    //start here
+    async function subjectAuto(data) {
 
-    fetch('https://raw.githubusercontent.com/Rothamsted-Ecoinformatics/CKAN/master/src/csvFiles/subjectsList.csv')
-      .then(response => response.text())
-      .then(csvString => {
-        subData = Papa.parse(csvString, { header: true }).data;
-        const subList = subData.map(row => row.subject);
-        $j("#field-subjectField").autocomplete({
-          source: subList,
-          select: function (event, ui) {
-            let selectedData = subData.find(row => row.subject === ui.item.value);
-            $j('#field-subjectField').val(selectedData.subject);
-            $j('#field-subjectSchemeField').val(selectedData.subjectScheme);
-            $j('#field-subjectUriField').val(selectedData.subjectURI);
-            $j('#field-valueUriField').val(selectedData.valueURI);
-            return false;
-          }
-        });
-      });
+let subjectData = data.map(item => ({
+  label: item[1], // Use the full name as the display label (6th element)
+  value: item[1], // Use the full name as the value (for consistency with label)
+  item: {
+    subject: item[1],   // 2nd element is the first name
+    subjectscheme: item[2],    // 3rd element is the last name
+    subjecturi: item[4],  // 5th element is the identifier (e.g., ORCID)
+    valueuri: item[3]  // 4th element is the affiliation
+  }
+}));
+
+// Initialize autocomplete with the transformed data
+$j("#field-subjectField").autocomplete({
+  source: subjectData,
+  select: function (event, ui) {
+    // Populate fields with selected values
+    $j('#field-subjectField').val(ui.item.item.subject);
+    $j('#field-subjectSchemeField').val(ui.item.item.subjectscheme || '');
+    $j('#field-subjectUriField').val(ui.item.item.subjecturi || ''); // Handle empty identifier
+    $j('#field-valueUriField').val(ui.item.item.valueuri || ''); // Handle empty affiliation
+    return false;
+  }
+});
+}
+
+async function fetchSubjectFromAPI() {
+const apiUrl = 'http://pursuit.rothamsted.ac.uk/api/3/action/fetchSubjects'; // Replace with your actual CKAN URL
+input_val = document.getElementById('field-subjectField').value;
+try {
+  const response = await fetch(apiUrl, {
+    method: 'POST', // CKAN action APIs use POST method
+    headers: {
+      'Content-Type': 'application/json',  // Set the content type to JSON
+    },
+    body: JSON.stringify({
+      input_val: input_val  // Send the dynamic value as a POST body
+    })
+  });
+
+  // Check if the response is ok (status in the range 200-299)
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  // Parse the JSON response
+  const data1 = await response.json();
+
+  // Check if the API returned a success response
+  if (data1.success) {
+    subjectAuto(data1.result.data);
+    return;  // The data contains the result of the SQL query
+  } else {
+  }
+} catch (error) {
+}
+}
+
   </script>
   <!-- Metadata Fields -->
   <input type="text" id="field-subjectScheme" name="subjectScheme" style="display: none;"
