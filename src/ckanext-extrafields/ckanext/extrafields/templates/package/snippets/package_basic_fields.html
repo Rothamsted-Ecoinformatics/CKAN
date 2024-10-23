@@ -116,14 +116,16 @@
     }
     // Function to call the CKAN fetchUsers API
     async function fetchAuthorsFromAPI() {
-      const apiUrl = 'http://pursuit.rothamsted.ac.uk/api/3/action/fetchUsers'; // Replace with your actual CKAN URL
-      input_val = document.getElementById('field-family_name').value;
+      let apiUrl = 'https://data.rothamsted.ac.uk/api/3/action/fetchUsers'; 
+      let csrfToken = document.querySelector('meta[name="_csrf_token"]').getAttribute('content');	      
+      let input_val = document.getElementById('field-family_name').value;
       try {
         const response = await fetch(apiUrl, {
           method: 'POST', // CKAN action APIs use POST method
           headers: {
             'Content-Type': 'application/json',  // Set the content type to JSON
-          },
+            'X-CSRF-Token': csrfToken,	
+		    },
           body: JSON.stringify({
             input_val: input_val  // Send the dynamic value as a POST body
           })
@@ -349,13 +351,16 @@
     }
 
     async function fetchContriFromAPI() {
-      const apiUrl = 'http://pursuit.rothamsted.ac.uk/api/3/action/fetchUsers'; // Replace with your actual CKAN URL
-      input_val = document.getElementById('field-contributorFamilyName').value;
+      let apiUrl = 'https://data.rothamsted.ac.uk/api/3/action/fetchUsers'; //url 
+      let input_val = document.getElementById('field-contributorFamilyName').value;
+      let csrfToken = document.querySelector('meta[name="_csrf_token"]').getAttribute('content');		      
+
       try {
         const response = await fetch(apiUrl, {
           method: 'POST', // CKAN action APIs use POST method
           headers: {
-            'Content-Type': 'application/json',  // Set the content type to JSON
+            'Content-Type': 'application/json',
+	    'X-CSRF-Token': csrfToken		    // Set the content type to JSON
           },
           body: JSON.stringify({
             input_val: input_val  // Send the dynamic value as a POST body
@@ -845,13 +850,15 @@ For example: a Dataset might be a survey dataset, a plant phenotyping dataset, o
       });
     }
     async function fetchFunderFromAPI() {
-      const apiUrl = 'http://pursuit.rothamsted.ac.uk/api/3/action/fetchFunders'; // Replace with your actual CKAN URL
+      const apiUrl = 'https://data.rothamsted.ac.uk/api/3/action/fetchFunders'; // Replace with your actual CKAN URL
+      const csrfToken = document.querySelector('meta[name="_csrf_token"]').getAttribute('content');		      
       input_val = document.getElementById('field-awardNumberField').value;
       try {
         const response = await fetch(apiUrl, {
           method: 'POST', // CKAN action APIs use POST method
           headers: {
             'Content-Type': 'application/json',  // Set the content type to JSON
+	    'X-CSRF-Token': csrfToken		    
           },
           body: JSON.stringify({
             input_val: input_val  // Send the dynamic value as a POST body
@@ -1504,13 +1511,15 @@ $j("#field-subjectField").autocomplete({
 }
 
 async function fetchSubjectFromAPI() {
-const apiUrl = 'http://pursuit.rothamsted.ac.uk/api/3/action/fetchSubjects'; // Replace with your actual CKAN URL
+let apiUrl = 'https://data.rothamsted.ac.uk/api/3/action/fetchSubjects'; // Replace with your actual CKAN URL
+let csrfToken = document.querySelector('meta[name="_csrf_token"]').getAttribute('content');		  
 input_val = document.getElementById('field-subjectField').value;
 try {
   const response = await fetch(apiUrl, {
     method: 'POST', // CKAN action APIs use POST method
     headers: {
       'Content-Type': 'application/json',  // Set the content type to JSON
+      'X-CSRF-Token': csrfToken
     },
     body: JSON.stringify({
       input_val: input_val  // Send the dynamic value as a POST body
