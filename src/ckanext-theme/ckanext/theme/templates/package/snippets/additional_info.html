@@ -79,7 +79,8 @@
   </script><br>
   <!-- Abstract, Methods and Technical Information  -->
   <div><strong> Abstract </strong></div>
-  <p id="p-abstract">{{ pkg_dict.abstract }}</p>
+  <p id="p-abstract">{{ pkg_dict.abstract | replace('\n', '<br>') | replace('\r\n', '<br>') | safe }}</p>
+
 
   <div><strong> Methods </strong></div>
   <p>{{ pkg_dict.methods }}</p>
