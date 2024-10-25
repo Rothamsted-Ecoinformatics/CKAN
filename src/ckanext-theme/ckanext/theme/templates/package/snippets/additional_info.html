@@ -80,18 +80,18 @@
   <!-- Abstract, Methods and Technical Information  -->
   <div><strong> Abstract </strong></div>
  <p id="p-abstract">
-    {{ pkg_dict.abstract | trim | replace('\r\n', '\n') | replace('\n\n', '\n') | replace('\n', '<br>') | safe }}
+    {{ pkg_dict.abstract | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}
 </p>
 
 
 
 
   <div><strong> Methods </strong></div>
-  <p>{{ pkg_dict.methods | trim | replace('\r\n', '\n') | replace('\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
+  <p>{{ pkg_dict.methods | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
 
 
   <div><strong> Technical Information </strong></div>
-  <p>{{ pkg_dict.technicalInfo | trim | replace('\r\n', '\n') | replace('\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
+  <p>{{ pkg_dict.technicalInfo | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Spatial Information -->
