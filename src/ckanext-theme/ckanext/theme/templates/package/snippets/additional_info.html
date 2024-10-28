@@ -79,17 +79,17 @@
   </script><br>
   <!-- Abstract, Methods and Technical Information  -->
   <div><strong> Abstract </strong></div>
-  <p id="p-abstract">{{ pkg_dict.abstract | replace('\n', '<br>') | replace('\r\n', '<br>') | replace('<br><br>$', '') | safe }}</p>
+  <p id="p-abstract">{{ pkg_dict.abstract | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
 
 
 
 
   <div><strong> Methods </strong></div>
-  <p>{{ pkg_dict.methods }}</p>
+  <p>{{ pkg_dict.methods | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
 
 
   <div><strong> Technical Information </strong></div>
-  <p>{{ pkg_dict.technicalInfo }}</p>
+  <p>{{ pkg_dict.technicalInfo | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Spatial Information -->
@@ -111,7 +111,7 @@
   </head>
   <div id="spatialInfo" style="display: none;">
     <div><strong> Spatial Information </strong></div>
-    <pre>
+    <pre style="display: none;" id="geoPointPre">
   <strong>Geolocation Point</strong> 
     (Latitude, Longitude) : ( {{ pkg_dict.geoLatitude }}, {{ pkg_dict.geoLongitude }} ) 
   </pre>
@@ -136,6 +136,9 @@
       x = "{{ pkg_dict.geoLowLeftLatitude }}";
       y = "{{ pkg_dict.geoLowLeftLongitude }}";
       flag = 1;
+    }
+    else{
+      document.getElementById("geoPointPre").style.display = "block";
     }
   
     var mymap = L.map('mapid');
@@ -189,13 +192,18 @@
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Related Resource Fields -->
+   <div id="relatedDiv" style="display: none;">
   <div><strong> Related Resources</strong> </div>
   <pre id="relatedResourceField"></pre>
+  </div>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <script>
     let type = "{{pkg_dict.relationType}}".split(",");
     let Rid = "{{pkg_dict.relatedIdentifier}}".split(",");
+    if("{{pkg_dict.relationType}}"){
+      document.getElementById("relatedDiv").style.display = "block";
+    }
     let p = document.getElementById("relatedResourceField");
     for (let i = 0; i < type.length; i++) {
 
