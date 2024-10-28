@@ -230,7 +230,8 @@
   let aNum = "{{pkg_dict.awardNumber}}".split(",");
   let aTitle = "{{pkg_dict.awardTitle}}".split(",");
   let funder = "{{pkg_dict.funderName}}".split(",");
-  let fId = "pkg_dict.funderId".split(",");
+  let fId = "{{pkg_dict.funderId}}".split(",");
+  let awardUri = "{{pkg_dict.awardURI}}".split(",");
 
   funTable = document.getElementById("funderTable");
   for (let i = 0; i < aNum.length; i++) {
@@ -240,7 +241,8 @@
     let cell3 = row.insertCell();
 
     let awardNum = aNum[i].replace(/\//g, "%2F");
-    let url = `https://gtr.ukri.org/projects?ref=${awardNum}`;
+    let aUri = awardUri[i];
+    let url = aUri;
 
     cell1.innerHTML = aNum[i];
     cell2.innerHTML = `<a href="${url}">${aTitle[i]}</a>`;
