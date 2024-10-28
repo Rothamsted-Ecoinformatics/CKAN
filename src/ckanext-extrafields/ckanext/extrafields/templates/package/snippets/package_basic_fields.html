@@ -1339,10 +1339,12 @@ For example, a dataset resource may have links to other related datasets, code u
   <hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
 
   <script>
+    //start here
     var latitude;
     var longitude;
     var drawnItems = new L.FeatureGroup();
     var mymap = L.map('mapid').setView([50, -0.1], 4);
+    var isDrawing = false;
 
     L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -1353,10 +1355,16 @@ For example, a dataset resource may have links to other related datasets, code u
     mymap.addLayer(drawnItems);
 
     mymap.on('click', function (e) {
-      latitude = e.latlng.lat;
+      if (!isDrawing){
+        latitude = e.latlng.lat;
       longitude = e.latlng.lng;
+      console.log("clicked")
       document.getElementById('field-geoLatitude').value = latitude.toFixed(4);
       document.getElementById('field-geoLongitude').value = longitude.toFixed(4);
+      }
+      else {
+	isDrawing = false;	
+		}		      
     });
 
     // Initialize the draw control and add it to the map
@@ -1373,6 +1381,13 @@ For example, a dataset resource may have links to other related datasets, code u
     mymap.addControl(drawControl);
 
     // Handle the rectangle drawing event
+    // Handle the start 
+    mymap.on('draw:drawstart', function () {
+      isDrawing = true; // Set flag to true when drawing starts
+      console.log("start draw");
+    });
+    
+  
     mymap.on(L.Draw.Event.CREATED, function (e) {
       var type = e.layerType,
         layer = e.layer;
@@ -1386,7 +1401,7 @@ For example, a dataset resource may have links to other related datasets, code u
         document.getElementById('field-geoLowLeftLongitude').value = lowerLeft.lng.toFixed(6);
         document.getElementById('field-geoTopRightLatitude').value = upperRight.lat.toFixed(6);
         document.getElementById('field-geoTopRightLongitude').value = upperRight.lng.toFixed(6);
-
+        console.log("REMOVE POINT")
         document.getElementById('field-geoLatitude').value = "";
         document.getElementById('field-geoLongitude').value = "";
 
@@ -1394,7 +1409,7 @@ For example, a dataset resource may have links to other related datasets, code u
         drawnItems.addLayer(layer);
       }
     });
-
+    // end here
     // Add buttons to zoom to specific locations
     var harpendenButton = L.control({ position: 'topright' });
     harpendenButton.onAdd = function (map) {
