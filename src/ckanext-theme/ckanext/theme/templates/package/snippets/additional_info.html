@@ -79,19 +79,17 @@
   </script><br>
   <!-- Abstract, Methods and Technical Information  -->
   <div><strong> Abstract </strong></div>
- <p id="p-abstract">
-    {{ pkg_dict.abstract | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}
-</p>
+  <p id="p-abstract">{{ pkg_dict.abstract | replace('\n', '<br>') | replace('\r\n', '<br>') | replace('<br><br>$', '') | safe }}</p>
 
 
 
 
   <div><strong> Methods </strong></div>
-  <p>{{ pkg_dict.methods | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
+  <p>{{ pkg_dict.methods }}</p>
 
 
   <div><strong> Technical Information </strong></div>
-  <p>{{ pkg_dict.technicalInfo | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
+  <p>{{ pkg_dict.technicalInfo }}</p>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Spatial Information -->
@@ -128,25 +126,44 @@
   <script>
     let x = parseFloat("{{ pkg_dict.geoLatitude }}");
     let y = parseFloat("{{ pkg_dict.geoLongitude }}");
+    let flag = 0;
+  
     if (x || y || "{{ pkg_dict.geoLowLeftLatitude }}") {
       document.getElementById("spatialInfo").style.display = "block";
     }
-    var mymap = L.map('mapid').setView([x, y], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-    }).addTo(mymap);
-    L.marker([x, y]).addTo(mymap);
+  
+    if (!x && !y) {
+      x = "{{ pkg_dict.geoLowLeftLatitude }}";
+      y = "{{ pkg_dict.geoLowLeftLongitude }}";
+      flag = 1;
+    }
+  
+    var mymap = L.map('mapid');
+  
+    // If the data is a point (latitude and longitude), set view with zoom level 13
+    if (flag === 0) {
+      mymap.setView([x, y], 13);
+      L.marker([x, y]).addTo(mymap);
+    }
+  
+    // If it's a rectangle, use fitBounds to adjust the view to show the entire rectangle
     if ("{{ pkg_dict.geoLowLeftLatitude }}") {
       document.getElementById("geoBox").style.display = "block";
       let llx = parseFloat("{{ pkg_dict.geoLowLeftLatitude }}");
       let lly = parseFloat("{{ pkg_dict.geoLowLeftLongitude }}");
       let trx = parseFloat("{{ pkg_dict.geoTopRightLatitude }}");
       let trY = parseFloat("{{ pkg_dict.geoTopRightLongitude }}");
+  
       var bounds = [[llx, lly], [trx, trY]];
       L.rectangle(bounds, { color: "#ff7800", weight: 1 }).addTo(mymap);
-
+      mymap.fitBounds(bounds);  // Automatically adjusts zoom and center to show the entire rectangle
     }
+  
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }).addTo(mymap);
   </script>
+  
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
 
