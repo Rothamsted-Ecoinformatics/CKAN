@@ -1573,8 +1573,8 @@ try {
   <!--                   -->
 
   <script>
+   //start
     const subjectList = document.getElementById('subjectDiv');
-
     var subScheme = [];
     var subUri = [];
     var valUri = [];
@@ -1584,6 +1584,7 @@ try {
       subUri = "{{ data.subjectUri }}".split(",");
       valUri = "{{ data.valueUri }}".split(",");
       sub = "{{ data.subject }}".split(",");
+      
       for (let i = 0; i < sub.length; i++) {
         displaySubject(sub[i]);
       }
@@ -1630,18 +1631,9 @@ try {
       document.getElementById('field-subject').value = sub;
       // Print Message
       //keyword->tag
-      var tag = [];
-      if ("data.tag_string") {
-        tag = document.getElementById("field-tags").value;
-        tag = tag.split(",");
-      }
-      console.log(tag);
-
-      tag.push(sub);
-      if (tag.length > 1) {
-        tag = tag.join(",");
-      }
-      document.getElementById("field-tags").value = tag;
+ 
+      let subString = sub.join(' ,');
+      document.getElementById("field-tags").value = subString;
 
       displaySubject(s);
     }
@@ -1659,16 +1651,11 @@ try {
 
     function removeSubjects(closeBtn) {
       let tag = document.getElementById("field-tags").value;
-      //console.log(tag);
       const subjectItem = closeBtn.parentNode;
       subjectList.removeChild(subjectItem);
       let s = subjectItem.textContent.trim();
-      // console.log(s);
-      //s = s.slice(0, -1);
       s = s.trim();
-      //console.log(id);
       let index = sub.indexOf(s);
-      //console.log(index);
       sub.splice(index, 1);
       subScheme.splice(index, 1);
       valUri.splice(index, 1);
@@ -1677,14 +1664,12 @@ try {
       document.getElementById('field-schemeURI').value = subUri;
       document.getElementById('field-valueUri').value = valUri;
       document.getElementById('field-subject').value = sub;
+      let subString = sub.join(' ,'); 
+      document.getElementById("field-tags").value = subString;
 
-      let tagList = tag.split(",");
-      let i = tagList.indexOf(s);
-      console.log(i);
-      tagList.splice(i, 1);
-      let tagS = tagList.join(',');
-      document.getElementById("field-tags").value = tagS;
+   
     }
+    //end
   </script>
   <hr style="height:2px;border-width:0;color:black;background-color:gray"><br>
 
