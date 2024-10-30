@@ -45,7 +45,7 @@
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <script>
-    console.log("{{pkg_dict}}");
+    //console.log("{{pkg_dict}}");
     let name = "{{pkg_dict.author}}".split(",");
     let orcid = "{{ pkg_dict.nameIdentifier }}".split(",");
     let affils = "{{ pkg_dict.creatorAffiliation }}".split(",");
@@ -79,17 +79,19 @@
   </script><br>
   <!-- Abstract, Methods and Technical Information  -->
   <div><strong> Abstract </strong></div>
-  <p id="p-abstract">{{ pkg_dict.abstract | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
+  <p id="p-abstract">{{ pkg_dict.abstract | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n',
+    '<br>') | safe }}</p>
 
 
 
 
   <div><strong> Methods </strong></div>
-  <p>{{ pkg_dict.methods | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
+  <p>{{ pkg_dict.methods | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe}}</p>
 
 
   <div><strong> Technical Information </strong></div>
-  <p>{{ pkg_dict.technicalInfo | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe }}</p>
+  <p>{{ pkg_dict.technicalInfo | trim | replace('\r\n', '\n') | replace('\n\n\n', '\n') | replace('\n', '<br>') | safe
+    }}</p>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Spatial Information -->
@@ -127,28 +129,28 @@
     let x = parseFloat("{{ pkg_dict.geoLatitude }}");
     let y = parseFloat("{{ pkg_dict.geoLongitude }}");
     let flag = 0;
-  
+
     if (x || y || "{{ pkg_dict.geoLowLeftLatitude }}") {
       document.getElementById("spatialInfo").style.display = "block";
     }
-  
+
     if (!x && !y) {
       x = "{{ pkg_dict.geoLowLeftLatitude }}";
       y = "{{ pkg_dict.geoLowLeftLongitude }}";
       flag = 1;
     }
-    else{
+    else {
       document.getElementById("geoPointPre").style.display = "block";
     }
-  
+
     var mymap = L.map('mapid');
-  
+
     // If the data is a point (latitude and longitude), set view with zoom level 13
     if (flag === 0) {
       mymap.setView([x, y], 13);
       L.marker([x, y]).addTo(mymap);
     }
-  
+
     // If it's a rectangle, use fitBounds to adjust the view to show the entire rectangle
     if ("{{ pkg_dict.geoLowLeftLatitude }}") {
       document.getElementById("geoBox").style.display = "block";
@@ -156,17 +158,17 @@
       let lly = parseFloat("{{ pkg_dict.geoLowLeftLongitude }}");
       let trx = parseFloat("{{ pkg_dict.geoTopRightLatitude }}");
       let trY = parseFloat("{{ pkg_dict.geoTopRightLongitude }}");
-  
+
       var bounds = [[llx, lly], [trx, trY]];
       L.rectangle(bounds, { color: "#ff7800", weight: 1 }).addTo(mymap);
       mymap.fitBounds(bounds);  // Automatically adjusts zoom and center to show the entire rectangle
     }
-  
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
     }).addTo(mymap);
   </script>
-  
+
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
 
@@ -192,16 +194,16 @@
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <!-- Related Resource Fields -->
-   <div id="relatedDiv" style="display: none;">
-  <div><strong> Related Resources</strong> </div>
-  <pre id="relatedResourceField"></pre>
+  <div id="relatedDiv" style="display: none;">
+    <div><strong> Related Resources</strong> </div>
+    <pre id="relatedResourceField"></pre>
   </div>
   <!-- <hr style="height:2px;border-width:0;color:black;background-color:gray"> -->
 
   <script>
     let type = "{{pkg_dict.relationType}}".split(",");
     let Rid = "{{pkg_dict.relatedIdentifier}}".split(",");
-    if("{{pkg_dict.relationType}}"){
+    if ("{{pkg_dict.relationType}}") {
       document.getElementById("relatedDiv").style.display = "block";
     }
     let p = document.getElementById("relatedResourceField");
@@ -218,45 +220,45 @@
     }
   </script>
 
-<!-- FUnder Information -->
-<div><strong> Funder Information</strong></div>
-<table id="funderTable" style="display: table; word-wrap: break-word; overflow: hidden; width: 100%;">
-  <tr style="color: #0e6633">
-    <th style="width: 20%;">
-      Award Number
-    </th>
-    <th style="width: 50%;">
-      Award Title
-    </th>
-    <th style="width: 30%;">
-      Funder Name
-    </th>
-  </tr>
-</table>
-<br>
-<script>
-  let aNum = "{{pkg_dict.awardNumber}}".split(",");
-  let aTitle = "{{pkg_dict.awardTitle}}".split(",");
-  let funder = "{{pkg_dict.funderName}}".split(",");
-  let fId = "{{pkg_dict.funderId}}".split(",");
-  let awardUri = "{{pkg_dict.awardURI}}".split(",");
+  <!-- FUnder Information -->
+  <div><strong> Funder Information</strong></div>
+  <table id="funderTable" style="display: table; word-wrap: break-word; overflow: hidden; width: 100%;">
+    <tr style="color: #0e6633">
+      <th style="width: 20%;">
+        Award Number
+      </th>
+      <th style="width: 50%;">
+        Award Title
+      </th>
+      <th style="width: 30%;">
+        Funder Name
+      </th>
+    </tr>
+  </table>
+  <br>
+  <script>
+    let aNum = "{{pkg_dict.awardNumber}}".split(",");
+    let aTitle = "{{pkg_dict.awardTitle}}".split(",");
+    let funder = "{{pkg_dict.funderName}}".split(",");
+    let fId = "{{pkg_dict.funderId}}".split(",");
+    let awardUri = "{{pkg_dict.awardURI}}".split(",");
 
-  funTable = document.getElementById("funderTable");
-  for (let i = 0; i < aNum.length; i++) {
-    let row = funTable.insertRow();
-    let cell1 = row.insertCell();
-    let cell2 = row.insertCell();
-    let cell3 = row.insertCell();
+    funTable = document.getElementById("funderTable");
+    for (let i = 0; i < aNum.length; i++) {
+      let row = funTable.insertRow();
+      let cell1 = row.insertCell();
+      let cell2 = row.insertCell();
+      let cell3 = row.insertCell();
 
-    let awardNum = aNum[i].replace(/\//g, "%2F");
-    let aUri = awardUri[i];
-    let url = aUri;
+      let awardNum = aNum[i].replace(/\//g, "%2F");
+      let aUri = awardUri[i];
+      let url = aUri;
 
-    cell1.innerHTML = aNum[i];
-    cell2.innerHTML = `<a href="${url}">${aTitle[i]}</a>`;
-    cell3.innerHTML = funder[i];
-  }
-</script>
+      cell1.innerHTML = aNum[i];
+      cell2.innerHTML = `<a href="${url}">${aTitle[i]}</a>`;
+      cell3.innerHTML = funder[i];
+    }
+  </script>
 
   <!-- Contributor Information -->
   <div id="contriDiv" style="display: none;">
@@ -366,6 +368,7 @@
       link.textContent = notebooks[i];
       document.getElementById("notebookField").append(link);
       document.getElementById("notebookField").append("\n");
+      //console.log("{{ pkg_dict.resources}}");
     }
   </script>
 
@@ -392,6 +395,17 @@
       else if (licenseText == "Open Government Licence (OGL)") {
         licenseLink = "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/";
       }
+      const resources = {{ pkg_dict.resources | tojson }};
+      //console.log(resources);
+      const distributionVar = resources.map(resource => ({
+        "@type": "DataDownload",
+        "name": resource.name,
+        "URL": resource.url,  // Use the resource URL if available
+        "contentURL": resource.url,  // Assumes contentURL is the same as URL in this case
+        "encodingFormat": resource.format,  // Use format directly
+        "fileSize": resource.size ? `${resource.size} bytes` : "Unknown" // Format fileSize if available
+      }));
+      // console.log("{{pkg_dict.resources}}");
 
       //Create JSON-LD Structure
       const jsonld = {
@@ -439,6 +453,7 @@
           "license": "N/A",
 
         })),
+        "distribution": distributionVar,
 
       }
       // Convert the JSON-LD structure to a string
