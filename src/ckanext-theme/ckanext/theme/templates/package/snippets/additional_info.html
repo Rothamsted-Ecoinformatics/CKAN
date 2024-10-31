@@ -381,8 +381,31 @@
       let abss = document.getElementById("p-abstract").innerHTML.trim();
       let tempCoverage = "{{ pkg_dict.collectionStartDate }}" + "/" + "{{pkg_dict.collectionEndDate}}";
       abss = abss.trim();
+      let spatialCoverage = null;
+      if("{{ pkg_dict.geoLowLeftLatitude}}"){
       let spatCoverage = "{{ pkg_dict.geoLowLeftLatitude}}" + " " + "{{ pkg_dict.geoLowLeftLongitude}}" + " " + "{{ pkg_dict.geoTopRightLatitude}}" + " " + "{{ pkg_dict.geoTopRightLongitude}}";
-      //console.log(spatCoverage);
+       spatialCoverage = {
+        "@type": "Place",
+        "geo": {
+            "@type": "GeoShape",
+            "box": spatCoverage
+        }
+    };  
+    }
+      else if("{{pkg_dict.geoLatitude}}"){
+         spatialCoverage = {
+        "@type": "Place",
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "{{ pkg_dict.geoLatitude }}",
+            "longitude": "{{ pkg_dict.geoLongitude }}"
+        }
+    };
+      }
+      else{
+         spatialCoverage = null;
+      }
+      console.log("{{ pkg_dict.name }}");
       let relatedType = "{{ pkg_dict.relatedResourceType }}".split(",");
       let licenseText = "{{ pkg_dict.license }}";
       let licenseLink = "";
@@ -396,7 +419,7 @@
         licenseLink = "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/";
       }
       const resources = {{ pkg_dict.resources | tojson }};
-      //console.log(resources);
+      
       const distributionVar = resources.map(resource => ({
         "@type": "DataDownload",
         "name": resource.name,
@@ -411,13 +434,13 @@
       const jsonld = {
         "@context": "http://schema.org",
         "@type": "Dataset",
-        "id": "https://doi.org/{{ pkg_dict['doi'] }}",
-        "url": "http://pursuit.rothamsted.ac.uk",
-        "name": "{{ pkg_dict.name }}",
+        "identifier": "https://doi.org/{{ pkg_dict['doi'] }}",
+        "url": "https://data.rothamsted.ac.uk/dataset/{{ pkg_dict.name }}",
+        "name": "{{ pkg_dict.title }}",
         "creator": author_names.map((name, index) => ({
           "@type": "Person",
           "name": name,
-          "identifier": author_id[index],
+          "identifier": "https://orcid.org/" + author_id[index],
           "affiliation": author_org[index]
 
         })),
@@ -430,22 +453,16 @@
         "funder": funder.map((name, index) => ({
           "@type": "Organization",
           "name": name,
-          "sameAs": fId[index],
+          "sameAs": "https://ror.org/" + fId[index],
         })),
         "temporalCoverage": tempCoverage,
-        "spatialCoverage": {
-          "@type": "Place",
-          "geo": {
-            "@type": "GeoShape",
-            "box": spatCoverage,
-          }
-        },
+        "spatialCoverage": spatialCoverage,
 
         "hasPart": Rid.map((name, index) => ({
           "@type": "Dataset",
           "name": name,
           "@id": name,
-          "description": "This resource is of type " + relatedType[index] + ". This is related to  " + "{{ pkg_dict.name }}" + " as " + type[index],
+          "description": "This resource is of type " + relatedType[index] + ". This is related to  " + "{{ pkg_dict.title }}" + " as " + type[index],
           "creator": {
             "@type": "Person",
             "name": "N/A"
@@ -454,6 +471,10 @@
 
         })),
         "distribution": distributionVar,
+        "includedInDataCatalog":{
+                  "@type":"DataCatalog",
+                  "name":"data.rothamsted.ac.uk"
+                }
 
       }
       // Convert the JSON-LD structure to a string
