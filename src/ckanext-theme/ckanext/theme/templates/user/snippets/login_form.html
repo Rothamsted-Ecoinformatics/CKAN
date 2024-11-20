@@ -15,6 +15,7 @@ Example:
 {% set password_error = true if error_summary %}
 
 <form action="{{ action }}" method="post">
+<div style="display: none;">	
   {{ h.csrf_input() }}
   {{ form.errors(errors=error_summary) }}
 
@@ -23,7 +24,7 @@ Example:
   {{ form.input('password', label=_("Password"), id='field-password', type="password", value="", error=password_error, classes=["control-medium"]) }}
 
   {{ form.checkbox('remember', label=_("Remember me"), id='field-remember', checked=true, value="63072000") }}
-
+</div>
   <div class="form-actions">
     {% block login_button %}
     <button class="btn btn-primary" type="submit">{{ _('Login') }}</button>
