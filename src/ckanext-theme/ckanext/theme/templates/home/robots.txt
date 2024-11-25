@@ -1,19 +1,19 @@
 {% block all_user_agents -%}
 User-agent: GPTBot
-Disallow: /
+Disallow: *
 
 User-agent: Googlebot
-Disallow: /
+Disallow: *
 
 User-agent: GoogleOther
-Disallow: /
+Disallow: *
 
 User-agent: *
 Disallow: /dataset/rate/
 Disallow: /revision/
 Disallow: /dataset/*/history
 Disallow: /api/
-Crawl-Delay: 10
+Crawl-Delay: 500
 {%- endblock %}
 
 {% block additional_user_agents -%}
