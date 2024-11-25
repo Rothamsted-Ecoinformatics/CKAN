@@ -1,5 +1,14 @@
-User-agent: *
 {% block all_user_agents -%}
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Googlebot
+Disallow: /
+
+User-agent: GoogleOther
+Disallow: /
+
+User-agent: *
 Disallow: /dataset/rate/
 Disallow: /revision/
 Disallow: /dataset/*/history
