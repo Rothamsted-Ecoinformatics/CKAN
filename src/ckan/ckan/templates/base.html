@@ -90,16 +90,7 @@
     {% endblock %}
   </head>
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-X759GVQ5W7"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-X759GVQ5W7');
-  </script>
-
+ 
   {# Allows custom attributes to be added to the <body> tag #}
   <body{% block bodytag %} data-site-root="{{ h.url_for('home.index', locale='default', qualified=true) }}" data-locale-root="{{ h.url_for('home.index', qualified=true) }}" {% endblock %}>
 

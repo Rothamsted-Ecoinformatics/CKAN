@@ -13,7 +13,7 @@ Disallow: /dataset/rate/
 Disallow: /revision/
 Disallow: /dataset/*/history
 Disallow: /api/
-Crawl-Delay: 500
+Crawl-Delay: 3600000
 {%- endblock %}
 
 {% block additional_user_agents -%}
