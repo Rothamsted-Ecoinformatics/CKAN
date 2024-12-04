@@ -3,17 +3,15 @@ User-agent: GPTBot
 Disallow: *
 
 User-agent: Googlebot
-Disallow: *
+Disallow: 
 
-User-agent: GoogleOther
+User-agent: Bytespider
 Disallow: *
 
 User-agent: *
-Disallow: /dataset/rate/
-Disallow: /revision/
-Disallow: /dataset/*/history
-Disallow: /api/
+Disallow: *
 Crawl-Delay: 3600000
+
 {%- endblock %}
 
 {% block additional_user_agents -%}
